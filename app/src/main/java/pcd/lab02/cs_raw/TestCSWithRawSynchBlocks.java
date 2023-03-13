@@ -7,5 +7,4 @@ public class TestCSWithRawSynchBlocks {
 		new MyWorkerB("MyAgent-01",lock).start();
 		new MyWorkerA("MyAgent-02",lock).start();		
 	}
-
 }
