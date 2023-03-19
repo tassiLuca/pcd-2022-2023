@@ -10,5 +10,4 @@ public class Step05 {
 		new MyWorkerB("worker-B").start();
 		new MyWorkerA("worker-A").start();		
 	}
-
 }

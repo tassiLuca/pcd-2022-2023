@@ -1,4 +1,4 @@
-package pcd.lab02.check_act;
+package pcd.lab02.check_act_fixed;
 
 public class Counter {
 
@@ -12,7 +12,7 @@ public class Counter {
 	}
 	
 	public synchronized void inc() throws OverflowException {
-		if (cont + 1 > max){
+		if (cont + 1 > max) {
 			throw new OverflowException();
 		}
 		cont++;

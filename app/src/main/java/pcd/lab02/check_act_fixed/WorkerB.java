@@ -1,4 +1,4 @@
-package pcd.lab02.check_act;
+package pcd.lab02.check_act_fixed;
 
 public class WorkerB extends Thread {
 	
@@ -12,9 +12,11 @@ public class WorkerB extends Thread {
 	
 	public void run() {
 		try {
-			for (int i = 0; i < ntimes; i++){
-				if (counter.getValue() < 1){
-					counter.inc();
+			for (int i = 0; i < ntimes; i++) {
+				synchronized (counter) {
+					if (counter.getValue() < 1) {
+						counter.inc();
+					}
 				}
 			}
 		} catch (Exception ex){

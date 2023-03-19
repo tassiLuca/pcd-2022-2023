@@ -1,12 +1,12 @@
-package pcd.lab02.lost_updates;
+package pcd.lab02.lost_updates_fixed;
 
 
 public class Worker extends Thread {
 	
-	private final UnsafeCounter counter;
+	private final SafeCounter counter;
 	private final int ntimes;
 	
-	public Worker(UnsafeCounter counter, int ntimes){
+	public Worker(SafeCounter counter, int ntimes){
 		this.counter = counter;
 		this.ntimes = ntimes;
 	}

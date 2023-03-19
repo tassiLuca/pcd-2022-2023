@@ -4,18 +4,16 @@ import javax.swing.SwingUtilities;
 
 public class BallViewer extends Thread {
     
-    private boolean stop;
-    private Context context;
-    private ViewerFrame frame;
+    private final boolean stop;
+    private final Context context;
+    private final ViewerFrame frame;
     private static final int FRAMES_PER_SEC = 25;
     
-    public BallViewer(Context context){
+    public BallViewer(final Context ctx){
         stop = false;
-        this.context = context ;
-        frame = new ViewerFrame(context,620,620);
-        SwingUtilities.invokeLater(() -> {
-        		frame.setVisible(true);
-        });
+        context = ctx;
+        frame = new ViewerFrame(620, 620);
+        SwingUtilities.invokeLater(() -> frame.setVisible(true));
    }
     
     public void run(){
@@ -23,9 +21,8 @@ public class BallViewer extends Thread {
             long t0 = System.currentTimeMillis();
         	frame.updatePosition(context.getPositions());
             long t1 = System.currentTimeMillis();
-        	//log("update pos");
-            long dt = (1000 / FRAMES_PER_SEC) - (t1-t0);
-            if (dt > 0){
+            long dt = (1000 / FRAMES_PER_SEC) - (t1 - t0);
+            if (dt > 0) {
 	            try {
 	                Thread.sleep(dt);     
 	            } catch (Exception ex){

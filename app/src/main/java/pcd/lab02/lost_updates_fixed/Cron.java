@@ -1,4 +1,4 @@
-package pcd.lab02.lost_updates;
+package pcd.lab02.lost_updates_fixed;
 
 public class Cron {
 

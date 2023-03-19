@@ -1,4 +1,4 @@
-package pcd.lab02.lost_updates;
+package pcd.lab02.lost_updates_fixed;
 
 public class TestCounter {
 
@@ -6,7 +6,7 @@ public class TestCounter {
 
 	public static void main(String[] args) throws Exception {
 		// int ntimes = Integer.parseInt(args[0]);
-		final UnsafeCounter counter = new UnsafeCounter(0);
+		final SafeCounter counter = new SafeCounter(0);
 		final Worker w1 = new Worker(counter, N_TIMES);
 		final Worker w2 = new Worker(counter, N_TIMES);
 		final Cron cron = new Cron();

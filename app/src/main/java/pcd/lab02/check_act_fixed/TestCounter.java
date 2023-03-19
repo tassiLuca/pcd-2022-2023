@@ -1,4 +1,4 @@
-package pcd.lab02.check_act;
+package pcd.lab02.check_act_fixed;
 
 /**
  * To enable assertions: run with -ea option.
