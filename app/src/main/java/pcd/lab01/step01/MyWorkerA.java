@@ -24,6 +24,5 @@ public class MyWorkerA extends Worker {
 	protected void action3(){
 		println("a3");
 	}
-	
 }
 

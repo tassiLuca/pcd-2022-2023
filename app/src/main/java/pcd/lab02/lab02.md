@@ -15,8 +15,19 @@ Race conditions
 - check-and-act: errore molto frequente
 
 - ogni oggeetto java ha un intrinsec lock
-  - ```java
-    synchronized(lock) {
-       statement 
-    }
-    ```
+  ```java
+  synchronized(lock) {
+      statement 
+      statement
+      statement
+  }
+  ```
+
+...
+
+## Lost Updates
+- più alto è il valore, più è alta la probabilità che via sia interleaving
+
+MAI PRENDERE IL LOCK SU COMPONENTI ATTIVI :)
+
+    

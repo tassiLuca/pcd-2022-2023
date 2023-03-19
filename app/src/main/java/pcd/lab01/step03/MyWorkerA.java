@@ -11,6 +11,4 @@ public class MyWorkerA extends Worker {
 		sleepFor(5000);
 		println("a2");
 	}
-	
 }
-
