@@ -34,4 +34,3 @@ public class MyWorkerA extends Worker {
 		wasteRandomTime(300,700);	
 	}
 }
-

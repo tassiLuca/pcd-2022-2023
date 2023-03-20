@@ -1,8 +1,7 @@
 package pcd.lab01.step02;
 
 /*
- * Non terminating behaviours.
- * 
+ * Non terminating behaviors.
  */
 public class Step02 {
 
@@ -10,5 +9,4 @@ public class Step02 {
 		new MyWorkerB("worker-B").start();
 		new MyWorkerA("worker-A").start();		
 	}
-
 }
