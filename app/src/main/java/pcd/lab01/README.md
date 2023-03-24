@@ -23,25 +23,8 @@
   - to start thread asynchronous execution, the method `start` is provided: it returns immediately, and a new activity executing what is specified in the `run` method is launched
 - The thread terminates as soon as the execution of the method run
 
-```mermaid
-classDiagram
-  direction BT
+![thread-api](http://www.plantuml.com/plantuml/svg/bLNRKjim47ttLwX-0eFz0NuYaBIJAQGT2CDBPpgAlOb5PCcZ2o73yEzTonVPO4hhbqIxPrVdhBJQ2sseChRan1GAQ1xJYWM11aC4BK5ND8CxgAYYHYeYf80WGDkUxe0yqYUQS2fsv2KW-35XG6qnWDnQ8UY6G-kelpDbnScfMxu6xaT80uJ3rX2vxIDIyjMAp30fA2VBFg4fg26wa9RdP0Fabs1bnQ441A3XIAWuaenJhScXaDe110eJ6MX25JXg8aUiaKqyF4Dck-1MUjBmQlAidOdq--X9KGsgrJMqO55tOD8-w7F4kIjuIkwCOcBt7Z_jxV-ye5p3ibToHh5yJt0bhJ0dfsajVGAKMQLGLSS_RVLE87DRLdS6Ztoe4falNHYNOkVDU6rMIFCDiZ5rt4Veduf9nSpnHC2X--yeZpFqi3TwQXzoC-0L96xj4UvIAbkP0IalhlU2KxEHaWCLWsYz_1GnurZk3tnp2gKKayueUfGCNL7qpbOopfbkYZlo-nvg2iW1gZ5wcCjrzdY3EDP6Ld4yp88sgojiZxTc1TgMq5kdshQfUPg6ZbdOHqVHNDP8Oh4PiUSSbG6HA385T6qtijzZG1YsrCEGr7qy025Dn-0lLBn6psSEbO8CBqR-nRVCkc2Qb60AYNsklPs90khcu4TYXQPRmESbz-wI7d5JwjuI9Z8fD4EAmdX4VRtgXsSOHTM66KNL4T-VWZunQLNo7uhy2Ks9mgum7qd8CGUNsJwk5BxUN_vzJt_yqrl2C-hMHEEzncrwo1RdH7tg1sQA-YGRvkuiUyoXO5b12ggn622GOfTrpAvTsNBKsuFtTxLuEEyNj_UhrUpoUk4jbzS_hhulvjxmC5kkbwjlth1UtYpclz-R5xStozLilPWFRtux4c9RnUF71ltDqBWvFaYr1uMrgUTDDqLwxvhg_TH82LfNaYGaR0P3sCK65vW9v_CV "thread-api")
 
-  class Runnable {
-    <<interface>>
-    +run()
-  }
-
-  class Thread {
-    +getId(): long
-    +getName(): String
-    +getPriority():int
-    ...
-  }
-
-  Thread ..|> Runnable
-  MyWorkerA --|> Thread
-```
 
 ```java
 public class MyWorker extends Thread {
@@ -70,9 +53,58 @@ public class MyTask implements Runnable {
 Thread th = new Thread(new MyTask());
 th.start();
 ```
-
+- :warning: Some important notes:
+  - the method to execute the thread object is `start()`, **not** `run()`
+    - If `run()` method is called directly instead of `start()`, `run()` method will be treated as a normal overridden method of the thread class (or runnable interface), just like a passive object. This run method will be executed within the context of the current thread, not in a new thread.
+    - It’s the `start()` method that spawns a new thread and schedules the thread with the JVM. The JVM will let the newly spawned thread execute `run()` method when the resources and CPU are ready.
+  - All the public methods to asynchronously act on the control flow of the thread have been deprecated (see [Java Thread Primitive Deprecation](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/doc-files/threadPrimitiveDeprecation.html) -- the reasons described here will be completely clear in a couple of labs...). The same functionality is achieved through proper patterns, we will see in the following.
 - When the Java virtual machine starts up, there is usually one non-daemon thread (the thread that typically calls the application's main method). The Java virtual machine terminates when all started non-daemon threads have terminated.
   - and a lot of other daemon threads: Java RMI, garbage collector, ...
+
+### Implicit synchronization
+
+- By applying the keyword `synchronized` as a qualifier to any code block within any method, only one thread at a time can obtain access to the object where `synchronized` is defined
+  - prevents arbitrary interleaving of the actions in the method bodies
+  - prevents unintended interactions among threads accessing the same objects
+
+```java
+synchronized (<object reference expression>) {     
+    // <code block>
+}  
+```
+
+- Suggestion: **to be used in passive objects that are shared and concurrently accessed (for updates) by multiple threads**.
+
+### Joining Threads
+
+- The `join()` method allows for a thread to synchronize its execution with the termination of another thread
+  - in particular: `t.join()` suspends the current thread until the thread `t` has completed its execution
+  - see `step03`
+  
+    `MyWorkerA`:
+    ```java
+    public void run() {
+        println("a1");
+        sleepFor(5000);
+        println("a2");
+    }
+    ```
+
+    `MyWorkerB`:
+    ```java
+    public void run() {
+        println("b1");
+        println("b2");
+        try {
+            workerA.join();
+        } catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
+        println("b3");
+    }
+    ```
+
+    Ordine delle stampe: `b3` è garantito sia stampato dopo `a2`.
 
 ## Programming Discipline
 
@@ -82,27 +114,19 @@ th.start();
 - Viewing threads as <ins>**active objects encapsulating state, behavior and the control of the behavior**</ins>
   - the object's methods should be called only by the thread represented by the object
   - **the use of public methods should be minimized**, ideally no public methods; protected ones are allowed for extendibility's sake
-- Promoting interaction using shared (passive) objects, not by calling public methods of their interface: this would violate encapsulation of the control flow
+- **Promoting interaction using shared (passive) objects, not by calling public methods of their interface**: this would violate encapsulation of the control flow
 
----
+## Performances and profiling
 
+### Monitoring
 
-
-`step0`
-
-- Un programma sequenziale ha sempre almeno il Main Thread.
-  - In realtà non è così: il garbage collector, le GUI...
-- il SO (non real-time) su cui è mandato in esecuzione non è deterministico lo scheduling
-- incapsulamento del comportamento!
-  - ha il suo stato
-  - e il comportamento non è dato da un'interfaccia perché non è progettato per fornire un servizio
-  - ma è lui che esegue!!! => nessun metodo pubblico, fuorché la `run`!
-    - metodo protetto: per estendibilità. Estendere un componente attivo non è come per i componenti passivi
-- `System.out` è un oggetto condiviso
-  - i flussi di esecuzione si incrociano
-- come specifico
-
-- non è possibile terminare l'esecuzione dell'oggetto
-  - ha senso nel campo più alto dell'incapsulamento: tutto ciò che condiziona e determina il comportamento è nel codice e del flusso di controllo del componente attivo
-
-- Java19: [`Thread`](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/lang/Thread.html)
+- JConsole is the Java Monitoring and Management Console, a graphical tool shipped in J2SE JDK 5.0 (and later versions)
+  - it uses the instrumentation of the Java virtual machine to provide information on the performance and resource consumption of applications running on the Java platform
+  - Useful (also) to monitor the thread spawned by running Java programs, including VM threads, such as the one used for garbage collecting
+  - simply, `jconsole` on a shell
+- Similar to JConsole, VisualVm is a full-fledged profiler that allows for measuring and visualizing the performances of Java programs
+  - like JConsole, it uses the instrumentation of the Java virtual machine to provide information on the performance and resource consumption of applications running on the Java platform
+  - More fine-grained monitoring than JConsole:
+    - monitoring % CPU used by methods, threads
+    - monitoring how long a thread is blocked or running
+    - ...

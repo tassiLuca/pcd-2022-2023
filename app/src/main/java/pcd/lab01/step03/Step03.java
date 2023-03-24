@@ -2,9 +2,6 @@ package pcd.lab01.step03;
 
 /**
  * Test join.
- * 
- * @author aricci
- *
  */
 public class Step03 {
 

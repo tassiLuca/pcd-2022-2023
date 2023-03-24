@@ -1,0 +1,81 @@
+@startuml thread-api
+
+set namespaceSeparator none
+
+package java.lang {
+    interface Runnable {
+        +run()
+    }
+
+    note left of Runnable: Functional Interface that should be \nimplemented by any class whose \ninstances are intended to be \nexecuted by a thread.
+
+    class Thread implements Runnable {
+        +Thread()
+        +Thread(target: Runnable)
+        +Thread(target: Runnable, name: String)
+        +Thread(name: String)
+        
+        {static} +activeCount(): int
+        {static} +currentThread(): Thread
+        {static} +dumpStack()
+        +getId(): long
+        +setName()
+        +getName(): String
+        +setPriority(newPriority: int)
+        +getPriority(): int
+        +getState(): Thread.State
+        +interrupt()
+        {static} +interrupted(): boolean
+        +isInterrupted(): boolean
+        +isAlive(): boolean
+        +isDaemon(): boolean
+        +**join()**
+        +**join(millis: long)**
+        +run()
+        +sleep(millis: long)
+        +**start()**
+        +--stop--()
+        +--suspend--()
+        +--resume--()
+    }
+
+    note left of Thread::"run()"
+        **Do not use to start**
+        **the thread.**
+        **Use ""start()"" instead.**
+    end note
+    note left of Thread::"--stop--()"
+        Deprecated! 
+        This method is 
+        inherently unsafe and 
+        may lead to inconsistent 
+        states and 
+        arbitrary behaviour.
+    end note
+    note left of Thread::"--suspend--()"
+        Deprecated: it is 
+        inherently deadlock-prone!
+    end note
+    note left of Thread::"--resume--()"
+        Deprecated: exists solely 
+        for use with ""suspend()"" 
+        which has been deprecated
+    end note
+
+    enum Thread.State {
+        NEW,
+        RUNNABLE,
+        BLOCKED,
+        WAITING,
+        TIMED_WAITING,
+        TERMINATED
+    }
+
+    Thread -up- Thread.State
+}
+
+class MyWorker extends Thread
+class MyTask implements Runnable
+MyTask ... "target" Thread
+
+@enduml
