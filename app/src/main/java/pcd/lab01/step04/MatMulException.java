@@ -1,5 +1,3 @@
 package pcd.lab01.step04;
 
-public class MatMulException extends Exception {
-
-}
+public class MatMulException extends Exception { }

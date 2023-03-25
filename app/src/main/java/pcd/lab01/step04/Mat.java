@@ -2,9 +2,6 @@ package pcd.lab01.step04;
 
 /**
  * Simple class implementing a matrix.
- * 
- * @author aricci
- *
  */
 public class Mat {
 

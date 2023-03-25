@@ -19,7 +19,7 @@ public class Counter {
 	}
 
 	public synchronized void dec() throws UnderflowException {
-		if (cont - 1 < min){
+		if (cont - 1 < min) {
 			throw new UnderflowException();
 		}
 		cont--;

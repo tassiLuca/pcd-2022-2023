@@ -45,6 +45,4 @@ public class MatMulConcurLib {
 	private MatMulConcurLib(int n){
 		workers = new Worker[n];
 	}
-	
-
 }

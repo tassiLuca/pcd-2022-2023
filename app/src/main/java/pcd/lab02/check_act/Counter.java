@@ -12,14 +12,14 @@ public class Counter {
 	}
 	
 	public synchronized void inc() throws OverflowException {
-		if (cont + 1 > max){
+		if (cont + 1 > max) {
 			throw new OverflowException();
 		}
 		cont++;
 	}
 
 	public synchronized void dec() throws UnderflowException {
-		if (cont - 1 < min){
+		if (cont - 1 < min) {
 			throw new UnderflowException();
 		}
 		cont--;

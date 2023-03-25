@@ -1,8 +1,8 @@
 package pcd.lab01.step05;
 
 /*
- * On the impact on the performance / CPU utilisation
- * of the agent behaviours 
+ * On the impact on the performance / CPU utilization
+ * of the agent behaviors 
  */
 public class Step05 {
 

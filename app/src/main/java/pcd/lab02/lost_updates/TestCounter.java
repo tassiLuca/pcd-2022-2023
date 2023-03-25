@@ -2,7 +2,7 @@ package pcd.lab02.lost_updates;
 
 public class TestCounter {
 
-	private static final int N_TIMES = 100_000_000;
+	private static final int N_TIMES = 1_000;
 
 	public static void main(String[] args) throws Exception {
 		// int ntimes = Integer.parseInt(args[0]);

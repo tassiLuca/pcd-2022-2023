@@ -12,8 +12,8 @@ public class WorkerB extends Thread {
 	
 	public void run() {
 		try {
-			for (int i = 0; i < ntimes; i++){
-				if (counter.getValue() < 1){
+			for (int i = 0; i < ntimes; i++) {
+				if (counter.getValue() < 1) {
 					counter.inc();
 				}
 			}

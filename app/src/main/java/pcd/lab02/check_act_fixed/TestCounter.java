@@ -5,10 +5,10 @@ package pcd.lab02.check_act_fixed;
  */
 public class TestCounter {
 
-	public static final int NTIMES = 10000;
+	public static final int NTIMES = 10_000;
 
 	public static void main(String[] args) throws Exception {
-		final Counter counter = new Counter(0,1);
+		final Counter counter = new Counter(0, 1);
 		WorkerA w1a = new WorkerA(counter, NTIMES);
 		WorkerA w1b = new WorkerA(counter, NTIMES);
 		WorkerB w2a = new WorkerB(counter, NTIMES);
@@ -21,6 +21,6 @@ public class TestCounter {
 		w1b.join();
 		w2a.join();
 		w2b.join();
-		System.out.println("Counter final value: "+counter.getValue());
+		System.out.println("Counter final value: " + counter.getValue());
 	}
 }
