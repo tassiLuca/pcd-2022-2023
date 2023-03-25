@@ -10,7 +10,6 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
   	id "org.openjfx.javafxplugin" version "0.0.13"
-
 }
 
 repositories {
@@ -25,27 +24,29 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
 
-	/* module 2.2 - asynchronous programming - Vert.x */
+    // VertX
     implementation("io.vertx:vertx-core:4.4.1")
     implementation("io.vertx:vertx-web:4.4.1")
     implementation("io.vertx:vertx-web-client:4.4.1")
     
-    /* module 2.3 - reactive programming - RxJava */
+    // RxJava
 	implementation 'io.reactivex.rxjava3:rxjava:3.1.4'
-    
-    /* module 3.1 - actors - akka*/
+
+    // Actors - akka
   	implementation platform("com.typesafe.akka:akka-bom_2.13:2.8.2")
   	implementation "com.typesafe.akka:akka-actor-typed_2.13"
     testImplementation "com.typesafe.akka:akka-actor-testkit-typed_2.13"    
     
     /* module 4.2 */
 	implementation 'com.rabbitmq:amqp-client:5.17.0'
-    
-    /* logging framework SLF4J */
+
+    // logging framework SLF4J
 	implementation 'org.slf4j:slf4j-api:2.0.7'
 	// testImplementation 'org.slf4j:slf4j-reload4j:2.0.7'
     implementation 'org.slf4j:slf4j-simple:2.0.7'
 
+    // JPF
+    implementation files("../lib/jpf-classes.jar", "../lib/jpf-annotations.jar")
 }
 
 application {
