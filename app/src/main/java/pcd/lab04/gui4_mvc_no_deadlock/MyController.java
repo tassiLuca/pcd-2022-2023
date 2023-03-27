@@ -1,17 +1,19 @@
-package pcd.lab04.gui4_mvc_nodeadlock;
+package pcd.lab04.gui4_mvc_no_deadlock;
 
 
 public class MyController {
 	
-	private MyModel model;
+	private final MyModel model;
+
 	public MyController(MyModel model){
 		this.model = model;
 	}
+
 	public void processEvent(String event) {
 		try {
 			new Thread(() -> {
 				try {
-					System.out.println("[Controller] Processing the event "+event+" ...");
+					System.out.println("[Controller] Processing the event " + event + " ...");
 					Thread.sleep(1000);
 					model.update();
 					System.out.println("[Controller] Processing the event done.");
@@ -23,5 +25,4 @@ public class MyController {
 			ex.printStackTrace();
 		}
 	}
-
 }

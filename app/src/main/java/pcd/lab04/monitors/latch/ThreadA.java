@@ -2,7 +2,7 @@ package pcd.lab04.monitors.latch;
 
 public class ThreadA extends Thread {
 
-	private Latch latch;
+	private final Latch latch;
 	
 	public ThreadA(String name, Latch latch) {
 		super(name);
@@ -23,9 +23,5 @@ public class ThreadA extends Thread {
 		synchronized(System.out) {
 			System.out.println("[ "+getName()+" ] "+msg);
 		}
-	}
-	
-	private void waitFor(long ms) throws InterruptedException{
-		Thread.sleep(ms);
 	}
 }

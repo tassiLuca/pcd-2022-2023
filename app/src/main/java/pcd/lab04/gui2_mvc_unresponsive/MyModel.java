@@ -5,28 +5,28 @@ import java.util.List;
 
 public class MyModel {
 
-	private List<ModelObserver> observers;
+	private final List<ModelObserver> observers;
 	private int state;
 	
-	public MyModel(){
+	public MyModel() {
 		state = 0;
-		observers = new ArrayList<ModelObserver>();
+		observers = new ArrayList<>();
 	}
 	
-	public void update(){
+	public void update() {
 		state++;
 		notifyObservers();
 	}
 	
-	public int getState(){
+	public int getState() {
 		return state;
 	}
 	
-	public void addObserver(ModelObserver obs){
+	public void addObserver(final ModelObserver obs) {
 		observers.add(obs);
 	}
 	
-	private void notifyObservers(){
+	private void notifyObservers() {
 		for (ModelObserver obs: observers){
 			obs.modelUpdated(this);
 		}

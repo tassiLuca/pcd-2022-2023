@@ -1,16 +1,16 @@
-package pcd.lab04.gui4_mvc_nodeadlock;
+package pcd.lab04.gui4_mvc_no_deadlock;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyModel {
 
-	private List<ModelObserver> observers;
+	private final List<ModelObserver> observers;
 	private int state;
 	
 	public MyModel(){
 		state = 0;
-		observers = new ArrayList<ModelObserver>();
+		observers = new ArrayList<>();
 	}
 	
 	public synchronized void update(){

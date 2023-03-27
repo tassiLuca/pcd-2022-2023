@@ -4,9 +4,9 @@ import java.util.Random;
 
 public class Worker extends Thread {
 
-	private Barrier barrier;
+	private final Barrier barrier;
 	
-	public Worker(String name, Barrier barrier) {
+	public Worker(final String name, final Barrier barrier) {
 		super(name);
 		this.barrier = barrier;
 	}
@@ -23,13 +23,13 @@ public class Worker extends Thread {
 		}
 	}
 	
-	private void log(String msg) {
+	private void log(final String msg) {
 		synchronized(System.out) {
 			System.out.println("[ "+getName()+" ] "+msg);
 		}
 	}
 	
-	private void waitFor(long ms) throws InterruptedException{
+	private void waitFor(final long ms) throws InterruptedException {
 		Thread.sleep(ms);
 	}
 }

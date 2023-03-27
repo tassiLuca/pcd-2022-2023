@@ -1,14 +1,15 @@
-package pcd.lab04.monitors;
+package pcd.lab04.monitors.bounded_buffer;
 
 import java.util.LinkedList;
 import java.util.concurrent.locks.*;
 
 public class BoundedBuffer2<Item> implements IBoundedBuffer<Item> {
 
-	private LinkedList<Item> buffer;
-	private int maxSize;
-	private Lock mutex;
-	private Condition notEmpty, notFull;
+	private final LinkedList<Item> buffer;
+	private final int maxSize;
+	private final Lock mutex;
+	private final Condition notEmpty;
+	private final Condition notFull;
 
 	public BoundedBuffer2(int size) {
 		buffer = new LinkedList<Item>();

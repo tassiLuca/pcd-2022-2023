@@ -6,20 +6,14 @@ import java.util.List;
 public class TestBarrier {
 
 	public static void main(String[] args) {
-		
-		int nWorkers = 10;
-
-		/* this barrier is not working */
-		Barrier barrier = new FakeBarrier();
-		
-		List<Worker> workers = new ArrayList<Worker>();
+		final int nWorkers = 10;
+		final Barrier barrier = new BarrierImpl(nWorkers);
+		final List<Worker> workers = new ArrayList<>();
 		for (int i = 0; i < nWorkers; i++) {
-			workers.add(new Worker("Worker-"+i, barrier));
+			workers.add(new Worker("Worker-" + i, barrier));
 		}
-
 		for (Worker w: workers) {
 			w.start();
 		}
-		
 	}
 }

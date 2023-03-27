@@ -4,8 +4,7 @@ public class Controller {
 
 	private static final int DELTA_TIME = 10;
 	private Flag stopFlag;
-	private CounterAgent agent;
-	private Counter counter;
+	private final Counter counter;
 	
 	public Controller(Counter counter) {
 		this.counter = counter;
@@ -13,7 +12,7 @@ public class Controller {
 	}
 	
 	public void notifyStarted() {
-		agent = new CounterAgent(counter, stopFlag, DELTA_TIME);
+		CounterAgent agent = new CounterAgent(counter, stopFlag, DELTA_TIME);
 		agent.start();				
 	}
 	

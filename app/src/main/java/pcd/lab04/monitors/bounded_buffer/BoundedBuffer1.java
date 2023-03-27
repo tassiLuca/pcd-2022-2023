@@ -1,11 +1,11 @@
-package pcd.lab04.monitors;
+package pcd.lab04.monitors.bounded_buffer;
 
 import java.util.LinkedList;
 
 public class BoundedBuffer1<Item> implements IBoundedBuffer<Item> {
 
-	private LinkedList<Item> buffer;
-	private int maxSize;
+	private final LinkedList<Item> buffer;
+	private final int maxSize;
 
 	public BoundedBuffer1(int size) {
 		buffer = new LinkedList<Item>();

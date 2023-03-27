@@ -1,25 +1,25 @@
-package pcd.lab04.monitors;
+package pcd.lab04.monitors.sync_cell;
 
-public class SynchCell {
+public class SyncCell {
 
 	private int value;
 	private boolean available;
 
-	public SynchCell(){
+	public SyncCell(){
 		available = false;
 	}
 
-	public synchronized void set(int v){
+	public synchronized void set(int v) {
 		value = v;
 		available = true;
 		notifyAll();  
 	}
 
 	public synchronized int get() {
-		while (!available){
+		while (!available) {
 			try {
 				wait();
-			} catch (InterruptedException ex){}
+			} catch (InterruptedException ignored) { }
 		}
 		return value;
 	}

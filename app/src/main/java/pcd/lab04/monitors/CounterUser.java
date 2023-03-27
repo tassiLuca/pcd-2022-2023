@@ -1,5 +1,7 @@
 package pcd.lab04.monitors;
 
+import pcd.lab04.monitors.sync_cell.Worker;
+
 public class CounterUser extends Worker {
 	
 	private Counter counter;

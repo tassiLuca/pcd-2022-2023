@@ -1,4 +1,4 @@
-package pcd.lab04.gui3_mvc_deadlock;
+package pcd.lab04.gui4_mvc_no_deadlock;
 
 public class TestGUI {
 
@@ -7,7 +7,7 @@ public class TestGUI {
         MyController controller = new MyController(model);
         MyView view = new MyView(controller);
         model.addObserver(view);
-        view.show();
+        view.setVisible(true);
         new MyAgent(model).start();
     }
 }

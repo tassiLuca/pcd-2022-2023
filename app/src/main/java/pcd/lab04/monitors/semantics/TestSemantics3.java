@@ -1,4 +1,4 @@
-package pcd.lab04.monitors;
+package pcd.lab04.monitors.semantics;
 
 import java.util.concurrent.locks.*;
 

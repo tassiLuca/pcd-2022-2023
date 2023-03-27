@@ -1,10 +1,10 @@
-package pcd.lab04.monitors;
+package pcd.lab04.monitors.sync_cell;
 
 import java.util.*;
 
 public abstract class Worker extends Thread {
 	
-	private Random rand;
+	private final Random rand;
 	
 	public Worker(String name){
 		super(name);

@@ -1,21 +1,21 @@
-package pcd.lab04.monitors;
+package pcd.lab04.monitors.sync_cell;
 
 import java.util.concurrent.locks.*;
 
-public class SynchCell2 {
+public class SyncCell2 {
 
 	private int value;
 	private boolean available;
-	private Lock mutex;   
-	private Condition isAvail;
+	private final Lock mutex;
+	private final Condition isAvail;
 
-	public SynchCell2(){
+	public SyncCell2() {
 		available = false;
 		mutex = new ReentrantLock(); 
 		isAvail = mutex.newCondition();
 	}
 
-	public void set(int v){
+	public void set(int v) {
 		try {
 			mutex.lock();
 			value = v;
@@ -32,7 +32,7 @@ public class SynchCell2 {
 			if (!available){
 				try {
 					isAvail.await();
-				} catch (InterruptedException ex){}
+				} catch (InterruptedException ignored) { }
 			} 
 			return value;
 		} finally {
@@ -40,4 +40,3 @@ public class SynchCell2 {
 		}
 	}
 }
-

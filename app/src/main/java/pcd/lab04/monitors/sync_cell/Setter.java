@@ -1,11 +1,11 @@
-package pcd.lab04.monitors;
+package pcd.lab04.monitors.sync_cell;
 
 public class Setter extends Worker {
 	
-	private SynchCell cell;
-	private int value;
+	private final SyncCell cell;
+	private final int value;
 	
-	public Setter(SynchCell cell, int value){
+	public Setter(SyncCell cell, int value){
 		super("setter");
 		this.cell = cell;
 		this.value = value;

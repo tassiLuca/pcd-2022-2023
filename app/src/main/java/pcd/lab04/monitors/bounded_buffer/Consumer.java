@@ -1,4 +1,4 @@
-package pcd.lab04.monitors;
+package pcd.lab04.monitors.bounded_buffer;
 
 
 class Consumer extends Thread {
