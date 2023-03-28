@@ -4,7 +4,7 @@ import pcd.lab03.liveness.deadlock_account.InsufficientBalanceException;
 
 import java.util.*;
 
-public class TestAccountsNoDeadlockRand {
+public class TestAccountsNoDeadlockWithTryLock {
 
 	private static final int NUM_THREADS = 20;
 	private static final int NUM_ACCOUNTS = 5;
