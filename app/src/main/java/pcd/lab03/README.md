@@ -89,7 +89,6 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
             at pcd.lab03.liveness.deadlocked_resource.ThreadB.run(ThreadB.java:17)
 
     Found 1 deadlock.
-
     ```
 
 2. A more sneaky example: accounts management (see `liveness.deadlock_account` package)
