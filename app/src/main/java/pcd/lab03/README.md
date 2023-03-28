@@ -4,14 +4,16 @@
 
 Thread-off between _safety_ and _liveness_:
 
-- Locks are essentials to ensure thread safety but indiscriminate use of locking can cause "lock-ordering" deadlocks;
-- using thread pools and semaphores to bind resource consumption but failure to understand activities being bounded can cause resource deadlocks.
+- Locks are essentials to ensure thread safety 
+  - :boom: but indiscriminate use of locking can cause **"lock-ordering" deadlocks**;
+- Thread pools and semaphores are essential to bind resource consumption 
+  - :boom: but failure to understand activities being bounded can cause **resource deadlocks**.
 
 ### Deadlock
 
 A situation wherein two or more competing actions are waiting for the other to finish, and thus neither ever does.
 
-Coffman necessary conditions for a deadlock to occur (1971), i.e. a deadlock can only occur in systems where all the following 4 conditions are satisfied:
+A deadlock can only occur in systems where all the following 4 conditions are satisfied (Coffman, 1971):
 
 - **mutual exclusion**
   - a resource that cannot be used by more than one process at a time;
@@ -92,8 +94,8 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
 
 A more sneaky example: accounts management (see `deadlock_account` package)
 
-- Deadlock came because the two threads attempted to acquire the locks in a different order without an access common policy
-  - running `TestAccountsWithDeadlock` and print thread dump:
+- Deadlock came because two (or more) threads attempted to acquire the locks in a different order <ins>without a common policy<ins>
+  - thread dump of `TestAccountsWithDeadlock`:
     ```
     Found one Java-level deadlock:
     =============================
@@ -109,11 +111,22 @@ A more sneaky example: accounts management (see `deadlock_account` package)
     waiting to lock monitor 0x0000600000320d00 (object 0x000000070e8181a0, a pcd.lab03.liveness.deadlock_account.Account),
     which is held by "Thread-1"
     ```
+  - this is the situation in which: inside `Thread-0` $A$ wants to send money to $B$ so it acquires the lock on $A$ and attempts to acquire the lock on $B$; in the meanwhile, because inside `Thread-1` $B$ wants to send money to $C$, it acquires the lock on $B$ before the `Thread-0` can do so, blocking it waiting for the `Thread-1` releases the lock on $B$. At this point, `Thread-1` should acquire the lock on $C$, but before doing so, `Thread-18`, which wants to send money from $C$ to $A$, acquires the lock on $C$, preventing `Thread-1` from entering the critical section. Now on, `Thread-18` attempts to acquire the lock on $A$, which is already hold by `Thread-0`: deadlock :skull:!
+    ```
+         Thread-0                 Thread-1                Thread-18
+         A --> B                  B --> C                 C --> A
+    |--> 1) lock A           |--> 2) lock B           |-> 4) lock C
+    |    2) attempt lock B x-|    5) attempt lock C --|   6) attempt lock A ->|
+    |--------------------------------------<----------------------------------|
+    ```
 
-- How to fix? If they asked for the locks in the same order, there would be no cyclic locking dependency and therefore no deadlock: **a program will be free of lock-ordering deadlocks if all threads acquire the locks they need in a fixed global order**
-  - verifying consistent lock ordering requires a global analysis of your program's locking behavior
-  - introduce `AccountManager` entity which take the locks based on ...
-  - running `TestAccountsNoDeadlock` and run VisualVM
-    
+- How to fix? If they asked for the locks in the same order, there would be no cyclic locking dependency and therefore no deadlock: <ins>**a program will be free of lock-ordering deadlocks if all threads acquire the locks they need in a fixed global order**</ins>
+  - introduce `AccountManager` entity which acquires the lock on the sender and receiver based on their id
+  - running `TestAccountsNoDeadlock` and running VisualVM
+    ![test account with no deadlock](../../../../../res/lab03/account-management.png)
+    No more deadlock :smile:.
+    :warning: Note that if the number of accounts is greater than 3 could happen that more threads are simultaneously in their critical section (due to the fact they are sending money from and to different receivers, e.g. $A \rightarrow B \land C \rightarrow D$).
+
+- Verifying consistent lock ordering requires a global analysis of your program's locking behavior.
 
 ## Semaphores
