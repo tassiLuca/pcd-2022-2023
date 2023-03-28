@@ -1,17 +1,17 @@
-package pcd.lab03.liveness;
+package pcd.lab03.liveness.deadlocked_resource;
 
 public class ThreadA extends BaseAgent {
- 
-	private Resource res;
-	
+
+	private final Resource res;
+
 	public ThreadA(Resource res){
 		this.res = res;
 	}
-	
+
 	public void run(){
-		while (true){
+		while (true) {
 			waitAbit();
-			res.rightLeft();
+			res.rightLeft("Thread A");
 		}
-	}	
+	}
 }

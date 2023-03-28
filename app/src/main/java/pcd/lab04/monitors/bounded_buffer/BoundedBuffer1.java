@@ -2,7 +2,7 @@ package pcd.lab04.monitors.bounded_buffer;
 
 import java.util.LinkedList;
 
-public class BoundedBuffer1<Item> implements IBoundedBuffer<Item> {
+public class BoundedBuffer1<Item> implements BoundedBuffer<Item> {
 
 	private final LinkedList<Item> buffer;
 	private final int maxSize;

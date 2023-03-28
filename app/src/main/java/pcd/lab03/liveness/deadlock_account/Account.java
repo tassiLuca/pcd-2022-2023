@@ -1,6 +1,6 @@
-package pcd.lab03.liveness;
+package pcd.lab03.liveness.deadlock_account;
 
-class Account {
+public class Account {
 
 	private int balance;
 	
@@ -13,10 +13,10 @@ class Account {
 	}
 
 	public void debit(int amount){
-		balance-=amount;
+		balance -= amount;
 	}
 
 	public void credit(int amount){
-		balance+=amount;
+		balance += amount;
 	}
 }

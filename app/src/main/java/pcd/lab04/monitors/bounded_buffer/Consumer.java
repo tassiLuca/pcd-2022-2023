@@ -3,14 +3,14 @@ package pcd.lab04.monitors.bounded_buffer;
 
 class Consumer extends Thread {
 
-	private IBoundedBuffer<Integer> buffer;
+	private final BoundedBuffer<Integer> buffer;
 	
-	public Consumer(IBoundedBuffer<Integer> buffer){
+	public Consumer(BoundedBuffer<Integer> buffer){
 		this.buffer = buffer;
 	}
 
-	public void run(){
-		while (true){
+	public void run() {
+		while (true) {
 			try {
 				Integer item = buffer.get();
 				consume(item);
@@ -21,12 +21,12 @@ class Consumer extends Thread {
 	}
 	
 	private void consume(Integer item){
-		log("consumed "+item);
+		log("consumed " + item);
 	}
 	
-	private void log(String st){
-		synchronized(System.out){
-			System.out.println("["+this.getName()+"] "+st);
+	private void log(String st) {
+		synchronized(System.out) {
+			System.out.println("[" + this.getName() + "] " + st);
 		}
 	}
 }

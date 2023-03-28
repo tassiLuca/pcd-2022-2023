@@ -1,12 +1,12 @@
-package pcd.lab03.liveness;
+package pcd.lab03.liveness.deadlock_account;
 
 import java.util.*;
 
-public class TestAccounts_deadlock {
+public class TestAccountsWithDeadlock {
 
 	private static final int NUM_THREADS = 20;
 	private static final int NUM_ACCOUNTS = 3;
-	private static final int NUM_ITERATIONS = 10000000;
+	private static final int NUM_ITERATIONS = 10_000_000;
 	private static final Random gen = new Random();
 	private static final Account[] accounts = new Account[NUM_ACCOUNTS];
 	
@@ -19,14 +19,14 @@ public class TestAccounts_deadlock {
 				to.credit(amount);
 				try {
 					Thread.sleep(100);
-				} catch (Exception ex) {}
+				} catch (Exception ignored) { }
 			}
 		}
 	}
 
 	static class TransferThread extends Thread {
 		public void run() {
-			for (int i = 0; i < NUM_ITERATIONS; i++){
+			for (int i = 0; i < NUM_ITERATIONS; i++) {
 				int fromAcc = gen.nextInt(NUM_ACCOUNTS);
 				int toAcc = 0;
 				do {
@@ -34,28 +34,26 @@ public class TestAccounts_deadlock {
 				} while (toAcc == fromAcc);
 				int amount = gen.nextInt(10);				
 				try {
-					log("Transferring from "+fromAcc+" to "+toAcc+" amount "+amount+"...");
-					transferMoney(accounts[fromAcc],accounts[toAcc],amount);
-					log("done.");
+					log("Transferring from " + fromAcc + " to " + toAcc + " amount " + amount + "...");
+					transferMoney(accounts[fromAcc], accounts[toAcc], amount);
+					log("Done.");
 				} catch (InsufficientBalanceException ex){
 					log("Not enough money.");
 				}
 			}
 		}
-		private void log(String msg){
-			synchronized(System.out){
-				System.out.println("["+this+"] "+msg);
+		private void log(String msg) {
+			synchronized(System.out) {
+				System.out.println("[" + this + "] " + msg);
 			}
 		}
 	}
 	
 	public static void main(String[] args) {
-		
-		for (int i = 0; i < accounts.length; i++){
+		for (int i = 0; i < accounts.length; i++) {
 			accounts[i] = new Account(10);
 		}
-		
-		for (int i = 0; i < NUM_THREADS; i++){
+		for (int i = 0; i < NUM_THREADS; i++) {
 			new TransferThread().start();
 		}
 	}

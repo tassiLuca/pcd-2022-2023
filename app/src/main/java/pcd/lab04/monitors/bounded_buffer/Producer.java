@@ -4,15 +4,15 @@ import java.util.*;
 
 class Producer extends Thread {
 
-	private IBoundedBuffer<Integer> buffer;
-	private Random gen;
+	private final BoundedBuffer<Integer> buffer;
+	private final Random gen;
 	
-	public Producer(IBoundedBuffer<Integer> buffer){
+	public Producer(BoundedBuffer<Integer> buffer) {
 		gen = new Random();
 		this.buffer = buffer;
 	}
 
-	public void run(){
+	public void run() {
 		while (true){
 			Integer item = produce();
 			try {
@@ -24,12 +24,11 @@ class Producer extends Thread {
 		}
 	}
 	
-	private Integer produce(){
-		int v = gen.nextInt(100);
-		return v;
+	private Integer produce() {
+		return gen.nextInt(100);
 	}
 	
-	private void log(String st){
+	private void log(String st) {
 		synchronized(System.out){
 			System.out.println("["+this.getName()+"] "+st);
 		}

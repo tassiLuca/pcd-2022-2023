@@ -30,9 +30,9 @@ public class TestLostUpdate {
 		
 		public void run(){
 			System.out.println("before inc "+this.getName());
-			synchronized (c){
+			// synchronized (c){
 				c.inc();
-			}
+			// }
 			System.out.println("after inc "+this.getName());
 		}		
 	}	

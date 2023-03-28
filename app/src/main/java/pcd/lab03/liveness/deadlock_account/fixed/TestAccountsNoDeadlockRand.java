@@ -1,21 +1,21 @@
-package pcd.lab03.liveness;
+package pcd.lab03.liveness.deadlock_account.fixed;
+
+import pcd.lab03.liveness.deadlock_account.InsufficientBalanceException;
 
 import java.util.*;
 
-public class TestAccounts_nodeadlock_rand {
+public class TestAccountsNoDeadlockRand {
 
 	private static final int NUM_THREADS = 20;
 	private static final int NUM_ACCOUNTS = 5;
-	private static final int NUM_ITERATIONS = 10000000;
+	private static final int NUM_ITERATIONS = 10_000_000;
 	private static final Random gen = new Random();
 	private static final AccountWithLock[] accounts = new AccountWithLock[NUM_ACCOUNTS];
 
 	public static boolean transferMoney(AccountWithLock fromAcct, AccountWithLock toAcct, int amount, long timeout) throws InsufficientBalanceException, InterruptedException {
-
 		long fixedDelay = 1;
 		long randMod = 10;
 		long stopTime = System.currentTimeMillis() + timeout;
-
 		while (true) {
 			if (fromAcct.lock.tryLock()) {
 				try {
@@ -36,18 +36,16 @@ public class TestAccounts_nodeadlock_rand {
 					fromAcct.lock.unlock();
 				}
 			}
-			
 			if (System.currentTimeMillis() < stopTime){
 				return false;
 			}
-			
 			Thread.sleep(fixedDelay + gen.nextLong() % randMod);
 		}
 	}
 
 	static class TransferThread extends Thread {
 		public void run() {
-			for (int i = 0; i < NUM_ITERATIONS; i++){
+			for (int i = 0; i < NUM_ITERATIONS; i++) {
 				int fromAcc = gen.nextInt(NUM_ACCOUNTS);
 				int toAcc = 0;
 				do {
@@ -55,21 +53,21 @@ public class TestAccounts_nodeadlock_rand {
 				} while (toAcc == fromAcc);
 				int amount = gen.nextInt(10);				
 				try {
-					log("Transferring from "+fromAcc+" to "+toAcc+" amount "+amount+"...");
+					log("Transferring from " + fromAcc + " to " + toAcc + " amount " + amount + "...");
 					boolean done = transferMoney(accounts[fromAcc],accounts[toAcc],amount,10);
-					if (done){
-						log("done.");
+					if (done) {
+						log("Done.");
 					} else {
-						log("timeed out.");
+						log("Timed out.");
 					}
-				} catch (InsufficientBalanceException ex){
+				} catch (InsufficientBalanceException ex) {
 					log("Not enough money.");
-				} catch (InterruptedException ex){
-					log("failed because of an interruption.");
+				} catch (InterruptedException ex) {
+					log("Failed because of an interruption.");
 				}
 			}
 		}
-		private void log(String msg){
+		private void log(String msg) {
 			synchronized(System.out){
 				System.out.println("["+this+"] "+msg);
 			}
@@ -77,14 +75,11 @@ public class TestAccounts_nodeadlock_rand {
 	}
 
 	public static void main(String[] args) {
-
 		for (int i = 0; i < accounts.length; i++){
 			accounts[i] = new AccountWithLock(1000);
 		}
-
 		for (int i = 0; i < NUM_THREADS; i++){
 			new TransferThread().start();
 		}
 	}
-
 }

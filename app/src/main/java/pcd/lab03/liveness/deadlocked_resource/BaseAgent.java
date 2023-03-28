@@ -1,10 +1,10 @@
-package pcd.lab03.liveness;
+package pcd.lab03.liveness.deadlocked_resource;
 
 import java.util.Random;
 
 public abstract class BaseAgent extends Thread {
  
-	private Random gen;
+	private final Random gen;
 	
 	public BaseAgent(){
 		gen = new Random();
@@ -13,7 +13,6 @@ public abstract class BaseAgent extends Thread {
 	protected void waitAbit() {
 		try {
 			Thread.sleep(gen.nextInt(2));
-		} catch (Exception ex){}
+		} catch (Exception ignored){ }
 	}
-
 }

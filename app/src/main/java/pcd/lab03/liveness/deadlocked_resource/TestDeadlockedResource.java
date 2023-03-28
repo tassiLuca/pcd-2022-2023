@@ -1,10 +1,7 @@
-package pcd.lab03.liveness;
+package pcd.lab03.liveness.deadlocked_resource;
 
 /**
- * Deadlock example 
- * 
- * @author aricci
- *
+ * Deadlock example.
  */
 public class TestDeadlockedResource {
 	public static void main(String[] args) {
@@ -12,5 +9,4 @@ public class TestDeadlockedResource {
 		new ThreadA(res).start();
 		new ThreadB(res).start();
 	}
-
 }

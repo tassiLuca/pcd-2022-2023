@@ -130,3 +130,5 @@ synchronized (<object reference expression>) {
     - monitoring % CPU used by methods, threads
     - monitoring how long a thread is blocked or running
     - ...
+- https://stackoverflow.com/questions/27406200/visualvm-thread-states
+- TO FINISH!

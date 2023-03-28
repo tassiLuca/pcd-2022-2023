@@ -21,7 +21,7 @@ public class ThreadA extends Thread {
 	
 	private void log(String msg) {
 		synchronized(System.out) {
-			System.out.println("[ "+getName()+" ] "+msg);
+			System.out.println("[" + getName() + "] " + msg);
 		}
 	}
 }

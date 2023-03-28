@@ -1,11 +1,11 @@
-package pcd.lab03.liveness;
+package pcd.lab03.liveness.deadlock_account.fixed;
 
 import java.util.concurrent.locks.*;
 
 class AccountWithLock {
 
 	private int balance;
-	public Lock lock = new ReentrantLock();
+	public final Lock lock = new ReentrantLock();
 	
 	public AccountWithLock(int amount){
 		balance = amount;
@@ -16,10 +16,10 @@ class AccountWithLock {
 	}
 
 	public void debit(int amount){
-		balance-=amount;
+		balance -= amount;
 	}
 
 	public void credit(int amount){
-		balance+=amount;
+		balance += amount;
 	}
 }

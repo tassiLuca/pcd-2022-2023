@@ -1,19 +1,21 @@
-package pcd.lab03.liveness;
+package pcd.lab03.liveness.deadlock_account.fixed;
+
+import pcd.lab03.liveness.deadlock_account.InsufficientBalanceException;
 
 import java.util.*;
 
-public class TestAccounts_nodeadlock {
+public class TestAccountsNoDeadlock {
 
 	private static final int NUM_THREADS = 20;
 	private static final int NUM_ACCOUNTS = 5;
-	private static final int NUM_ITERATIONS = 10000000;
+	private static final int NUM_ITERATIONS = 10_000_000;
 	private static final Random gen = new Random();
 
 	static class TransferThread extends Thread {
-		AccountManager man;
+		private final AccountManager accountManager;
 
 		TransferThread(AccountManager man){
-			this.man = man;
+			this.accountManager = man;
 		}
 		
 		public void run() {
@@ -25,8 +27,8 @@ public class TestAccounts_nodeadlock {
 				} while (toAcc == fromAcc);
 				int amount = gen.nextInt(10);				
 				try {
-					log("Transferring from "+fromAcc+" to "+toAcc+" amount "+amount+"...");
-					man.transferMoney(fromAcc,toAcc,amount);
+					log("Transferring from " + fromAcc + " to " + toAcc + " amount " + amount + "...");
+					accountManager.transferMoney(fromAcc, toAcc, amount);
 					log("done.");
 				} catch (InsufficientBalanceException ex){
 					log("Not enough money.");
