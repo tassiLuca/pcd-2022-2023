@@ -49,48 +49,48 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
 
     (Legend -- `Monitor` state means threads are waiting on a condition to become true to resume execution)
 
-        ```
-        2023-03-28 17:18:50
-        Full thread dump OpenJDK 64-Bit Server VM (17+35-2724 mixed mode, sharing):
+    ```
+    2023-03-28 17:18:50
+    Full thread dump OpenJDK 64-Bit Server VM (17+35-2724 mixed mode, sharing):
 
-        Threads class SMR info:
-        _java_thread_list=0x00006000011f0340, length=21, elements={
-            0x00007fca8e8c6000, 0x00007fca8f044600, 0x00007fca8f04a200, 0x00007fca8f04a800,
-            0x00007fca8f04ae00, 0x00007fca8f04b400, 0x00007fca8e8ca000, 0x00007fca8e8ca600,
-            0x00007fca8e8cac00, 0x00007fca8e908a00, 0x00007fca8d80e200, 0x00007fca8e909600,
-            0x00007fca8e909c00, 0x00007fca7f008200, 0x00007fca8e8fe000, 0x00007fca8e905a00,
-            0x00007fca8f179c00, 0x00007fca8ecdee00, 0x00007fca8f2bf600, 0x00007fca8ea43200,
-            0x00007fca7f808200
-        }
+    Threads class SMR info:
+    _java_thread_list=0x00006000011f0340, length=21, elements={
+    0x00007fca8e8c6000, 0x00007fca8f044600, 0x00007fca8f04a200, 0x00007fca8f04a800,
+    0x00007fca8f04ae00, 0x00007fca8f04b400, 0x00007fca8e8ca000, 0x00007fca8e8ca600,
+    0x00007fca8e8cac00, 0x00007fca8e908a00, 0x00007fca8d80e200, 0x00007fca8e909600,
+    0x00007fca8e909c00, 0x00007fca7f008200, 0x00007fca8e8fe000, 0x00007fca8e905a00,
+    0x00007fca8f179c00, 0x00007fca8ecdee00, 0x00007fca8f2bf600, 0x00007fca8ea43200,
+    0x00007fca7f808200
+    }
 
-        ...
+    ...
 
-        Found one Java-level deadlock:
-        =============================
-        "Thread-0":
-        waiting to lock monitor 0x0000600002adc270 (object 0x000000070e8203a8, a java.lang.Object),
-        which is held by "Thread-1"
+    Found one Java-level deadlock:
+    =============================
+    "Thread-0":
+    waiting to lock monitor 0x0000600002adc270 (object 0x000000070e8203a8, a java.lang.Object),
+    which is held by "Thread-1"
 
-        "Thread-1":
-        waiting to lock monitor 0x0000600002ad0270 (object 0x000000070e8203b8, a java.lang.Object),
-        which is held by "Thread-0"
+    "Thread-1":
+    waiting to lock monitor 0x0000600002ad0270 (object 0x000000070e8203b8, a java.lang.Object),
+    which is held by "Thread-0"
 
-        Java stack information for the threads listed above:
-        ===================================================
-        "Thread-0":
-                at pcd.lab03.liveness.deadlocked_resource.Resource.rightLeft(Resource.java:18)
-                - waiting to lock <0x000000070e8203a8> (a java.lang.Object)
-                - locked <0x000000070e8203b8> (a java.lang.Object)
-                at pcd.lab03.liveness.deadlocked_resource.ThreadA.run(ThreadA.java:17)
-        "Thread-1":
-                at pcd.lab03.liveness.deadlocked_resource.Resource.leftRight(Resource.java:10)
-                - waiting to lock <0x000000070e8203b8> (a java.lang.Object)
-                - locked <0x000000070e8203a8> (a java.lang.Object)
-                at pcd.lab03.liveness.deadlocked_resource.ThreadB.run(ThreadB.java:17)
+    Java stack information for the threads listed above:
+    ===================================================
+    "Thread-0":
+            at pcd.lab03.liveness.deadlocked_resource.Resource.rightLeft(Resource.java:18)
+            - waiting to lock <0x000000070e8203a8> (a java.lang.Object)
+            - locked <0x000000070e8203b8> (a java.lang.Object)
+            at pcd.lab03.liveness.deadlocked_resource.ThreadA.run(ThreadA.java:17)
+    "Thread-1":
+            at pcd.lab03.liveness.deadlocked_resource.Resource.leftRight(Resource.java:10)
+            - waiting to lock <0x000000070e8203b8> (a java.lang.Object)
+            - locked <0x000000070e8203a8> (a java.lang.Object)
+            at pcd.lab03.liveness.deadlocked_resource.ThreadB.run(ThreadB.java:17)
 
-        Found 1 deadlock.
+    Found 1 deadlock.
 
-        ```
+    ```
 
 2. A more sneaky example: accounts management (see `liveness.deadlock_account` package)
    - Deadlock came because two (or more) threads attempted to acquire the locks in a different order <ins>without a common policy<ins>
