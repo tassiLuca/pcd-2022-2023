@@ -161,3 +161,163 @@ an operation that will always fail
     - breaking the synchronization that causes the live-lock
 
 ## Thread Coordination in Java - Library support
+
+The Java platform libraries (Java 5.0 & Java 6.0) include a rich set of concurrent building blocks such as thread-safe collections and a variety of synchronizers that can coordinate the control flow of cooperating threads:
+
+- Synchronized Collections
+- Concurrent Collections
+- Synchronizers
+
+### Synchronized Collections
+
+- Since Java 1.2
+- Synchronized wrappers
+  - created by [`Collections.synchronizedXXX`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collections.html) factory methods
+  - achieving thread-safety by _encapsulating_ the state + _synchronizing_ every public method serializing all access to the collection's state
+  - Problems:
+    - need to use additional client-side locking to guard compound actions, including iteration, navigation, conditional operations such as put-if-absent. 
+
+      ---
+      From Java doc:
+
+      ```java
+      public static <T> List<T> synchronizedList(List<T> list)
+      ```
+
+      Returns a synchronized (thread-safe) list backed by the specified list. In order to guarantee serial access, it is critical that all access to the backing list is accomplished through the returned list.
+      It is imperative that the user manually synchronizes on the returned list when traversing it via Iterator, Spliterator or Stream:
+
+      ```java
+      List list = Collections.synchronizedList(new ArrayList());
+          ...
+      synchronized (list) {
+          Iterator i = list.iterator(); // Must be in synchronized block
+          while (i.hasNext())
+              foo(i.next());
+      }
+      ```
+
+      Failure to follow this advice may result in non-deterministic behavior.
+      The returned list will be serializable if the specified list is serializable.
+
+      ---
+
+    - the object to be used for client-side locking in the synchronized collection object itself
+    - performances: locking the collection for long-term operations, such as iteration, strongly limits concurrency. This is due to the fact synchronized collections lock the whole collection.
+
+
+### Concurrent Collections
+
+- Since Java 1.5
+- Designed for concurrent access from multiple threads greatly improving scalability and performance concerning synchronized collections
+  - they achieve thread safety by using advanced and sophisticated techniques like lock stripping. 
+  - For example, the `ConcurrentHashMap` divides the whole map into several segments and locks only the relevant segments, which allows multiple threads to access other segments of the same `ConcurrentHashMap` without locking.
+  - Similarly, `CopyOnWriteArrayList` allows multiple reader threads to read without synchronization and when a write happens it copies the whole ArrayList and swaps with a newer one.
+  - So if you use concurrent collection classes in their favorable conditions like for more reading and fewer updates, they are much more scalable than synchronized collections.
+
+![concurrent collections overview](../../../../../res/lab03/concurrent-collections.svg)
+
+Some notes:
+
+- Bounded queue as a basic building block for producer-consumer design pattern
+  - powerful resource management tool for building reliable applications, making programs more robust to overload by throttling activities that threaten to produce more work than can be handled
+
+- [`Deque`](https://docs.oracle.com/javase/8/docs/api/java/util/Deque.html) and [`BlockingDeque`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/BlockingDeque.html) are used for _work stealing_ design pattern
+  
+  ---
+
+  **Deque** = "double ended queue": A linear collection that supports element insertion and removal at both ends. It is usually pronounced "deck".
+
+  A **BlockingDeque** is a deque that additionally supports blocking operations that wait for the deque to become non-empty when retrieving an element, and wait for space to become available in the deque when storing an element.
+
+  ---
+
+  - similar to producers-consumers
+  - each consumer has its deque
+  - if a consumer exhausts the work in its deque, it can steal work from the tail of someone else’s deque
+  - More scalable than _producers-consumers_:
+    - workers don’t contend for a shared work queue: most of the time they access only their own deque, reducing contention
+    - when accessing others’ deque, the access is from the tail, not from the head: further reducing contention
+
+### Synchronizers
+
+A _synchronizer_ is any object that coordinates the control flow of threads based on its state (a blocking queue can function as a synchronizer).
+
+They represent a very important building block of concurrent applications: passive components encapsulating coordination functionalities.
+
+All synchronizers share the following structural properties:
+
+- encapsulating state that determines whether threads arriving at the synchronizers should be allowed to pass or forced to wait
+- providing methods to manipulate that state
+- providing methods to wait efficiently for the synchronizer to enter in the desired state
+
+Main types provided with Java library:
+
+- **_Locks_**
+  - Providing explicit lock functionality vs. intrinsic lock given by synchronized blocks
+    ![lock uml](../../../../../res/lab03/locks-uml.png)
+  - Typical usage:
+    ```java
+    Lock lock = new ReentrantLock();
+    ...
+    // If the lock is not available then the current thread
+    // becomes disabled for thread scheduling purposes and lies
+    // dormant until the lock has been acquired.
+    lock.lock();
+    try {
+        // update shared object state
+        // catch exception and restore invariants if necessary
+    } finally {
+        // Releases the lock.
+        lock.unlock();
+    }
+    ```
+  - `tryLock()` for polled and timed lock acquisition to have a more sophisticated error recovery
+    - see `TestAccountsNoDeadlockWithTryLock.java` for an use example
+  - `lockInterruptibly()`: acquires the lock unless the current thread is interrupted.
+  - [`ReadWriteLock`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/ReadWriteLock.html): A ReadWriteLock maintains a pair of associated locks, one for read-only operations and one for writing. The read lock may be held simultaneously by multiple reader threads, so long as there are no writers. The write lock is exclusive.
+  - Aside: `ReentrantLock` throughput is about 4 times than intrinsic lock
+
+- **_Semaphores_**
+  - Implementation of Dijkstra’s basic semaphore construct
+  - [`Semaphore`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Semaphore.html) class
+    - created specifying the number of virtual permits
+    - `acquire` + `release` method
+    - possibility to enforce _fairness_ in the constructor: 
+      ```java
+      Semaphore(int permits, boolean fair)
+      ```
+  - see `semaphore` + `semaphore.pingpong` packages
+
+- **_Latches_**
+  - A latch is a synchronizer that can delay the progress of a thread until it reaches its terminal state, functioning as a gate:
+    - until the latch reached the terminal state, the gate is closed and no thread can pass
+    - in the terminal state, the gate opens allowing all threads to pass
+    - once the latch reaches the terminal state, it cannot change the state again and so it remains open forever!
+  - `CountDownLatch` class:
+    - ```java
+      CountDownLatch(int count)
+      ```
+    - `countDown()` method to decrement the counter
+    - `await()` method that causes the current thread to wait until the latch has counted down to zero unless the thread is interrupted.
+    ![latch use](../../../../../res/lab03/latch-seq.png)
+  - Used to ensure that certain activities do not proceed until other one-time activity complete. Main examples:
+    - ensuring a computation does not proceed until the resources it needs have been initialized
+    - ensuring that a service does not start until other services on which it depends have started
+    - waiting for all parties involved in an activity (e.g: players in a multiplayer game) to be ready to proceed
+  - see `latches` package
+- **_Barriers_**
+  - similar to latches in that they block a group of threads until
+some event has occurred
+  - the key difference is that in this case, all the threads must come together at a barrier point at the same time in order to proceed
+  - [`CyclicBarrier`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CyclicBarrier.html)
+    - ```java 
+      CyclicBarrier(int parties, Runnable barrierAction)
+      ```
+      Creates a new CyclicBarrier that will trip when the given number of parties (threads) are waiting upon it, and which will execute the given barrier action when the barrier is tripped, performed by the last thread entering the barrier.
+      ![barrier](../../../../../res/lab03/cyclic-barrier-uml.png)
+    - Actually, it is a **Cyclic** barrier: with `reset()` method is possible reset the barrier to its initial state
+      ![barrier](../../../../../res/lab03/cyclic-barrier-sq.png)
+    - see `barrier` package
+
+> Latches are for waiting for events, barriers for other threads

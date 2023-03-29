@@ -1,4 +1,4 @@
-package pcd.lab03.sem.ex;
+package pcd.lab03.semaphore.pingpong;
 
 import java.util.concurrent.Semaphore;
 

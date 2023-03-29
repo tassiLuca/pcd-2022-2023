@@ -1,18 +1,18 @@
-package pcd.lab03.sem;
+package pcd.lab03.semaphore;
 
 import java.util.concurrent.Semaphore;
 
 public class MyWorkerA extends Worker {
-	
-	private Semaphore mutex;
-	
-	public MyWorkerA(String name, Semaphore mutex){
+
+	private final Semaphore mutex;
+
+	public MyWorkerA(String name, Semaphore mutex) {
 		super(name);
 		this.mutex = mutex;
 	}
-	
-	public void run(){
-		while (true){
+
+	public void run() {
+		while (true) {
 		  action1();	
 		  try {
 			  mutex.acquire();
@@ -25,17 +25,18 @@ public class MyWorkerA extends Worker {
 		  }
 		}
 	}
-	
-	protected void action1(){
+
+	protected void action1() {
 		println("a1");
 		wasteRandomTime(100,500);	
 	}
-	
-	protected void action2(){
+
+	protected void action2() {
 		println("a2");
 		wasteRandomTime(300,700);	
 	}
-	protected void action3(){
+
+	protected void action3() {
 		println("a3");
 		wasteRandomTime(300,700);	
 	}

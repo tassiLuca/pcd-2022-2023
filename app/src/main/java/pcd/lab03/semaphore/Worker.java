@@ -1,10 +1,10 @@
-package pcd.lab03.sem;
+package pcd.lab03.semaphore;
 
 import java.util.*;
 
 public abstract class Worker extends Thread {
 	
-	private Random rand;
+	private final Random rand;
 	
 	public Worker(String name){
 		super(name);
@@ -46,6 +46,4 @@ public abstract class Worker extends Thread {
 			System.out.println("[" + this.getName()+ "] " + msg);
 		}
 	}
-	
-
 }
