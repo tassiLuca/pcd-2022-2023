@@ -1,4 +1,4 @@
-package pcd.lab04.monitors.semantics;
+package pcd.lab04.monitors.signaling_semantic;
 
 public class TestSemantics2 {
 
@@ -9,15 +9,13 @@ public class TestSemantics2 {
 				System.out.println("First thread inside, going to wait in 1 sec");
 				try {
 					Thread.sleep(1000);
-				} catch (Exception ex) {
-				}
+				} catch (Exception ignored) { }
 				System.out.println("First thread inside, going to wait");
 				wait();
 				System.out.println("First thread unblocked.");
 				try {
 					Thread.sleep(5000);
-				} catch (Exception ex) {
-				}
+				} catch (Exception ignored) { }
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}
@@ -27,8 +25,7 @@ public class TestSemantics2 {
 			System.out.println("Second thread inside");
 			try {
 				Thread.sleep(5000);
-			} catch (Exception ex) {
-			}
+			} catch (Exception ignored) { }
 			System.out.println("Second thread inside, going to signal");
 			notify();
 			System.out.println("Second thread inside signaled.");
@@ -38,13 +35,12 @@ public class TestSemantics2 {
 			System.out.println("Third thread inside.");
 			try {
 				Thread.sleep(5000);
-			} catch (Exception ex) {
-			}
+			} catch (Exception ignored) { }
 		}
 	}
 
 	static class MyThread1 extends Thread {
-		private MyMonitor mon;
+		private final MyMonitor mon;
 
 		public MyThread1(MyMonitor mon) {
 			this.mon = mon;
@@ -63,7 +59,7 @@ public class TestSemantics2 {
 	}
 
 	static class MyThread2 extends Thread {
-		private MyMonitor mon;
+		private final MyMonitor mon;
 
 		public MyThread2(MyMonitor mon) {
 			this.mon = mon;
@@ -82,7 +78,7 @@ public class TestSemantics2 {
 	}
 
 	static class MyThread3 extends Thread {
-		private MyMonitor mon;
+		private final MyMonitor mon;
 
 		public MyThread3(MyMonitor mon) {
 			this.mon = mon;
@@ -101,11 +97,9 @@ public class TestSemantics2 {
 	}
 
 	public static void main(String[] args) throws Exception {
-
 		MyMonitor mon = new MyMonitor();
 		new MyThread1(mon).start();
 		new MyThread3(mon).start();
 		new MyThread2(mon).start();
-
 	}
 }

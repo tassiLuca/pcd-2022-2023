@@ -1,4 +1,4 @@
-package pcd.lab04.monitors.semantics;
+package pcd.lab04.monitors.signaling_semantic;
 
 import java.util.concurrent.locks.*;
 
@@ -7,7 +7,7 @@ class MyMonitor {
 	private ReentrantLock mutex;
 	private Condition c;
 	
-	public MyMonitor(){
+	public MyMonitor() {
 		mutex = new ReentrantLock();
 		c = mutex.newCondition();
 	}

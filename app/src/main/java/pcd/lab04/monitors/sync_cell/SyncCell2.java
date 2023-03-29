@@ -29,7 +29,7 @@ public class SyncCell2 {
 	public int get() {
 		try {
 			mutex.lock();
-			if (!available){
+			if (!available) {
 				try {
 					isAvail.await();
 				} catch (InterruptedException ignored) { }

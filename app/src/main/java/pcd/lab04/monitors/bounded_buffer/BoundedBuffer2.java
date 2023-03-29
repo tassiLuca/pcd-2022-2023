@@ -12,9 +12,10 @@ public class BoundedBuffer2<Item> implements BoundedBuffer<Item> {
 	private final Condition notFull;
 
 	public BoundedBuffer2(int size) {
-		buffer = new LinkedList<Item>();
+		buffer = new LinkedList<>();
 		maxSize = size;
-		mutex = new ReentrantLock();
+		mutex = new ReentrantLock(); // new ReentrantLock(true) for fair mutex
+		// conditions are taken from the same lock!
 		notEmpty = mutex.newCondition();
 		notFull = mutex.newCondition();
 	}

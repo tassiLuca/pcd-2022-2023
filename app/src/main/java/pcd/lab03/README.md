@@ -129,7 +129,7 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
 
    - Verifying consistent lock ordering requires a global analysis of your program's locking behavior.
 
-    > :arrow_right: <ins>***Takeaway***</ins>: A program that never acquires more than one lock per time cannot have lock-ordering deadlock. If we must acquire multiple locks, lock order must be part of the design, minimizing the number of potential locking interactions and documenting a lock-ordering protocol for locks that may be acquired together.
+    > :arrow_right: <ins>***Takeaway***</ins>: A program that never acquires more than one lock per time cannot have lock-ordering deadlock. **If we must acquire multiple locks, lock order must be part of the design**, minimizing the number of potential locking interactions and **documenting a lock-ordering protocol for locks that may be acquired together.**
 
 3. <ins>**Deadlocks in cooperating objects, in which no methods explicitly acquire two locks, but where this happens indirectly**</ins>
    - a common example: Observer pattern
@@ -141,7 +141,12 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
       3. Now the `UpdateAgent` continues, trying to call the `notifyStateChanged()`, but this function cannot be performed either because the `ListeningAgent` has still the mutual exclusion on the object.
       4. DEADLOCK! :skull:
 
-    > :arrow_right: <ins>***Takeaway***</ins>: the state change notification **must not** transfer the control flow. Instead, a _queue_ of events is used to track them.
+    > :arrow_right: <ins>***Takeaway***</ins>: the state change notification **must not** transfer the control flow.
+    > 
+    > This is also an Item of Effective Java (Item 79: Avoid excessive synchronization)
+    > 
+    > "To avoid liveness and safety failures, **never cede control to the client within a synchronized method or block**. In other words, inside a synchronized region, do not invoke a method that is design to be overridden, or one provided by a client in the fort of a function object. **From the perspective of the class with the synchronized region, such methods are _alien_.** The class has no knowledge of what the method does and has no control over it. Depending on what an alien method does, calling it from a synchronized region can cause exceptions, deadlock, or data corruption"
+    >
 
 ### Other liveness hazard
 

@@ -1,0 +1,42 @@
+@startuml object-class
+
+class Object {
+    +Object()
+    #clone(): Object
+    +equals(obj: Object): boolean
+    +getClass(): Class<?>
+    +hashCode(): int
+    +toString(): String
+    +**notify()**
+    +**notifyAll()**
+    +**wait()**
+    +**wait(timeoutMillis: long)**
+    +**wait(timeoutMillis: long, nanos: int)**
+}
+
+note top of Object
+    Class ""Object"" is the root of the class hierarchy.
+    Every class has ""Object"" as a superclass. 
+    All objects, including arrays, implement the methods of this class.
+end note
+
+note right of Object::notify()
+    Wakes up a single thread that 
+    is waiting on this object's monitor
+end note
+
+note right of Object::notifyAll()
+    Wakes up all threads that are 
+    waiting on this object's monitor.
+end note
+
+note right of Object::wait()
+    Causes the current thread to wait 
+    until it is awakened, typically 
+    by being notified or interrupted 
+    (or until a certain amount of real
+    time has elapsed in case of timed 
+    versions).
+end note
+
+@enduml

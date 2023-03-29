@@ -1,4 +1,4 @@
-package pcd.lab04.monitors.semantics;
+package pcd.lab04.monitors.signaling_semantic;
 
 public class TestSemantics1 {
 
