@@ -1,4 +1,4 @@
-target = pcd.lab02.check_act.TestCounter
+target = pcd.lab02.jpf.TestCheckAct
 
 classpath=bin
 
