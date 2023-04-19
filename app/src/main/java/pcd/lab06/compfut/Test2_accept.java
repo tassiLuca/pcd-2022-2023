@@ -4,7 +4,6 @@ import java.util.concurrent.CompletableFuture;
 public class Test2_accept {
 
 	public static void main(String[] args) {
-
 		CompletableFuture<Void> cf = CompletableFuture.runAsync(() -> {
 			log("step 1 doing.");
 			waitFor(500);
@@ -12,7 +11,6 @@ public class Test2_accept {
 		}).thenAccept((res) -> {
 			log("step 2.");
 		});
-
 		// keep main thread alive.
 		log("going to sleep.");
 		waitFor(10000);
@@ -21,11 +19,11 @@ public class Test2_accept {
 	private static void waitFor(long dt) {
 		try {
 			Thread.sleep(dt);
-		} catch (Exception ex) {}
+		} catch (Exception ignored) { }
 	}
 	
 	private static void log(String msg) {
-		System.out.println("" + Thread.currentThread() + " " + msg);
+		System.out.println(Thread.currentThread() + " " + msg);
 	}
 
 

@@ -18,7 +18,5 @@ public class TestScalabilityVT2 {
 		}  // close() called implicitly
 		var t1 = System.currentTimeMillis();
 		System.out.println("Time elapsed: " + (t1 - t0));
-		
 	}
-
 }

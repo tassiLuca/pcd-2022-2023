@@ -1,0 +1,16 @@
+@startuml executor-classes
+
+interface ExecutorService extends Executor
+
+abstract class AbstractExecutorService implements ExecutorService {
+    #newTaskFor(runnable: Runnable, value: T): RunnableFuture<T>
+    #newTaskFor(callable: Callable<T>): RunnableFuture<T>
+}
+
+class ForkJoinPool extends AbstractExecutorService
+class ThreadPoolExecutor extends AbstractExecutorService
+
+class ForkJoinTask<V> implements Future
+ForkJoinPool *-up- ForkJoinTask
+
+@enduml

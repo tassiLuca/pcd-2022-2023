@@ -2,11 +2,12 @@ package pcd.lab06.executors.quad1_basic;
 
 public class ComputeAreaTask implements Runnable {
 
-	private QuadratureResult result;
-	private IFunction mf;
-	private double a, b;
+	private final QuadratureResult result;
+	private final Function mf;
+	private final double a;
+	private final double b;
 
-	public ComputeAreaTask(double a, double b, IFunction mf, QuadratureResult result) {
+	public ComputeAreaTask(double a, double b, Function mf, QuadratureResult result) {
 		this.mf = mf;
 		this.a = a;
 		this.b = b;

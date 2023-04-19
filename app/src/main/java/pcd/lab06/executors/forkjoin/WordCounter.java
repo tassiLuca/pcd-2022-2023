@@ -43,5 +43,4 @@ public class WordCounter {
     public Long countOccurrencesInParallel(Folder folder, String searchedWord) {
         return forkJoinPool.invoke(new FolderSearchTask(this, folder, searchedWord));
     }
-
 }

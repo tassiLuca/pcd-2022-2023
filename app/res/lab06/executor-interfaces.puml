@@ -1,0 +1,91 @@
+@startuml executor-interfaces
+
+package java.util.concurrent {
+
+    interface Executor {
+        +execute(command: Runnable)
+    }
+    note top of Executor
+        An object that executes 
+        submitted Runnable tasks.
+    end note
+
+    interface Future<V> {
+        +**get(): V**
+        +get(timeout: long, unit: TimeUnit)
+        +isCancelled(): boolean
+        +isDone(): boolean
+        +cancel(\n    mayInterruptIfRunning: boolean\n): boolean
+    }
+    note top of Future
+        Represents the result of an
+        asynchronous computation.
+        **""get()"" blocks waiting**
+        **result is ready!**
+    end note
+
+    interface RunnableFuture<V> extends Future {
+        +run()
+    }
+    note bottom of RunnableFuture
+        A Future that 
+        is Runnable.
+    end note
+
+    interface ScheduledFuture<V> extends Future 
+
+    class FutureTask<V> implements RunnableFuture
+
+    class Executors {
+        +{static} newSingleThreadExecutor(): ExecutorService
+        +{static} newCachedThreadPool(): ExecutorService
+        +{static} newFixedThreadPool(nThreads: Int): ExecutorService
+        +{static} newWorkingStealingPool(parallelism: Int)
+        +...()
+    }
+    note bottom of Executors
+        Factory and utility methods for executors.
+        Other methods (here not reported) to
+        create ""ScheduledExecutorService"s
+    end note
+    Executors .up..> ExecutorService: creates
+
+    interface ExecutorService extends Executor {
+        +**submit(task: Callable<T>): Future<T>**
+        +awaitTermination(timeout: long, unit: TimeUnit)
+        +invokeAll(tasks: Collection<Callable<T>>)
+        +invokeAny(tasks: Collection<Callable<T>>)
+        +isShutdown(): boolean
+        +isTerminated(): boolean
+        +shutdown()
+        +shutdownNow(): List<Runnable>
+    }
+    ExecutorService *-left- Future
+    note right of ExecutorService::submit
+        Extends base method 
+        ""execute(Runnable)""
+        by creating and returning 
+        a ""Future"" that can be
+        used to cancel execution 
+        and/or wait for completion.
+    end note
+    note right of ExecutorService::invokeAny
+        ""invokeAny"" + ""invokeAll"" 
+        performs bulk operations
+    end note
+
+    interface ScheduledExecutorService extends ExecutorService {
+        +schedule(\n    callable: Callable<V>,\n    delay: long,\n    unit: TimeUnit\n): ScheduledFuture<V>
+        +scheduleAtFixedRate(...)
+        +scheduleWithFixedDelay(...)
+    }
+    note bottom of ScheduledExecutorService
+        An executor that can 
+        schedule commands to 
+        run after a given 
+        delay, or to execute 
+        periodically.
+    end note
+}
+
+@enduml

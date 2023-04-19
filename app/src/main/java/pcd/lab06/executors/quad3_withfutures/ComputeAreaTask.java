@@ -2,13 +2,13 @@ package pcd.lab06.executors.quad3_withfutures;
 
 import java.util.concurrent.Callable;
 
-
 public class ComputeAreaTask implements Callable<Double>  {
 
-	private IFunction mf;
-	private double a, b;
+	private final Function mf;
+	private final double a;
+	private final double b;
 
-	public ComputeAreaTask(double a, double b, IFunction mf) {
+	public ComputeAreaTask(double a, double b, Function mf) {
 		this.mf = mf;
 		this.a = a;
 		this.b = b;

@@ -17,6 +17,7 @@
     - require few resources and a single Java virtual machine may support millions of virtual threads
     - <ins>are suitable for executing tasks that spend most of the time blocked, often waiting for I/O operations to complete</ins>
     - <ins>are not intended for long-running CPU-intensive operations</ins>
+    - see lab06
 - A thread is represented by the abstract class [`Thread`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Thread.html#stop())
   - a concrete thread can be defined by extending `Thread` class and implementing the `run` method, which defines the behavior of the thread
   - an alternative approach is provided to define a thread, based on `Runnable` interface, useful when the class used to implement the thread belongs to some class hierarchy already extending some class, which is not `Thread` (Java does not support multiple inheritance)

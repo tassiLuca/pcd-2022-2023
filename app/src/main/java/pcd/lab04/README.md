@@ -108,3 +108,6 @@ Item 81, Effective Java: ***Prefer concurrency utilities to `wait` and `notify`*
 
 > "Since Java 5, the platform has provided higher-level concurrency utilities that do the sorts of things you formerly had to hand-code atop `wait` and `notify`.
 > **Given the difficulty of usign `wait` and `notify` correctly, you should use the higher-level concurrency utilities instead**."
+
+## GUI
+- TO FINISH!

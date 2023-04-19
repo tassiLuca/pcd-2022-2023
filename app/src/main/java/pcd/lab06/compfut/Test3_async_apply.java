@@ -6,9 +6,7 @@ import java.util.concurrent.Executors;
 public class Test3_async_apply {
 
 	public static void main(String[] args) {
-
 		Executor executor = Executors.newFixedThreadPool(2);
-
 		CompletableFuture.supplyAsync(() -> {
 			log("computing...");
 			waitFor(500);
@@ -26,7 +24,6 @@ public class Test3_async_apply {
 			waitFor(1000);
 			log("accept " + res);
 		});
-
 		// keep main thread alive.
 		waitFor(10000);
 	}
@@ -34,11 +31,11 @@ public class Test3_async_apply {
 	private static void waitFor(long dt) {
 		try {
 			Thread.sleep(dt);
-		} catch (Exception ex) {}
+		} catch (Exception ignored) {}
 	}
 	
 	private static void log(String msg) {
-		System.out.println("" + Thread.currentThread() + " " + msg);
+		System.out.println(Thread.currentThread() + " " + msg);
 	}
 
 }

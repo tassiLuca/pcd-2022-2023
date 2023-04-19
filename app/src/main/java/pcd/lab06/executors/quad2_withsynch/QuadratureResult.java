@@ -3,7 +3,7 @@ package pcd.lab06.executors.quad2_withsynch;
 public class QuadratureResult {
 	
 	private double sum; 
-	private int nTotalResultsToWait;
+	private final int nTotalResultsToWait;
 	private int nResultsArrived;
 	
 	public QuadratureResult(int nResults){

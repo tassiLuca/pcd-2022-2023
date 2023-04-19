@@ -4,8 +4,8 @@ import java.util.concurrent.CyclicBarrier;
 
 public class MyTask implements Runnable {
 	
-	private String name;
-	private CyclicBarrier barrier;
+	private final String name;
+	private final CyclicBarrier barrier;
 	
 	public MyTask(String name, CyclicBarrier barrier) {
 		this.name = name;

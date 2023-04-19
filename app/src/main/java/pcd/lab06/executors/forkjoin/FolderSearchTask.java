@@ -25,13 +25,11 @@ public class FolderSearchTask extends RecursiveTask<Long> {
             forks.add(task);
             task.fork();
         }
-        
         for (Document document : folder.getDocuments()) {
             DocumentSearchTask task = new DocumentSearchTask(wc, document, searchedWord);
             forks.add(task);
             task.fork();
         }
-        
         for (RecursiveTask<Long> task : forks) {
             count = count + task.join();
         }

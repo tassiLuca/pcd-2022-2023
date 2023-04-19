@@ -4,7 +4,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 class MyMonitor {
-	private Lock lock;
+	private final Lock lock;
 	
 	public MyMonitor() {
 		lock = new ReentrantLock();
@@ -24,12 +24,8 @@ class MyMonitor {
 public class TestVT {
 	
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-
 		System.out.println("Launching.. " + Thread.currentThread());
-		
 		MyMonitor mon = new MyMonitor();
-		
 		for (int i = 0; i <  2; i++) {
 			Thread
 			.ofVirtual()
@@ -43,12 +39,10 @@ public class TestVT {
 				}
 			});
 		}
-		
 		Thread.sleep(100000);
 	}
 	
 	private static void log(String msg) {
 		System.out.println(msg);
 	}
-
 }

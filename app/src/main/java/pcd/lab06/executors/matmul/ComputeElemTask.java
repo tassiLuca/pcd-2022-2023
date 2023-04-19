@@ -2,8 +2,11 @@ package pcd.lab06.executors.matmul;
 
 public class ComputeElemTask implements Runnable {
 	
-	private Mat a,b,c;
-	private int i, j;
+	private final Mat a;
+	private final Mat b;
+	private final Mat c;
+	private final int i;
+	private final int j;
 	
 	public ComputeElemTask(int i, int j, Mat a, Mat b, Mat c){
 		this.i = i;
@@ -26,5 +29,4 @@ public class ComputeElemTask implements Runnable {
 	private void log(String msg){
 		System.out.println("[TASK] "+msg);
 	}
-
 }

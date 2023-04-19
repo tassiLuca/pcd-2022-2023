@@ -2,13 +2,10 @@ package pcd.lab06.executors.matmul;
 
 /**
  * Simple class implementing a matrix.
- * 
- * @author aricci
- *
  */
 public class Mat {
 
-	private double[][] mat;
+	private final double[][] mat;
 
 	public Mat(int n, int m) {
 		mat = new double[n][m];
@@ -55,9 +52,9 @@ public class Mat {
 	}
 
 	public void print() {
-		for (int i = 0; i < mat.length; i++) {
-			for (int j = 0; j < mat[i].length; j++) {
-				System.out.print(" " + mat[i][j]);
+		for (double[] doubles : mat) {
+			for (double aDouble : doubles) {
+				System.out.print(" " + aDouble);
 			}
 			System.out.println();
 		}

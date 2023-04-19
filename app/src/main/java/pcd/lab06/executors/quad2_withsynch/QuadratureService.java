@@ -4,16 +4,15 @@ import java.util.concurrent.*;
 
 public class QuadratureService  {
 
-	private int numTasks;
-	private ExecutorService executor;
+	private final int numTasks;
+	private final ExecutorService executor;
 	
 	public QuadratureService (int numTasks, int poolSize){		
 		this.numTasks = numTasks;
 		executor = Executors.newFixedThreadPool(poolSize);
 	}
 	
-	public double compute(IFunction mf, double a, double b) throws InterruptedException { 
-
+	public double compute(Function mf, double a, double b) throws InterruptedException {
 		QuadratureResult result = new QuadratureResult(numTasks);		
 		double x0 = a;
 		double step = (b-a)/numTasks;		
@@ -25,11 +24,9 @@ public class QuadratureService  {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}				
-		double res = result.getResult();
-		return res;
+		}
+		return result.getResult();
 	}
-	
 	
 	private void log(String msg){
 		System.out.println("[SERVICE] "+msg);
