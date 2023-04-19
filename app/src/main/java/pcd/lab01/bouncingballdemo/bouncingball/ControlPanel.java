@@ -1,4 +1,4 @@
-package pcd.demo.bouncingball;
+package pcd.lab01.bouncingballdemo.bouncingball;
 
 import javax.swing.*;
 import java.awt.event.*;

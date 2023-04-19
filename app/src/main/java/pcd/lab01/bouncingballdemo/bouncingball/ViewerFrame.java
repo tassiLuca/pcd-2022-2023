@@ -1,6 +1,6 @@
-package pcd.demo.bouncingball;
+package pcd.lab01.bouncingballdemo.bouncingball;
 
-import pcd.demo.common.P2d;
+import pcd.lab01.bouncingballdemo.common.P2d;
 
 import javax.swing.*;
 import java.awt.Graphics;

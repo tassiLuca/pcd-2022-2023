@@ -1,9 +1,9 @@
-package pcd.demo.bouncingballnet;
+package pcd.lab01.bouncingballdemo.bouncingballnet;
 
 
 import java.util.*;
 
-import pcd.demo.common.*;
+import pcd.lab01.bouncingballdemo.common.*;
 
 public class BallAgent extends Thread {
     

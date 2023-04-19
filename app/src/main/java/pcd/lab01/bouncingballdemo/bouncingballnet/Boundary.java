@@ -2,7 +2,7 @@
  * Created on Feb 10, 2005
  * 
  */
-package pcd.demo.bouncingballnet;
+package pcd.lab01.bouncingballdemo.bouncingballnet;
 
 /**
  * 

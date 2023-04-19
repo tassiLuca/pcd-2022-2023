@@ -1,4 +1,4 @@
-package pcd.demo.bouncingballnet;
+package pcd.lab01.bouncingballdemo.bouncingballnet;
 
 import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
@@ -7,7 +7,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
-import pcd.demo.common.*;
+import pcd.lab01.bouncingballdemo.common.*;
 
 
 public class VisualiserFrame extends JFrame {

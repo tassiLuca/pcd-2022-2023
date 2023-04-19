@@ -1,9 +1,9 @@
-package pcd.demo.bouncingballnet;
+package pcd.lab01.bouncingballdemo.bouncingballnet;
 
 import java.io.*;
 import java.net.*;
 
-import pcd.demo.common.*;
+import pcd.lab01.bouncingballdemo.common.*;
 
 
 /**
