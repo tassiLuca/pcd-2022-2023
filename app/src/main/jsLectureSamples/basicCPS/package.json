@@ -1,0 +1,11 @@
+{
+  "name": "jslecturesamples",
+  "version": "1.0.0",
+  "description": "step 1: basic CPS",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

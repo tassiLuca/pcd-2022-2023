@@ -28,11 +28,19 @@ package java.util.concurrent {
         +run()
     }
     note bottom of RunnableFuture
-        A Future that 
-        is Runnable.
+        A Future 
+        that is
+        Runnable.
     end note
 
     interface ScheduledFuture<V> extends Future 
+    note bottom of ScheduledFuture
+        A delayed
+        result-bearing
+        action that 
+        can be 
+        cancelled.
+    end note
 
     class FutureTask<V> implements RunnableFuture
 
@@ -46,7 +54,7 @@ package java.util.concurrent {
     note bottom of Executors
         Factory and utility methods for executors.
         Other methods (here not reported) to
-        create ""ScheduledExecutorService"s
+        create ""ScheduledExecutorService""s
     end note
     Executors .up..> ExecutorService: creates
 
@@ -67,11 +75,17 @@ package java.util.concurrent {
         by creating and returning 
         a ""Future"" that can be
         used to cancel execution 
-        and/or wait for completion.
+        and/or wait for completion
     end note
     note right of ExecutorService::invokeAny
         ""invokeAny"" + ""invokeAll"" 
         performs bulk operations
+    end note
+    note right of ExecutorService::shutdown
+        Graceful shutdown
+    end note
+    note right of ExecutorService::shutdownNow
+        Abrupt shutdown
     end note
 
     interface ScheduledExecutorService extends ExecutorService {
@@ -80,9 +94,10 @@ package java.util.concurrent {
         +scheduleWithFixedDelay(...)
     }
     note bottom of ScheduledExecutorService
-        An executor that can 
-        schedule commands to 
-        run after a given 
+        An executor that 
+        can schedule 
+        commands
+        to run after a given 
         delay, or to execute 
         periodically.
     end note

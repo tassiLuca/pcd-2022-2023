@@ -13,4 +13,8 @@ class ThreadPoolExecutor extends AbstractExecutorService
 class ForkJoinTask<V> implements Future
 ForkJoinPool *-up- ForkJoinTask
 
+interface ScheduledExecutorService extends ExecutorService
+
+class ScheduledThreadPoolExecutor implements ScheduledExecutorService
+
 @enduml

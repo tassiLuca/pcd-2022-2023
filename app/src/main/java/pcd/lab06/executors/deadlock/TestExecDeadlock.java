@@ -19,5 +19,3 @@ public class TestExecDeadlock {
 		exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);		
 	}
 }
-
-

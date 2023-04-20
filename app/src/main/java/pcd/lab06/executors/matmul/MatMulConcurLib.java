@@ -25,7 +25,7 @@ public class MatMulConcurLib {
 		try {
 			for (int i = 0; i < matA.getNRows(); i++){
 				for (int j = 0; j < matB.getNColumns(); j++){
-					exec.execute(new ComputeElemTask(i,j,matA,matB,matC));
+					exec.execute(new ComputeElemTask(i, j, matA, matB, matC));
 					// Alternative: using a lambda expression to specify the task
 					/* 					
 					exec.execute(() -> {
@@ -39,7 +39,7 @@ public class MatMulConcurLib {
 				}
 			}
 			exec.shutdown();
-			exec.awaitTermination(Long.MAX_VALUE,TimeUnit.SECONDS);
+			exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
 			return matC;
 		} catch (Exception ex){
 			throw new MatMulException();

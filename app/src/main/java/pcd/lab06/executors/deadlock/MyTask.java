@@ -15,8 +15,8 @@ public class MyTask implements Runnable {
 	public void run() {
 		log("started.");
 		jobA();
-		
 		try {
+			// DEADLOCK: here the under the hood thread stops, not the task as hoped!
 			barrier.await();
 		} catch (Exception ex) {
 			ex.printStackTrace();

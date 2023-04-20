@@ -20,7 +20,7 @@ public class Chrono {
 	}
 	
 	public long getTime(){
-		if (running){
+		if (running) {
 			return 	System.currentTimeMillis() - startTime;
 		} else {
 			return startTime;
