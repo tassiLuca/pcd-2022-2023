@@ -1,11 +1,11 @@
 package pcd.lab06.executors.quad2_withsynch;
 
 public class QuadratureResult {
-	
-	private double sum; 
+
+	private double sum;
 	private final int nTotalResultsToWait;
 	private int nResultsArrived;
-	
+
 	public QuadratureResult(int nResults){
 		nTotalResultsToWait = nResults;
 		nResultsArrived = 0;

@@ -55,7 +55,7 @@ Overview:
 
 ### Task independence
 
-:warning: **In the Java Executor framework task must be independent**
+:warning: **In the Java Executor framework tasks must be independent**
 
 - e.g. a task cannot wait for another task
   - reason: by blocking a task (e.g., on an event semaphore) we are going to block also the physical thread running the task $\rightarrow$ <ins>**_deadlock possibility_**</ins>
