@@ -44,7 +44,7 @@ Overview:
 
 ### Matrix multiplication example
 
-- see `lab06.matmul` package
+- see `lab06.executors.matmul` package
 - For every element of the target matrix a task is created and assigned to a **`FixedThreadPool`** executor
   - All of them are fully indipendent from each other
   - The task is modeled by the `ComputeElemTask` class
@@ -59,16 +59,33 @@ Overview:
 
 - e.g. a task cannot wait for another task
   - reason: by blocking a task (e.g., on an event semaphore) we are going to block also the physical thread running the task $\rightarrow$ <ins>**_deadlock possibility_**</ins>
-- see `lab06.deadlock` package
+- see `lab06.executors.deadlock` package
   - here we create a _logically correct_ synchronization point with a barrier initialized to the number of tasks with the goal of blocking the tasks until the barrier collapse, but the tasks are executed, under the hood, by "platform" threads which stop their execution when `barrier.await()` is called, preventing executing other threads waiting in the queue
-    - :boom: consequence: after #NUM-OF-CPU in your machine reaches the `barrier.await()` line the process is in deadlock!
+    - :boom: consequence: after #NUM-OF-CPU threads in your machine reaches the `barrier.await()` line the process goes in deadlock!
 
 ### Quadrature problem example
 
-- see `lab06.quad*` package
-- 
+- see `lab06.executors.quad*` package
+- problem: compute the definite integral of a given function between $[a, b]$ with the quadrature rule.
+- Version 1: `lab06.executors.quad1_basic`
+  - `QuadratureService` is the class in charge of creating and asynchronously submitting the tasks to the executor service
+    - as before the pool is fixed and **after all threads have been submitted the service await the termination, blocking itself**
+  - the task is defined by the `ComputeAreaTask` and is in charge of calculating the area (i.e. the integral) of a given function between a sub-interval of the domain
+  - **the result (`QuadratureResult`) is updated within each tasks: in order to avoid race conditions it is implemented as a monitor**
+
+- Version 2: `lab06.executors.quad2_withsynch`
+  - the only difference is that the `QuadratureService` no more waits for the result to be ready with an `executor.awaitTermination` call
+  - the collection of the result is performed through the `QuadratureResult` monitor
+    - calling `getResult` blocks the caller until the result is ready
+    - emulating the `Future` mechanism (see following step)
+
+- **_Version 3 -- THE WAY: `lab06.executors.quad2_withfuture`_**
+  - no more monitors to represent the result, using low level synchronized, signals and wait...
+  - using instead the `Feature` mechanism: the `submit` method of the executor service returns a `Feature` on which the service can block waiting for the result
 
 ### Fork join
+
+![executor-classes](http://www.plantuml.com/plantuml/svg/XPB1Ri8m38RlVef8kspJ-W8JGapJE712KErkKazKk0bo78OqxTqNQEXA0P6JO-VxyplE92YAneODxSb6zL9OnX0e0DHEIRxGald8jIN9havxsYkvAdHv05m55RHgZhHvoziXM3TRfeQSXWlD7p1fFJZwBZ5ifbuU9Jg7AwPNiyZHYzaXnvGed_wJqwXHQ5IEBmGiChS2xpbAfwwIlm2jyOHjPhvsS--vQ_D6Dnafrq9O7O1J_IuukEpWT_GvxhzEQmtEx3mNSLkSGVqPBUsQgiXKtHlMm4J7NUcZP-YMFC0agQSFz0S0 "executor-classes")
 
 <ins>**Outcomes**:</ins>
 

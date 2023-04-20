@@ -16,7 +16,7 @@ public class QuadratureService {
 		ExecutorService executor = Executors.newFixedThreadPool(poolSize);
 		QuadratureResult result = new QuadratureResult();		
 		double x0 = a;
-		double step = (b-a)/numTasks;		
+		double step = (b - a) / numTasks;
 		for (int i = 0; i < numTasks; i++) {
 			try {
 				executor.execute(new ComputeAreaTask(x0, x0 + step, mf, result));
@@ -27,9 +27,8 @@ public class QuadratureService {
 			}
 		}
 		executor.shutdown();
-		executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);		
-		double res = result.getResult();
-		return res;
+		executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+		return result.getResult();
 	}
 
 	private void log(String msg){

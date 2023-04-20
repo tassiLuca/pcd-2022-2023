@@ -9,7 +9,7 @@ public class Main {
 		int poolSize = Runtime.getRuntime().availableProcessors() + 1;
 		QuadratureService service = new QuadratureService(nTasks, poolSize);
 		double result = service.compute(Math::sin, a, b);
-		System.out.println("Result: "+result);
+		System.out.println("Result: " + result);
 		System.exit(0);
 	}
 }

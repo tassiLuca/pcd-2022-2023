@@ -2,6 +2,7 @@ package pcd.lab06.executors.quad1_basic;
 
 public class ComputeAreaTask implements Runnable {
 
+	public static final int INTERVALS = 1_000;
 	private final QuadratureResult result;
 	private final Function mf;
 	private final double a;
@@ -17,9 +18,9 @@ public class ComputeAreaTask implements Runnable {
 	public void run() {
 		log("executing task " + a + " " + b);
 		double sum = 0;
-		double step = (b - a) / 1000;
+		double step = (b - a) / INTERVALS;
 		double x = a;
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < INTERVALS; i++) {
 			sum += step * mf.eval(x);
 			x += step;
 		}

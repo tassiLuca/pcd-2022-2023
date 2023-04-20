@@ -16,13 +16,13 @@ public class QuadratureService extends Thread {
 
 	public double compute(Function mf, double a, double b) throws InterruptedException {
 		double x0 = a;
-		double step = (b-a)/numTasks;		
-	    List<Future<Double>> results = new LinkedList<Future<Double>>();
+		double step = (b - a) / numTasks;
+	    List<Future<Double>> results = new LinkedList<>();
 		for (int i = 0; i < numTasks; i++) {
 			try {
 				Future<Double> res = executor.submit(new ComputeAreaTask(x0, x0 + step, mf));
 				results.add(res);
-				log("submitted task " + x0 + " " + (x0+step));
+				log("submitted task " + x0 + " " + (x0 + step));
 				x0 += step;
 			} catch (Exception e) {
 				e.printStackTrace();
