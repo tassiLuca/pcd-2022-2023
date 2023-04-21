@@ -11,7 +11,7 @@ Recall:
 
 :arrow_right: from JDK 5.0 support for **decoupling task submission from task execution**: tasks are logic unit of work, threads the mechanism by which the task can run <ins>asynchronously</ins>.
 
-![ExecutorService](../../../../../res/lab06/executors.jpeg)
+![ExecutorService](../../../../../../res/lab06/executors.jpeg)
 
 Pool-based vs. Thread-per-task approach:
 
@@ -85,9 +85,53 @@ Overview:
 
 ### Fork join
 
-![executor-classes](http://www.plantuml.com/plantuml/svg/XPB1Ri8m38RlVef8kspJ-W8JGapJE712KErkKazKk0bo78OqxTqNQEXA0P6JO-VxyplE92YAneODxSb6zL9OnX0e0DHEIRxGald8jIN9havxsYkvAdHv05m55RHgZhHvoziXM3TRfeQSXWlD7p1fFJZwBZ5ifbuU9Jg7AwPNiyZHYzaXnvGed_wJqwXHQ5IEBmGiChS2xpbAfwwIlm2jyOHjPhvsS--vQ_D6Dnafrq9O7O1J_IuukEpWT_GvxhzEQmtEx3mNSLkSGVqPBUsQgiXKtHlMm4J7NUcZP-YMFC0agQSFz0S0 "executor-classes")
+In parallel programming, many algorithms exists that require tasks to create subtasks and communicate with each other to complete:
 
+- **map and reduce** algorithms:
+  - **map** phase: splitting the data space to be processed by an algorithm into smaller, independent chunks
+  - **reduce phase**: once a set of chunks has been processed, partial results can be collected to form the final result
 
+$\Rightarrow$ **Executors can be easily applied when that data space topology is known in advance.**
+If the data space topology is not known in advance (e.g. graph-based and tree-based data structures), then **algorithms should create hierarchies of tasks, waiting for subtasks to complete before returning a partial result**.
+In this new model is now possible having dependencies among sub-tasks!
+Moreover, please note that in the previous cases when a Callable waits for the result of another Callable, it is put in a waiting state, thus wasting an opportunity to handle another Callable queued for execution!
+
+From Java SE 7 **Fork-Join Framework**:
+
+![executor-classes](http://www.plantuml.com/plantuml/svg/XLNBRY8n4BpFLrZi1GZm0IYAWb1os4EKJH1tusaO2u-D_E0XnBzlj-tXJOA4DDFkQbUNopslpdFhGwqOR444RsnVAEuSkAAGseETSm7iBQzzWrrBV8Uj1rswOxme-CnvouLd4Sr6-VKQAEkLWXgqTpSrzmN3tnyDcmbtotTZspPepMSAXkmhF_NOcgk0WKdd57mFFbXudhpS511SgLHWd9ymwoxoK1I9ECAMVutKdyQeOviFkicGIMM1bmHerdy5NilLx4h4dwSlvp8bZbcT9s5enKCxwp3jNCRVjW9MNXgD_UxQ95HbpOPwpOdTxXptQgC8Ltjskqs2r6kp14gPDi4zkiHBSM0ByFy212W9DJP1Uyf3ezpcaI3d-z1xof9kpBK0fQ2aX1ak0DV7jTnAEPffO-lOo0zP7uzo1eD1kuC7guq7PkMYyipCBxeU3acBc3sobki5EEODYm7kTbgWTje4ftOfbcu8C5z9JCG2AImrHe2jo37q48CYM8ldbz8mFGR9q58l284caOaeGLejFC3QH8rQhGAzmuZsZzpJCSKIA0QQHI3z5LvO58GsoSKprHxZ6oxHJ_HF39E2w1Kcvqm3mXstkrxk7obOGElf1B7WWlAzk8RSFTdAOHQAaXqtED6-k4JTVl-2-Otvlr1Lw-GQ6lStj-SSrOo7VGC-47yyZUZJvfWLpADI5oM7mvmQAqnGxfhZ2QGWZmB4bQmTb6osEmbtrjP3uYCHgzpZVGEAbmRAnhyMfyy3u6dyVeiAoe3NvRSvV9mlQQyZxiw8EXinZyeNnIjMns_3Vm00 "executor-classes")
+
+- `ForkJoinTask` objects support the creation of subtasks plus waiting for the subtasks to complete. With those clear semantics, the executor is able to dispatch tasks among its internal threads pool by **“stealing” jobs when a task is waiting for another task to complete and there are pending tasks to be run**.
+
+- `ForkJoinTask` objects feature two specific methods:
+  - `fork()` allows a `ForkJoinTask` to be planned for asynchronous execution. This allows a new `ForkJoinTask` to be launched from an existing one.
+    - Note: this method only schedules a new task within a ForkJoinPool, but no child Java Virtual Machine is ever created.
+  - `join()` method allows a `ForkJoinTask` to wait for the completion of another one.
+
+- 2 types of `ForkJoinTask` specializations:
+  - `RecursiveAction` represent executions that do not yield a return value.
+  - `RecursiveTask` yield return values. This is preferred because most divide-and-conquer algorithms return a value from a computation over a data set.
+
+Example in `lab06.executors.forkjoin` package.
+
+**Goal**:  counting the occurrences of a word in a set of documents [^1].
+
+[^1] [Fork and Join: Java Can Excel at Painless Parallel Programming Too!](https://www.oracle.com/technical-resources/articles/java/fork-join.html)
+
+:warning: **Fork/join tasks should operate as “pure” in-memory algorithms in which no I/O operations come into play.** 
+Also, **communication between tasks through shared state should be avoided as much as possible, because that implies that locking might have to be performed.** 
+**Ideally, tasks communicate only when one task forks another or when one task joins another.**
+
+**Used strategy**:
+
+- Two types of fork/join tasks. 
+  - `DocumentSearchTask` counts the occurrences of a word in a document
+  - `FolderSearchTask` the task that operates on folder elements in our tree structure
+  - both extends `RecursiveTask` abstract class
+  - Intuitively, the number of occurrences of a word in a folder is the sum of those in each of its subfolders and documents. Hence, simply forks document and folder tasks for each element of the folder and joins them all to compute its partial sum
+
+The fork/join framework maximizes parallelism by ensuring that a pending document’s or folder’s word counting task can be executed while a folder’s task is waiting on a `join()` operation.
+
+![fork join word counting example](../../../../../../res/lab06/fork-join-wc.png)
 
 <ins>**Outcomes**:</ins>
 
@@ -99,4 +143,3 @@ Overview:
 
 ## Java Virtual Threads
 TO FINISH!
-

@@ -36,4 +36,3 @@ public class Step3_chaining {
 		vertx.deployVerticle(new TestChain());
 	}
 }
-

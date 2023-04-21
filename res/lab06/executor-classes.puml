@@ -47,8 +47,16 @@ note left of RecursiveTask::compute
     The main computation 
     performed by this task.
 end note
+note bottom of RecursiveTask
+    Represent executions that 
+    yield a return value.
+end note
 
 abstract class RecursiveAction extends ForkJoinTask
+note bottom of RecursiveAction
+    Represent executions that 
+    **do not** yield a return value.
+end note
 
 abstract class CountedCompleter<T> extends ForkJoinTask
 

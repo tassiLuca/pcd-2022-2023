@@ -10,30 +10,19 @@ class MyReactiveAgent extends AbstractVerticle {
 	
 	public void start() {
 		log("started");
-		
-		FileSystem fs = getVertx().fileSystem();    		
-		
+		FileSystem fs = getVertx().fileSystem();
 		Future<Buffer> f1 = fs.readFile("build.gradle");
-
-		f1.onComplete((AsyncResult<Buffer> res) -> {
-			log("BUILD \n" + res.result().toString().substring(0,160));
-		});
-	
-		fs
-		.readFile("../settings.gradle")
-		.onComplete((AsyncResult<Buffer> res) -> {
-			log("SETTINGS \n" + res.result().toString().substring(0,160));
-		});
-		
-		try {
-			Thread.sleep(3000);
-		} catch (Exception ex) {};
-		
+		f1.onComplete((AsyncResult<Buffer> res) -> log("BUILD \n" + res.result().toString().substring(0, 160)));
+		fs.readFile("../settings.gradle")
+			.onComplete((AsyncResult<Buffer> res) -> log("SETTINGS \n" + res.result().toString().substring(0, 160)));
+//		try {
+//			Thread.sleep(3000);
+//		} catch (Exception ignored) { }
 		log("done");
 	}
 
 	private void log(String msg) {
-		System.out.println("" + Thread.currentThread() + " " + msg);
+		System.out.println(Thread.currentThread() + " " + msg);
 	}
 }
 
@@ -44,4 +33,3 @@ public class Step2_withverticle {
 		vertx.deployVerticle(new MyReactiveAgent());
 	}
 }
-

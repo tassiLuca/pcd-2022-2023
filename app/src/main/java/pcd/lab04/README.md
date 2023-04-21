@@ -71,7 +71,7 @@ In Java the signaling semantic is a variant of the Signal-and-Continue strategy:
 
 See `monitors.signaling_semantic` package.
 
-![entry + wait set in Java](../../../../../res/lab04/entry+wait-set-java.jpg)
+![entry + wait set in Java](../../../../../../res/lab04/entry+wait-set-java.jpg)
 
 - Entry set: set where threads waiting for the lock are suspended
 - Wait set: set where threads that executed a wait are waiting to be notified
@@ -91,7 +91,7 @@ As we have seen in previous lab:
     ```java
     public Condition newCondition();
     ```
-    ![lock + condition uml](../../../../../res/lab03/locks-uml.png)
+    ![lock + condition uml](../../../../../../res/lab03/locks-uml.png)
 
 - How to implement a monitor with `ReentrantLock` + `Condition`? 
   - `ReentrantLock` mutex for each monitor

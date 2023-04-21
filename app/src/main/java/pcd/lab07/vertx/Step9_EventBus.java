@@ -8,9 +8,7 @@ class MyAgent1 extends AbstractVerticle {
 	 public void start(Promise<Void> startPromise) {
 		log("started.");
 		EventBus eb = this.getVertx().eventBus();
-		eb.consumer("my-topic", message -> {
-			log("new message: " + message.body());
-		});		
+		eb.consumer("my-topic", message -> log("new message: " + message.body()));
 		log("Ready.");
 		startPromise.complete();
 	}
@@ -38,9 +36,8 @@ public class Step9_EventBus {
 	public static void main(String[] args) {
 		Vertx  vertx = Vertx.vertx();
 		vertx.deployVerticle(new MyAgent1(), res -> {
-			/* deploy the second verticle only when the first has completed */
+			/* deploy the second verticle only when the first has completed to not lose event. */
 			vertx.deployVerticle(new MyAgent2());
 		});
 	}
 }
-

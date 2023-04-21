@@ -18,9 +18,6 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
-
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
 
@@ -47,6 +44,16 @@ dependencies {
 
     // JPF
     implementation files("../lib/jpf-classes.jar", "../lib/jpf-annotations.jar")
+
+    // Coroutines - Kotlin
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta"
+
+    // Lincheck plugin for testing and model checking in kotlin
+    testImplementation "org.jetbrains.kotlinx:lincheck:2.16"
+
+    // Use JUnit Jupiter for testing.
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 application {

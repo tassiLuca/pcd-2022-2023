@@ -45,7 +45,7 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
     - we can just restart the application
   - “post-mortem” diagnosis support:
     - _Thread dump_ support provided by the JVM triggered by sending the JVM process a `SIGQUIT` signal on UNIX (`kill -3`) or by simply pressing `CTRL-\` on UNIX (or CTRL-Break on Windows) or using, for example, VisualVM.
-    ![deadlock-resource](../../../../../res/lab03/deadlock-resource.png)
+    ![deadlock-resource](../../../../../../res/lab03/deadlock-resource.png)
 
     (Legend -- `Monitor` state means threads are waiting on a condition to become true to resume execution)
 
@@ -121,7 +121,7 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
    - How to fix? If they asked for the locks in the same order, there would be no cyclic locking dependency and therefore no deadlock: <ins>**a program will be free of lock-ordering deadlocks if all threads acquire the locks they need in a fixed global order**</ins>
      - introduce `AccountManager` entity which acquires the lock on the sender and receiver based on their id
      - running `TestAccountsNoDeadlock` and running VisualVM
-       ![test account with no deadlock](../../../../../res/lab03/account-management.png)
+       ![test account with no deadlock](../../../../../../res/lab03/account-management.png)
        No more deadlock :smile:.
        :warning: Note that if the number of accounts is greater than 3 could happen that more threads are simultaneously in their critical section (due to the fact they are sending money from and to different receivers, e.g. $A \rightarrow B \land C \rightarrow D$).
 
@@ -220,7 +220,7 @@ The Java platform libraries (Java 5.0 & Java 6.0) include a rich set of concurre
   - Similarly, `CopyOnWriteArrayList` allows multiple reader threads to read without synchronization and when a write happens it copies the whole ArrayList and swaps with a newer one.
   - So if you use concurrent collection classes in their favorable conditions like for more reading and fewer updates, they are much more scalable than synchronized collections.
 
-![concurrent collections overview](../../../../../res/lab03/concurrent-collections.svg)
+![concurrent collections overview](../../../../../../res/lab03/concurrent-collections.svg)
 
 Some notes:
 
@@ -260,7 +260,7 @@ Main types provided with Java library:
 
 - **_Locks_**
   - Providing explicit lock functionality vs. intrinsic lock given by synchronized blocks
-    ![lock uml](../../../../../res/lab03/locks-uml.png)
+    ![lock uml](../../../../../../res/lab03/locks-uml.png)
   - Typical usage:
     ```java
     Lock lock = new ReentrantLock();
@@ -305,7 +305,7 @@ Main types provided with Java library:
       ```
     - `countDown()` method to decrement the counter
     - `await()` method that causes the current thread to wait until the latch has counted down to zero unless the thread is interrupted.
-    ![latch use](../../../../../res/lab03/latch-seq.png)
+    ![latch use](../../../../../../res/lab03/latch-seq.png)
   - Used to ensure that certain activities do not proceed until other one-time activity complete. Main examples:
     - ensuring a computation does not proceed until the resources it needs have been initialized
     - ensuring that a service does not start until other services on which it depends have started
@@ -320,9 +320,9 @@ some event has occurred
       CyclicBarrier(int parties, Runnable barrierAction)
       ```
       Creates a new CyclicBarrier that will trip when the given number of parties (threads) are waiting upon it, and which will execute the given barrier action when the barrier is tripped, performed by the last thread entering the barrier.
-      ![barrier](../../../../../res/lab03/cyclic-barrier-uml.png)
+      ![barrier](../../../../../../res/lab03/cyclic-barrier-uml.png)
     - Actually, it is a **Cyclic** barrier: with `reset()` method is possible reset the barrier to its initial state
-      ![barrier](../../../../../res/lab03/cyclic-barrier-sq.png)
+      ![barrier](../../../../../../res/lab03/cyclic-barrier-sq.png)
     - see `barrier` package
 
 > Latches are for waiting for events, barriers for other threads
