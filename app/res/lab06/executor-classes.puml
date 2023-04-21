@@ -10,8 +10,47 @@ abstract class AbstractExecutorService implements ExecutorService {
 class ForkJoinPool extends AbstractExecutorService
 class ThreadPoolExecutor extends AbstractExecutorService
 
-class ForkJoinTask<V> implements Future
-ForkJoinPool *-up- ForkJoinTask
+abstract class ForkJoinTask<V> implements Future {
+    +complete(value: V)
+    +completeExceptionally(e: Throwable)
+    +**fork(): ForkJoinTask<V>**
+    +**invoke(): V**
+    +{static} getQueuedTaskCount(): int
+    +{static} getPool(): ForkJoinPool
+    +isCancelled(): boolean
+    +isCompletedAbnormally(): boolean
+    +isCompletedNormally(): boolean
+    +...()
+}
+note right of ForkJoinTask::fork
+    Arranges to 
+    asynchronously 
+    execute this task 
+    in the pool the 
+    current task is 
+    running in or in
+    the ""commonPool""
+end note
+note right of ForkJoinTask::invoke
+    Commences performing 
+    this task, awaits its 
+    completion if necessary, 
+    and returns its result,
+    or throws an exception.
+end note
+ForkJoinPool *-- ForkJoinTask
+
+abstract class RecursiveTask<V> extends ForkJoinTask {
+    #{abstract}compute(): V
+}
+note left of RecursiveTask::compute
+    The main computation 
+    performed by this task.
+end note
+
+abstract class RecursiveAction extends ForkJoinTask
+
+abstract class CountedCompleter<T> extends ForkJoinTask
 
 interface ScheduledExecutorService extends ExecutorService
 

@@ -20,4 +20,3 @@ public class DocumentSearchTask extends RecursiveTask<Long> {
         return wc.occurrencesCount(document, searchedWord);
     }
 }
-

@@ -1,13 +1,6 @@
-/*
- * Fork-Join example, adapted from
- * http://www.oracle.com/technetwork/articles/java/fork-join-422606.html
- * 
- */
 package pcd.lab06.executors.forkjoin;
 
 import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
 
 public class WordCounterMain {    
 

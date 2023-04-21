@@ -20,7 +20,7 @@ public class Document {
     }
     
     public static Document fromFile(File file) throws IOException {
-        List<String> lines = new LinkedList<String>();
+        List<String> lines = new LinkedList<>();
         BufferedReader reader;
         try {
         	reader = new BufferedReader(new FileReader(file));
