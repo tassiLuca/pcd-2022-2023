@@ -1,4 +1,4 @@
-package pcd.lab06.executors.forkjoin;
+package pcd.lab06.executors.forkjoin.documentsearch;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,4 +36,3 @@ public class FolderSearchTask extends RecursiveTask<Long> {
         return count;
     }
 }
-    

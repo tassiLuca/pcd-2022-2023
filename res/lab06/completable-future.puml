@@ -1,0 +1,7 @@
+@startuml completable-future
+
+interface CompletionStage<T> {
+    +acceptEither
+}
+
+@enduml

@@ -1,4 +1,4 @@
-package pcd.lab06.executors.forkjoin;
+package pcd.lab06.executors.forkjoin.documentsearch;
 
 import java.io.*;
 
@@ -6,9 +6,11 @@ public class WordCounterMain {
 
 
     public static void main(String[] args) throws IOException {
-        WordCounter wordCounter = new WordCounter();
-        Folder folder = Folder.fromDirectory(new File(args[0]));
+        final String rootDirectory = args[0];
         final int repeatCount = Integer.parseInt(args[2]);
+        final String searchedWord = args[1];
+        final WordCounter wordCounter = new WordCounter();
+        final Folder folder = Folder.fromDirectory(new File(rootDirectory));
         long counts;
         long startTime;
         long stopTime;
@@ -16,14 +18,14 @@ public class WordCounterMain {
         long[] forkedThreadTimes = new long[repeatCount];
         for (int i = 0; i < repeatCount; i++) {
             startTime = System.currentTimeMillis();
-            counts = wordCounter.countOccurrencesOnSingleThread(folder, args[1]);
+            counts = wordCounter.countOccurrencesOnSingleThread(folder, searchedWord);
             stopTime = System.currentTimeMillis();
             singleThreadTimes[i] = (stopTime - startTime);
             System.out.println(counts + " , single thread search took " + singleThreadTimes[i] + "ms");
         }
         for (int i = 0; i < repeatCount; i++) {
             startTime = System.currentTimeMillis();
-            counts = wordCounter.countOccurrencesInParallel(folder, args[1]);
+            counts = wordCounter.countOccurrencesInParallel(folder, searchedWord);
             stopTime = System.currentTimeMillis();
             forkedThreadTimes[i] = (stopTime - startTime);
             System.out.println(counts + " , fork / join search took " + forkedThreadTimes[i] + "ms");

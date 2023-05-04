@@ -1,4 +1,4 @@
-package pcd.lab06.executors.forkjoin;
+package pcd.lab06.executors.forkjoin.documentsearch;
 
 import java.io.BufferedReader;
 import java.io.File;

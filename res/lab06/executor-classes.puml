@@ -15,6 +15,7 @@ abstract class ForkJoinTask<V> implements Future {
     +completeExceptionally(e: Throwable)
     +**fork(): ForkJoinTask<V>**
     +**invoke(): V**
+    +**join(): V**
     +{static} getQueuedTaskCount(): int
     +{static} getPool(): ForkJoinPool
     +isCancelled(): boolean
@@ -52,15 +53,26 @@ note bottom of RecursiveTask
     yield a return value.
 end note
 
-abstract class RecursiveAction extends ForkJoinTask
+abstract class RecursiveAction extends ForkJoinTask {
+    #{abstract}compute()
+}
 note bottom of RecursiveAction
     Represent executions that 
     **do not** yield a return value.
 end note
 
-abstract class CountedCompleter<T> extends ForkJoinTask
+abstract class CountedCompleter<T> extends ForkJoinTask {
+    #{abstract}compute(): V
+    +...()
+}
+note bottom of CountedCompleter
+    A ""ForkJoinTask"" with a 
+    completion action performed
+    when triggered and there are 
+    no remaining pending actions.
+end note
 
-interface ScheduledExecutorService extends ExecutorService
+interface ScheduledExecutorService extends ExecutorService {}
 
 class ScheduledThreadPoolExecutor implements ScheduledExecutorService
 

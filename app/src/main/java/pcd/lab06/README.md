@@ -115,7 +115,7 @@ Example in `lab06.executors.forkjoin` package.
 
 **Goal**:  counting the occurrences of a word in a set of documents [^1].
 
-[^1] [Fork and Join: Java Can Excel at Painless Parallel Programming Too!](https://www.oracle.com/technical-resources/articles/java/fork-join.html)
+[^1]: [Fork and Join: Java Can Excel at Painless Parallel Programming Too!](https://www.oracle.com/technical-resources/articles/java/fork-join.html)
 
 :warning: **Fork/join tasks should operate as “pure” in-memory algorithms in which no I/O operations come into play.** 
 Also, **communication between tasks through shared state should be avoided as much as possible, because that implies that locking might have to be performed.** 
@@ -140,6 +140,8 @@ The fork/join framework maximizes parallelism by ensuring that a pending documen
 - promotes concurrency
 
 ### `CompletableFuture`
+
+
 
 ## Java Virtual Threads
 TO FINISH!

@@ -1,4 +1,4 @@
-package pcd.lab06.executors.forkjoin;
+package pcd.lab06.executors.forkjoin.documentsearch;
 
 import java.util.concurrent.ForkJoinPool;
 
@@ -21,7 +21,7 @@ public class WordCounter {
         }
         return count;
     }
-        
+
     public Long countOccurrencesOnSingleThread(Folder folder, String searchedWord) {
         long count = 0;
         for (Folder subFolder : folder.getSubFolders()) {
