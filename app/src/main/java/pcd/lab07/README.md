@@ -1,4 +1,4 @@
-# Lab06
+# Lab07
 
 ## Asynchronous Programming in Java with Event loops: Vert.x framework
 

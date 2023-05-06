@@ -29,7 +29,7 @@ class MyAgent2 extends AbstractVerticle {
 	}
 
 	private void log(String msg) {
-		System.out.println("[REACTIVE AGENT #2]["+Thread.currentThread()+"] " + msg);
+		System.out.println("[REACTIVE AGENT #2][" + Thread.currentThread() + "] " + msg);
 	}
 }
 
