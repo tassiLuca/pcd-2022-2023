@@ -5,22 +5,17 @@ import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.file.FileSystem;
-import java.io.*;
 
-public class Step1_basic {
+public class Step1_Basic {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		Vertx vertx = Vertx.vertx();
 		FileSystem fs = vertx.fileSystem();
 		log("started ");
-		/* version 4.X - future (promise) based API */
-		Future<Buffer> fut = fs.readFile("build.gradle");
-		fut.onComplete((AsyncResult<Buffer> res) -> {
-			log("BUILD \n" + res.result().toString().substring(0,160));
-		});
-		try {
-			Thread.sleep(1000);
-		} catch (Exception ignored) { }
+		/* version 4.X - future -- **equivalent to JS promise** -- based API */
+		Future<Buffer> fut = fs.readFile("settings.gradle");
+		fut.onComplete((AsyncResult<Buffer> res) -> log("BUILD \n" + res.result().toString()));
+		Thread.sleep(5_000);
 		log("done");
 	}
 	

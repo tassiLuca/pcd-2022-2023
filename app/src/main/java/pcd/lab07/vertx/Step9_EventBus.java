@@ -4,7 +4,8 @@ import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
 
 class MyAgent1 extends AbstractVerticle {
-	
+
+	@Override
 	 public void start(Promise<Void> startPromise) {
 		log("started.");
 		EventBus eb = this.getVertx().eventBus();
@@ -19,7 +20,8 @@ class MyAgent1 extends AbstractVerticle {
 }
 
 class MyAgent2 extends AbstractVerticle {
-	
+
+	@Override
 	public void start() {
 		log("started.");
 		EventBus eb = this.getVertx().eventBus();
@@ -34,7 +36,7 @@ class MyAgent2 extends AbstractVerticle {
 public class Step9_EventBus {
 
 	public static void main(String[] args) {
-		Vertx  vertx = Vertx.vertx();
+		Vertx vertx = Vertx.vertx();
 		vertx.deployVerticle(new MyAgent1(), res -> {
 			/* deploy the second verticle only when the first has completed to not lose event. */
 			vertx.deployVerticle(new MyAgent2());

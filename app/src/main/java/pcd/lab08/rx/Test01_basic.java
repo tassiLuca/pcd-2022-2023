@@ -6,34 +6,17 @@ import io.reactivex.rxjava3.core.*;
 
 public class Test01_basic {
 
-	public static void main(String[] args){
-				
-		log("creating with just.");
-		
-	    Flowable.just("Hello world").subscribe(s -> {	    		
-	    		log(s);    		
-	    });
-	    
-	    // with inline method
-	    
-	    Flowable.just("Hello world")
-	    	.subscribe(System.out::println);
-	    
+	public static void main(String[] args) {
+		log("Creating with `just` operator.");
+	    Flowable.just("Hello world").subscribe(Test01_basic::log);
+
 		// creating a flow (an observable stream) from a static collection
-		
-	    // simple subscription 
-	    
-		String[] words = { "Hello", " ", "World", "!" }; 
-		
-		Flowable.fromArray(words)
-			.subscribe((String s) -> {
-				log(s);
-			});
+	    // simple subscription
+		String[] words = { "Hello", " ", "World", "!" };
+		Flowable.fromArray(words).subscribe((String s) -> log(s));
 		
 		// full subscription: onNext(), onError(), onCompleted()
-		
 		log("Full subscription...");
-		
 		Observable.fromArray(words)
 			.subscribe((String s) -> {
 				log("> " + s);
@@ -44,25 +27,17 @@ public class Test01_basic {
 			});
 		
 		// operators
-
 		log("simple application of operators");
-		
 		Flowable<Integer> flow = Flowable.range(1, 20)
 			.map(v -> v * v)
 			.filter(v -> v % 3 == 0);
-		
 		log("first subscription #1");
 		flow.subscribe(System.out::println);
-
 		log("first subscription #2");
-		flow.subscribe((v) -> {
-			log("" + v);
-		});
+		flow.subscribe((v) -> log(String.valueOf(v)));
 
 		// doOnNext for debugging...
-		
 		log("showing the flow...");
-		
 		Flowable.range(1, 20)
 			.doOnNext(v -> log("1> " + v))
 			.map(v -> v * v)
@@ -70,32 +45,27 @@ public class Test01_basic {
 			.filter(v -> v % 3 == 0)
 			.doOnNext(v -> log("3> " + v))
 			.subscribe(System.out::println);
-						
 		
 		// simple composition
-		
 		log("simple composition");
-		
 		Observable<String> src1 = Observable.fromIterable(Arrays.asList(
-				 "the",
-				 "quick",
-				 "brown",
-				 "fox",
-				 "jumped",
-				 "over",
-				 "the",
-				 "lazy",
-				 "dog"
-				));
+			 "the",
+			 "quick",
+			 "brown",
+			 "fox",
+			 "jumped",
+			 "over",
+			 "the",
+			 "lazy",
+			 "dog"
+		));
 
 		Observable<Integer> src2 = Observable.range(1, 5);
-		
 		src1
 			.zipWith(src2, (string, count) -> String.format("%2d. %s", count, string))
 			.subscribe(System.out::println);
-		
 	}
-	
+
 	private static void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getName() + "] " + msg);
 	}

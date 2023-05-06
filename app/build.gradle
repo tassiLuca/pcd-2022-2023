@@ -42,6 +42,9 @@ dependencies {
 	// testImplementation 'org.slf4j:slf4j-reload4j:2.0.7'
     implementation 'org.slf4j:slf4j-simple:2.0.7'
 
+    // RxJava
+    implementation("io.reactivex.rxjava3:rxjava:3.1.6")
+
     // JPF
     implementation files("../lib/jpf-classes.jar", "../lib/jpf-annotations.jar")
 

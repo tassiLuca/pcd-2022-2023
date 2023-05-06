@@ -15,7 +15,7 @@ import io.vertx.ext.web.handler.BodyHandler;
 class WebService extends AbstractVerticle {
 
 	private int numRequests;
-	private int port;
+	private final int port;
 
 	public WebService(int port) {
 		numRequests = 0;
@@ -26,11 +26,8 @@ class WebService extends AbstractVerticle {
 		log("Service initializing...");
 		HttpServer server = vertx.createHttpServer();
 		Router router = Router.router(vertx);
-
 		router.route().handler(BodyHandler.create());
-
-		router.get("/api/numRequests")
-		.respond(request -> {	
+		router.get("/api/numRequests").respond(request -> {
 			log("new request arrived: " + request.currentRoute().getPath());
 			JsonObject reply = new JsonObject();
 			reply.put("numRequests", numRequests);
@@ -39,42 +36,26 @@ class WebService extends AbstractVerticle {
 			    .putHeader("Content-Type", "application/json")
 			    .end(reply.toString());
 		});
-
-		router.route(HttpMethod.GET, "/api/things/:thingId/state")
-		.handler( request -> {
+		router.route(HttpMethod.GET, "/api/things/:thingId/state").handler( request -> {
 			log("new request arrived: " + request.currentRoute().getPath());
-
 			JsonObject reply = new JsonObject();
-			reply
-			.put("id", request.pathParam("thingId"))
-			.put("state", Math.random());			
-
+			reply.put("id", request.pathParam("thingId"))
+				.put("state", Math.random());
 			sendReply(request, reply);
 		});
-		
-		
-		router
-		.route(HttpMethod.POST, "/api/task/inc")
-		.handler(request -> {
+		router.route(HttpMethod.POST, "/api/task/inc").handler(request -> {
 			log("new request arrived: " + request.currentRoute().getPath());
 			JsonObject msgReq = request.getBodyAsJson();
 			double value = msgReq.getDouble("value");
 			double result = value + 1;			
 			JsonObject reply = new JsonObject();
 			numRequests++;
-			
-			reply
-			.put("numReq", numRequests)
-			.put("result", result);				
+			reply.put("numReq", numRequests)
+				.put("result", result);
 			log("reply: " + reply.encodePrettily());
-
 			sendReply(request, reply);
 		  });
-
-		server
-		.requestHandler(router)
-		.listen(port);
-		
+		server.requestHandler(router).listen(port);
 		log("Service ready - port: " + port);
 	}
 
@@ -85,7 +66,7 @@ class WebService extends AbstractVerticle {
 	}
 	
 	private  void log(String msg) {
-		System.out.println("" + Thread.currentThread() + " " + msg);
+		System.out.println("[" + Thread.currentThread() + "] " + msg);
 	}
 }
 

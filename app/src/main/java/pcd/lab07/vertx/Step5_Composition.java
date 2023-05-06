@@ -5,25 +5,19 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.file.FileSystem;
 
 class TestCompo extends AbstractVerticle {
-	
-	public void start() {
-		FileSystem fs = vertx.fileSystem();    		
 
+	@Override
+	public void start() {
+		FileSystem fs = vertx.fileSystem();
 		Promise<Buffer> p1 = Promise.promise();
 		Promise<Buffer> p2 = Promise.promise();
-
 		Future<Buffer> f1 = p1.future();
 		Future<Buffer> f2 = p2.future();
-		
-		fs.readFile("build.gradle", p1);
-		
+		fs.readFile("gradlew", p1);
 		fs.readFile("settings.gradle", p2);
-				
 		CompositeFuture
-		.all(f1,f2)
-		.onSuccess((CompositeFuture res) -> {
-			log("COMPOSITE => \n"+res.result().list());			
-		}); 
+			.all(f1,f2)
+			.onSuccess((CompositeFuture res) -> log("COMPOSITE => \n"+res.result().list()));
 	}
 
 	private void log(String msg) {
@@ -31,7 +25,7 @@ class TestCompo extends AbstractVerticle {
 	}
 }
 
-public class Step5_compo {
+public class Step5_Composition {
 
 	public static void main(String[] args) {
 		Vertx  vertx = Vertx.vertx();

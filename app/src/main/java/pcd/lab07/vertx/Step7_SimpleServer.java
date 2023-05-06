@@ -6,7 +6,7 @@ import io.vertx.core.Vertx;
 class SimpleServer extends AbstractVerticle {
 
 	private int numRequests;
-	private int port;
+	private final int port;
 
 	public SimpleServer(int port) {
 		numRequests = 0;
@@ -16,12 +16,9 @@ class SimpleServer extends AbstractVerticle {
 	public void start() {
 		getVertx().createHttpServer().requestHandler(req -> {
 			numRequests++;
-			
 			String fileName = req.path().substring(1);
 			log("request " + numRequests + " arrived for file: " + fileName);
-
-			this.getVertx().fileSystem().readFile(fileName)
-			.onComplete(result -> {
+			this.getVertx().fileSystem().readFile(fileName).onComplete(result -> {
 				log("result ready");
 				if (result.succeeded()) {
 					log(result.result().toString());
@@ -31,12 +28,11 @@ class SimpleServer extends AbstractVerticle {
 					req.response().putHeader("content-type", "text/plain").end("File not found");
 				}
 			});
-			
 		}).listen(port);
 	}
 
-	private  void log(String msg) {
-		System.out.println("" + Thread.currentThread() + " " + msg);
+	private void log(String msg) {
+		System.out.println("[" + Thread.currentThread() + "] " + msg);
 	}
 
 }

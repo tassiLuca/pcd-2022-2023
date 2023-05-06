@@ -1,0 +1,24 @@
+@startuml verticle
+
+interface Verticle {
+    +getVertx(): Vertx
+    +init(vertx: Vertx, context: Context)
+    +start(startPromise: Promise<Void>)
+    +stop(stopPromise: Promise<Void>)
+}
+
+abstract class AbstractVerticle implements Verticle {
+    #context: Context
+    #vertx: Vertx
+    +config(): JsonObject
+    +deploymentID(): String
+    +getVertx(): Vertx
+    +init(vertx: Vertx, context: Context)
+    +processArgs(): List<String>
+    +start()
+    +start(startPromise: Promise<Void>)
+    +stop()
+    +stop(stopPromise: Promise<Void>)
+} 
+
+@enduml
