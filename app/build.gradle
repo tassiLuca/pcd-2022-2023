@@ -43,7 +43,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-simple:2.0.7'
 
     // RxJava
-    implementation("io.reactivex.rxjava3:rxjava:3.1.6")
+    implementation "io.reactivex.rxjava3:rxjava:3.1.6"
 
     // JPF
     implementation files("../lib/jpf-classes.jar", "../lib/jpf-annotations.jar")
@@ -55,8 +55,8 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:lincheck:2.16"
 
     // Use JUnit Jupiter for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.9.2"
 }
 
 application {
