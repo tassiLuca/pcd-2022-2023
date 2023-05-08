@@ -7,22 +7,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class Test06b_BackpressureStrategyBuffer {
 
 	public static void main(String[] args) throws Exception {
-
 		System.out.println("\n=== TEST backpressure | strategy BUFFER ===\n");
-
 		/* generator with period 5 ms - strategy BUFFER | specifying size with onBackpressureBuffer*/
-		
 		Flowable<Long> source = genHotStream(5);
-
 		log("subscribing.");
-
 		/* with buffer size = 5_000, it generates a MissingBackpressureException 
 		 * after ~8000 emits (it depends on the local config) */
-		
-		source
-			.onBackpressureBuffer(5_000, () -> {
-				log("HELP!");
-			})
+		source.onBackpressureBuffer(5_000, () -> log("HELP!"))
 			.observeOn(Schedulers.computation())
 			.subscribe(v -> {
 				log("consuming " + v);
@@ -30,7 +21,6 @@ public class Test06b_BackpressureStrategyBuffer {
 			}, error -> {
 				log("ERROR: " + error);
 			});
-
 		Thread.sleep(1000);
 	}
 
@@ -62,5 +52,4 @@ public class Test06b_BackpressureStrategyBuffer {
 	static private void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getName() + " ] " + msg);
 	}
-
 }
