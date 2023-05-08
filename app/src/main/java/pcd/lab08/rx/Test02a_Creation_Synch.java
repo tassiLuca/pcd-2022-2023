@@ -2,7 +2,7 @@ package pcd.lab08.rx;
 
 import io.reactivex.rxjava3.core.*;
 
-public class Test02a_creation_synch {
+public class Test02a_Creation_Synch {
 
 	public static void main(String[] args) {
 	    log("Creating a **cold** observable.");
@@ -18,7 +18,7 @@ public class Test02a_creation_synch {
 	    log("Subscribing B");
 	    source.subscribe(v -> log("B: " + v));
 	}
-	
+
 	static private void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getName() + "] " + msg);
 	}

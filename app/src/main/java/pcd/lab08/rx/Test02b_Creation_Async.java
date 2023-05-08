@@ -2,7 +2,7 @@ package pcd.lab08.rx;
 
 import io.reactivex.rxjava3.core.*;
 
-public class Test02b_creation_async {
+public class Test02b_Creation_Async {
 
 	public static void main(String[] args) throws Exception {
 		log("Creating an observable (cold) using its own thread.");
@@ -27,7 +27,7 @@ public class Test02b_creation_async {
 		source.subscribe((s) -> log("Subscriber B: " + s));
 		System.out.println("Done.");
 	}
-	
+
 	static private void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getName() + "] " + msg);
 	}

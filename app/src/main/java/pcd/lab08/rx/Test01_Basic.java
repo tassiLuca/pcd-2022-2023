@@ -4,17 +4,17 @@ import java.util.Arrays;
 
 import io.reactivex.rxjava3.core.*;
 
-public class Test01_basic {
+public class Test01_Basic {
 
 	public static void main(String[] args) {
 		log("Creating with `just` operator.");
-	    Flowable.just("Hello world").subscribe(Test01_basic::log);
+	    Flowable.just("Hello world").subscribe(Test01_Basic::log);
 
 		// creating a flow (an observable stream) from a static collection
 	    // simple subscription
 		String[] words = { "Hello", " ", "World", "!" };
 		Flowable.fromArray(words).subscribe((String s) -> log(s));
-		
+
 		// full subscription: onNext(), onError(), onCompleted()
 		log("Full subscription...");
 		Observable.fromArray(words)
@@ -25,7 +25,7 @@ public class Test01_basic {
 			},() -> {
 				log("completed");
 			});
-		
+
 		// operators
 		log("simple application of operators");
 		Flowable<Integer> flow = Flowable.range(1, 20)
@@ -45,7 +45,7 @@ public class Test01_basic {
 			.filter(v -> v % 3 == 0)
 			.doOnNext(v -> log("3> " + v))
 			.subscribe(System.out::println);
-		
+
 		// simple composition
 		log("simple composition");
 		Observable<String> src1 = Observable.fromIterable(Arrays.asList(
@@ -61,8 +61,7 @@ public class Test01_basic {
 		));
 
 		Observable<Integer> src2 = Observable.range(1, 5);
-		src1
-			.zipWith(src2, (string, count) -> String.format("%2d. %s", count, string))
+		src1.zipWith(src2, (string, count) -> String.format("%2d. %s", count, string))
 			.subscribe(System.out::println);
 	}
 

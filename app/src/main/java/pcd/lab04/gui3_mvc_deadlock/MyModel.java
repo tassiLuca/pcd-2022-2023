@@ -8,7 +8,7 @@ public class MyModel {
 	private final List<ModelObserver> observers;
 	private int state;
 	
-	public MyModel(){
+	public MyModel() {
 		state = 0;
 		observers = new ArrayList<>();
 	}

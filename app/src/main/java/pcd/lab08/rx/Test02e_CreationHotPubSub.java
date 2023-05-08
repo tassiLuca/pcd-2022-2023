@@ -2,7 +2,7 @@ package pcd.lab08.rx;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
-public class Test02e_creation_hot_pubsub {
+public class Test02e_CreationHotPubSub {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("\n=== TEST Hot streams with pubsub ===\n");
@@ -30,7 +30,7 @@ public class Test02e_creation_hot_pubsub {
 			log("subscriber B: "+s); 
 		}, Throwable::printStackTrace);
 	}
-	
+
 	static private void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getName() + "] " + msg);
 	}

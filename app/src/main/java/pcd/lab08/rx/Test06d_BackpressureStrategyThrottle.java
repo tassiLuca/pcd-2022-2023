@@ -1,10 +1,12 @@
 package pcd.lab08.rx;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.flowables.ConnectableFlowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class Test06c_backpressure_strategy_drop {
+public class Test06d_BackpressureStrategyThrottle {
 
 	public static void main(String[] args) throws Exception {
 
@@ -15,9 +17,10 @@ public class Test06c_backpressure_strategy_drop {
 
 		log("subscribing.");
 
-		/* never generating a MissingBackpressureException => elements are dropped */
-		
+		/* using throttleLast to reduce the flow (effect: less elements are dropped) */
+		 
 		source
+		.throttleLast(100, TimeUnit.MILLISECONDS)	// emits only the last item in 100 ms 
 		.onBackpressureDrop(v  -> {
 			log("DROPPING: " + v);
 		})

@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.flowables.ConnectableFlowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class Test06b_backpressure_strategy_buffer {
+public class Test06b_BackpressureStrategyBuffer {
 
 	public static void main(String[] args) throws Exception {
 

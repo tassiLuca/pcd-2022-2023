@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.subjects.Subject;
  * @author aricci
  *
  */
-public class Test04b_pubsub_warning {
+public class Test04b_PubSubWarning {
 
 	public static void main(String[] args){
 				
@@ -39,10 +39,5 @@ public class Test04b_pubsub_warning {
 		subject2.onNext("Two");
 		subject2.onNext("Three");
 		subject2.onComplete();
-		
-		
-;
-	
-	
 	}
 }

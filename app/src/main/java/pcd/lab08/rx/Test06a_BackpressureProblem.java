@@ -1,33 +1,27 @@
 package pcd.lab08.rx;
 
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.flowables.ConnectableFlowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class Test06d_backpressure_strategy_throttle {
+public class Test06a_BackpressureProblem {
 
 	public static void main(String[] args) throws Exception {
 
-		System.out.println("\n=== TEST backpressure | strategy BUFFER ===\n");
+		System.out.println("\n=== TEST backpressure ===\n");
 
-		/* generator with period 5ms - backpressure strategy set: DROPPING LATEST */
+		/* generator with period 5 ms */
 		Flowable<Long> source = genHotStream(5);
 
 		log("subscribing.");
 
-		/* using throttleLast to reduce the flow (effect: less elements are dropped) */
-		 
+		/* generating a MissingBackpressureException after ~7000 emits (it depends on the local config) */
+
 		source
-		.throttleLast(100, TimeUnit.MILLISECONDS)	// emits only the last item in 100 ms 
-		.onBackpressureDrop(v  -> {
-			log("DROPPING: " + v);
-		})
 		.observeOn(Schedulers.computation())
 		.subscribe(v -> {
 			log("consuming " + v);
-			Thread.sleep(100);
+			Thread.sleep(100);				// <------ creating a delay in consuming
 		}, error -> {
 			log("ERROR: " + error);
 		});
@@ -46,14 +40,14 @@ public class Test06d_backpressure_strategy_throttle {
 						}
 						emitter.onNext(i);
 						i++;
-						Thread.sleep(delay);
+						Thread.sleep(0, delay);
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					log("exit");
 				}
 			}).start();
-		}, BackpressureStrategy.LATEST);
+		}, BackpressureStrategy.ERROR);
 
 		ConnectableFlowable<Long> hotObservable = source.publish();
 		hotObservable.connect();

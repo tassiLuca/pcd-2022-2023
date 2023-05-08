@@ -2,9 +2,8 @@ package pcd.lab08.rx;
 
 import java.util.concurrent.TimeUnit;
 import io.reactivex.rxjava3.core.*;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class Test05_time_flow {
+public class Test05_TimeFlow {
 
 	public static void main(String[] args) throws Exception {
 
@@ -23,7 +22,7 @@ public class Test05_time_flow {
         					.doOnNext(v -> logDeb("4> " + v))
 				.take(5)
         					.doOnNext(v -> logDeb("5> " + v))
-				.subscribe(Test05_time_flow::log);		
+				.subscribe(Test05_TimeFlow::log);
 		
 		log("Going to sleep.");
 		Thread.sleep(10000);

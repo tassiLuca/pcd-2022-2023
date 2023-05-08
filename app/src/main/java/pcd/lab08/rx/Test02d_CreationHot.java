@@ -1,10 +1,9 @@
 package pcd.lab08.rx;
 
 import io.reactivex.rxjava3.core.*;
-import io.reactivex.rxjava3.flowables.ConnectableFlowable;
 import io.reactivex.rxjava3.observables.ConnectableObservable;
 
-public class Test02d_creation_hot {
+public class Test02d_CreationHot {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("\n=== TEST Hot streams  ===\n");
@@ -38,7 +37,7 @@ public class Test02d_creation_hot {
 		log("Done.");
 		Thread.sleep(10_000);
 	}
-	
+
 	static private void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getName() + "] " + msg);
 	}

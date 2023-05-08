@@ -4,24 +4,27 @@ import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.flowables.ConnectableFlowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class Test06a_backpressure_problem {
+public class Test06c_BackpressureStrategyDrop {
 
 	public static void main(String[] args) throws Exception {
 
-		System.out.println("\n=== TEST backpressure ===\n");
+		System.out.println("\n=== TEST backpressure | strategy BUFFER ===\n");
 
-		/* generator with period 5 ms */
+		/* generator with period 5ms - backpressure strategy set: DROPPING LATEST */
 		Flowable<Long> source = genHotStream(5);
 
 		log("subscribing.");
 
-		/* generating a MissingBackpressureException after ~7000 emits (it depends on the local config) */
-
+		/* never generating a MissingBackpressureException => elements are dropped */
+		
 		source
+		.onBackpressureDrop(v  -> {
+			log("DROPPING: " + v);
+		})
 		.observeOn(Schedulers.computation())
 		.subscribe(v -> {
 			log("consuming " + v);
-			Thread.sleep(100);				// <------ creating a delay in consuming
+			Thread.sleep(100);
 		}, error -> {
 			log("ERROR: " + error);
 		});
@@ -40,14 +43,14 @@ public class Test06a_backpressure_problem {
 						}
 						emitter.onNext(i);
 						i++;
-						Thread.sleep(0, delay);
+						Thread.sleep(delay);
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					log("exit");
 				}
 			}).start();
-		}, BackpressureStrategy.ERROR);
+		}, BackpressureStrategy.LATEST);
 
 		ConnectableFlowable<Long> hotObservable = source.publish();
 		hotObservable.connect();

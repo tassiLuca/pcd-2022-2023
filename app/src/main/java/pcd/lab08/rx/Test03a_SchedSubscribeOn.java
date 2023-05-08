@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class Test03a_sched_subscribeon {
+public class Test03a_SchedSubscribeOn {
 
 	public static void main(String[] args) throws Exception {
 
@@ -67,9 +67,8 @@ public class Test03a_sched_subscribeon {
 		  });
 		
 	}
-		
+
 	static private void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getName() + "] " + msg);
 	}
-	
 }
