@@ -22,6 +22,8 @@
     - code inside `main()` is executed by the main thread `Thread[#1,main,5,main]` 
     - handler code passed in `onComplete()` method is executed by the event-loop thread: `Thread[#24,vert.x-eventloop-thread-0,5,main]`
     - consequence: the handler is executed before the log of the message `"done"` (which is intentionally delayed) -- in general the order is not deterministic.
+    - note in Vert.x a [`FileSystem`](https://vertx.io/docs/apidocs/io/vertx/core/file/FileSystem.html) interface exists which contains a broad set of operations for manipulating files on the file system with **non-blocking** behaviour, taking a handler to be called when the operation completes or an error occurs
+      - I/O operation in the Java framework are synchronous, blocking behaviour :expressionless:
 
 - :star: The suggested way to create active components: using **Verticles**.
   - actor-like model (that we will see in the following labs)
@@ -30,7 +32,7 @@
 
       ![verticle](http://www.plantuml.com/plantuml/svg/hLB1QiCm3BtxAmIz9BHV44f8wIuhWnK6kJkE6ZGSErZgo1ZxzyLn2AKm66K-2Fdf-Kbwk6BHGQwzXGyCGiQYKkG4mqKRX7h1u4l1TBOTIeJ6B2_csfXWSYHPV3yky0wCdqH6AU2OaZmnvsxP7C_1zyHOm9BiQqzjkVByaCNm6-jRATsm16q4ZDNCS5YkwypK3nPxTCBtUspkfqlexGPfZ8bteIvkUsBlNfjtD8cxRN6m_ZEgFp_5-fi4Sjq_kJG4Rv3v43gE6Y_4iayDobiR7_7qp_w2KXMwTlePFm00 "verticle")
 
-      - Normally you would override the `start` method.When Vert.x deploys the verticle it will call the it, and when the method has completed the verticle will be considered started.
+      - Normally you would override the `start` method. When Vert.x deploys the verticle it will call it, and when the method has completed the verticle will be considered started.
       You can also optionally override the `stop` method.
 
       - If you have to do something in your verticle start-up which takes some time and you don’t want the verticle to be considered deployed until that happens (e.g. start HTTP server) you have to implement the asynchronous `start` method (see `Step7_SimpleServer` e `Step8_WebService`). This version of the method takes a `Future` as a parameter. When the method returns the verticle will not be considered deployed. Some time later, after you’ve done everything you need to do you can call complete on the Future (or fail) to signal that you’re done.
@@ -68,7 +70,8 @@
 - `Step6_WithBlocking.java`
   - in an idyllic world all APIs will be written asynchronously but in the real world, at least in the JVM standard library (but also in lot of other libraries), there are synchronous APIs with blocking behavior (see JDBC API)
   - But we cannot call blocking operations directly from an event loop...
-  - The way to do is by calling `executeBlocking` specifying both the blocking code to execute and a result handler to be called back asynchronous when the blocking code has been executed
+    - (and we cannot rewrite every single library, of course)
+  - The way to deal with this problem is by calling `executeBlocking` specifying both the blocking code to execute and a result handler to be called back asynchronous when the blocking code has been executed
 
     ```java
     vertx.executeBlocking(promise -> {
@@ -82,7 +85,7 @@
 
     - note that blocking code should block for a reasonable amount of time (i.e no more than a few seconds)
     - long blocking operations should use a dedicated thread managed by the application, which can interact with verticles using the event-bus or `runOnContext`
-  - An alternative way to run blocking code is to use a worker verticle: like a standard verticle but it’s executed using a thread from the Vert.x worker thread pool, rather than using an event loop.
+  - An alternative way to run blocking code is to use a worker verticle: like a standard verticle, but it’s executed using a thread from the Vert.x worker thread pool, rather than using an event loop.
     - see [documentation](https://vertx.io/docs/apidocs/io/vertx/core/WorkerExecutor.html)
 
 - [**Event Bus**](https://vertx.io/docs/apidocs/io/vertx/core/eventbus/EventBus.html)
