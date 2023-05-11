@@ -13,4 +13,5 @@ Labs:
 - [Lab05: Mandelbrot case study + TLA+ modeling](./app/src/main/java/pcd/lab05/)
   - [TLA+ souces](./tla+-specs/)
 - [Lab06: Java Executors Framework + Java Virtual Threads](./app/src/main/java/pcd/lab06/)
-- [Lab07: Event loop with VertX](./app/src/main/java/pcd/lab07/)
+- [Lab07: Event loop with `Vert.X`](./app/src/main/java/pcd/lab07/)
+- [Lab08: Reactive programming with `RxJava`](./app/src/main/java/pcd/lab08/)
