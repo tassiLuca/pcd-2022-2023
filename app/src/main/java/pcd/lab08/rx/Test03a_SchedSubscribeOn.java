@@ -39,7 +39,7 @@ public class Test03a_SchedSubscribeOn {
 		Flowable.range(1, 10)
 			.flatMap(v -> Flowable.just(v)
 		    	.subscribeOn(Schedulers.computation())
-				.map(w -> { log("map " + w); return w * w; })	// by the RX comp thread;
+				.map(w -> { log("map " + w); return w * w; })	// by the RX computation thread;
 		  	).blockingSubscribe(v -> log("sub > " + v));
 	}
 

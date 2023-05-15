@@ -7,7 +7,7 @@ public class Test02a_Creation_Synch {
 	public static void main(String[] args) {
 	    log("Creating a **cold** observable.");
 	    Observable<Integer> source = Observable.create(emitter -> {
-	        for (int i = 0; i <= 2; i++) {
+	        for (int i = 0; i <= 100; i++) {
 	            log("source: " + i);
 	            emitter.onNext(i);
 	        }
