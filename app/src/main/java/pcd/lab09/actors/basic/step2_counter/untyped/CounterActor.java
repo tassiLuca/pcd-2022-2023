@@ -12,9 +12,9 @@ public class CounterActor extends AbstractActor {
 
 	public Receive createReceive() {
 		return receiveBuilder()
-				.match(CounterMsgProtocol.IncMsg.class, this::onIncMsg)
-				.match(CounterMsgProtocol.GetValueMsg.class, this::onGetValueMsg)
-	            .build();
+			.match(CounterMsgProtocol.IncMsg.class, this::onIncMsg)
+			.match(CounterMsgProtocol.GetValueMsg.class, this::onGetValueMsg)
+	        .build();
 	}
 
 	private void onIncMsg(CounterMsgProtocol.IncMsg msg) {
@@ -24,5 +24,4 @@ public class CounterActor extends AbstractActor {
 	private void onGetValueMsg(CounterMsgProtocol.GetValueMsg msg) {
 		msg.replyTo.tell(new CounterMsgProtocol.CounterValueMsg(count), this.getSelf());
 	}
-	
 }

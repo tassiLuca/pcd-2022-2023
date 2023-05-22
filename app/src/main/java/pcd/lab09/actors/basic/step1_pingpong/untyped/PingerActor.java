@@ -7,9 +7,9 @@ public class PingerActor extends AbstractActor {
 
 	public Receive createReceive() {
 		return receiveBuilder()
-				.match(BootMsg.class, this::onBootMsg)
-				.match(PongMsg.class, this::onPongMsg)
-	            .build();
+			.match(BootMsg.class, this::onBootMsg)
+			.match(PongMsg.class, this::onPongMsg)
+	        .build();
 	}
 
 	private void onPongMsg(PongMsg msg) {
@@ -21,9 +21,8 @@ public class PingerActor extends AbstractActor {
 		log("booting.");
 		msg.ponger.tell(new PingMsg(0, this.getSelf()), this.getSelf());
 	}
-	
+
 	private void log(String msg) {
 		System.out.println("[CounterUserActor] " + msg);
 	}
-	
 }

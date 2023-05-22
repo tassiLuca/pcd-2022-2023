@@ -7,7 +7,6 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 
-
 public class BootActor extends AbstractBehavior<pcd.lab09.actors.basic.step1_pingpong.typed.BootActor.BootMsg> {
 
 	private BootActor(ActorContext<BootMsg> context) {
@@ -17,8 +16,8 @@ public class BootActor extends AbstractBehavior<pcd.lab09.actors.basic.step1_pin
 	@Override
 	public Receive<BootMsg> createReceive() {
 		return newReceiveBuilder()
-				.onMessage(BootMsg.class, this::onBootMsg)
-				.build();		
+			.onMessage(BootMsg.class, this::onBootMsg)
+			.build();
 	}
 
 	private Behavior<BootMsg> onBootMsg(BootMsg msg) {
@@ -29,11 +28,9 @@ public class BootActor extends AbstractBehavior<pcd.lab09.actors.basic.step1_pin
 	}
 
 	/* messages */
-	
 	static public class BootMsg {}
 
 	/* public factory to create the actor */
-
 	public static Behavior<BootMsg> create() {
 		return Behaviors.setup(BootActor::new);
 	}

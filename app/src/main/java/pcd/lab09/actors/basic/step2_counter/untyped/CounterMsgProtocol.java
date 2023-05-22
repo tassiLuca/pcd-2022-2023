@@ -4,9 +4,9 @@ import akka.actor.ActorRef;
 
 public class CounterMsgProtocol {
 
-	static public interface CounterMsg {}
+	public interface CounterMsg {}
 
-	static public interface CounterUserMsg {}
+	public interface CounterUserMsg {}
 
 	static public class IncMsg implements CounterMsg {}
 	
@@ -23,5 +23,4 @@ public class CounterMsgProtocol {
 			this.value = value;
 		}
 	}
-
 }

@@ -3,7 +3,7 @@ package pcd.lab09.actors.basic.step0_hello.typed;
 public class HelloWorldMsgProtocol {
 
 	/* messages types */
-	
+
 	public static class SayHello {
 		
 		private final String content;
@@ -16,6 +16,4 @@ public class HelloWorldMsgProtocol {
 			return content;
 		}
 	}
-
-
 }

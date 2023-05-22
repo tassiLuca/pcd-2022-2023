@@ -7,10 +7,9 @@ public class CounterUserActor extends AbstractActor {
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
-				.match(StartMsg.class, this::onStartMsg)
-				.match(CounterMsgProtocol.CounterValueMsg.class, this::onCounterValueMsg)
-				.build();
-		
+			.match(StartMsg.class, this::onStartMsg)
+			.match(CounterMsgProtocol.CounterValueMsg.class, this::onCounterValueMsg)
+			.build();
 	}
 
 	private void onStartMsg(StartMsg msg) {

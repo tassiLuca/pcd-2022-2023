@@ -4,7 +4,7 @@ import akka.actor.ActorRef;
 
 public interface PingerPongerProtocol {
 
-	static public class PongMsg implements PingerPongerProtocol {
+	class PongMsg implements PingerPongerProtocol {
 		public final long count;
 		public final ActorRef ponger;
 		public PongMsg(long count, ActorRef ponger) {
@@ -12,8 +12,8 @@ public interface PingerPongerProtocol {
 			this.ponger = ponger;
 		}
 	}	
-	
-	static public class PingMsg implements PingerPongerProtocol {
+
+	class PingMsg implements PingerPongerProtocol {
 		public final long count;
 		public final ActorRef pinger;
 		public PingMsg(long count, ActorRef pinger) {
@@ -22,11 +22,10 @@ public interface PingerPongerProtocol {
 		}
 	}	
 
-	static public class BootMsg implements PingerPongerProtocol {
+	class BootMsg implements PingerPongerProtocol {
 		public final ActorRef ponger;
 		public BootMsg(ActorRef ponger) {
 			this.ponger = ponger;
 		}                                                                                                                           
-	}	
-
+	}
 }

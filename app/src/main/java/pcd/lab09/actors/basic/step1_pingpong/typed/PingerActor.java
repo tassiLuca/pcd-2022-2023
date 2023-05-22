@@ -10,7 +10,6 @@ import pcd.lab09.actors.basic.step1_pingpong.typed.PingerPongerProtocol.*;
 public class PingerActor extends AbstractBehavior<PingerPongerProtocol> {
 
 	/* constructor called indirectly */
-
 	private PingerActor(ActorContext<PingerPongerProtocol> context) {
 		super(context);
 	}
@@ -18,10 +17,9 @@ public class PingerActor extends AbstractBehavior<PingerPongerProtocol> {
 	@Override
 	public Receive<PingerPongerProtocol> createReceive() {
 		return newReceiveBuilder()
-				.onMessage(BootMsg.class, this::onBootMsg)
-				.onMessage(PongMsg.class, this::onPongMsg)
-				.build();
-		
+			.onMessage(BootMsg.class, this::onBootMsg)
+			.onMessage(PongMsg.class, this::onPongMsg)
+			.build();
 	}
 
 	private Behavior<PingerPongerProtocol> onPongMsg(PongMsg msg) {
@@ -37,7 +35,6 @@ public class PingerActor extends AbstractBehavior<PingerPongerProtocol> {
 	}
 
 	/* public factory to create the actor */
-
 	public static Behavior<PingerPongerProtocol> create() {
 		return Behaviors.setup(PingerActor::new);
 	}
@@ -45,5 +42,4 @@ public class PingerActor extends AbstractBehavior<PingerPongerProtocol> {
 	private void log(String msg) {
 		System.out.println("[CounterUserActor] " + msg);
 	}
-	
 }

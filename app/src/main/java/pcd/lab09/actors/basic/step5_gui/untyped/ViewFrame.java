@@ -17,9 +17,7 @@ public class ViewFrame extends JFrame {
 		super(".:: Test Swing | Actors interaction ::.");
 		setSize(400, 70);
 		JButton button = new JButton("Press me");
-		button.addActionListener((ActionEvent ev) -> {
-			actorView.tell(new PressedMsg(), ActorRef.noSender());
-		});
+		button.addActionListener((ActionEvent ev) -> actorView.tell(new PressedMsg(), ActorRef.noSender()));
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
 		panel.add(button);
@@ -32,8 +30,6 @@ public class ViewFrame extends JFrame {
 	}
 	
 	public void display() {
-		SwingUtilities.invokeLater(() -> {
-			this.setVisible(true);
-		});
+		SwingUtilities.invokeLater(() -> this.setVisible(true));
 	}
 }

@@ -1,7 +1,6 @@
 package pcd.lab09.actors.basic.step3_multiple_behav.untyped;
 import akka.actor.*;
 
-
 public class ActorWithBehaviours extends AbstractActor {
 
 	private int state;
@@ -15,8 +14,8 @@ public class ActorWithBehaviours extends AbstractActor {
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
-				.match(MsgProtocol.MsgZero.class,this::onMsgZero)
-				.build();
+			.match(MsgProtocol.MsgZero.class,this::onMsgZero)
+			.build();
 	}
 
 	private void onMsgZero(MsgProtocol.MsgZero msg) {
@@ -30,14 +29,13 @@ public class ActorWithBehaviours extends AbstractActor {
 
 	public Receive receiverBehaviourA() {
 		return receiveBuilder()
-				.match(MsgProtocol.MsgOne.class,this::onMsgOne)
-				.build();
+			.match(MsgProtocol.MsgOne.class,this::onMsgOne)
+			.build();
 	}
 	
 	private void onMsgOne(MsgProtocol.MsgOne msg) {
 		log("msgOne - state: " + state);	
 		state++;
-
 		this.getContext().become(receiverBehaviourB());
 	}
 	
@@ -45,8 +43,8 @@ public class ActorWithBehaviours extends AbstractActor {
 	
 	public Receive receiverBehaviourB() {
 		return receiveBuilder()
-				.match(MsgProtocol.MsgTwo.class,this::onMsgTwo)
-				.build();
+			.match(MsgProtocol.MsgTwo.class,this::onMsgTwo)
+			.build();
 	}
 
 	private void onMsgTwo(MsgProtocol.MsgTwo msg) {
@@ -58,7 +56,4 @@ public class ActorWithBehaviours extends AbstractActor {
 	private void log(String msg) {
 		System.out.println("[ActorWithBehaviour] " + msg);
 	}
-
-
-	
 }

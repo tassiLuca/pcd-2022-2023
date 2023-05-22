@@ -5,10 +5,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 class MyMonitor {
 	private final Lock lock;
-	
+
 	public MyMonitor() {
 		lock = new ReentrantLock();
 	}
+
 	public void m() throws Exception {
 		try {
 			lock.lock();
@@ -22,26 +23,25 @@ class MyMonitor {
 }
 
 public class TestVT {
-	
+
 	public static void main(String[] args) throws Exception {
 		System.out.println("Launching.. " + Thread.currentThread());
 		MyMonitor mon = new MyMonitor();
 		for (int i = 0; i <  2; i++) {
-			Thread
-			.ofVirtual()
-			.name("myVirtualThread-"+i)
-			.start(() -> {
-				log("Hello from " + Thread.currentThread());
-				try {
-					mon.m();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			});
+			Thread.ofVirtual()
+				.name("myVirtualThread-"+i)
+				.start(() -> {
+					log("Hello from " + Thread.currentThread());
+					try {
+						mon.m();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				});
 		}
 		Thread.sleep(100000);
 	}
-	
+
 	private static void log(String msg) {
 		System.out.println(msg);
 	}

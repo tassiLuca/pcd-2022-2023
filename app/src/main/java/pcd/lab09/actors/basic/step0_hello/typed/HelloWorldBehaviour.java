@@ -13,14 +13,12 @@ public class HelloWorldBehaviour extends AbstractBehavior<HelloWorldMsgProtocol.
 	}
 
 	/* configuring message handlers in this behavior */
-	
 	@Override
 	public Receive<HelloWorldMsgProtocol.SayHello> createReceive() {
 		return newReceiveBuilder().onMessage(HelloWorldMsgProtocol.SayHello.class, this::onSayHello).build();
 	}
 
 	/* message handler for SayHello */
-	
 	private Behavior<HelloWorldMsgProtocol.SayHello> onSayHello(HelloWorldMsgProtocol.SayHello msg) {
 		helloCounter++;
 		getContext().getLog().info("Hello " + msg.getContent() + " from " + this.getContext().getSelf() + " - count " + helloCounter);
@@ -28,10 +26,7 @@ public class HelloWorldBehaviour extends AbstractBehavior<HelloWorldMsgProtocol.
 	}
 
 	/* factory method */
-	
 	public static Behavior<HelloWorldMsgProtocol.SayHello> create() {
 		return Behaviors.setup(HelloWorldBehaviour::new);
 	}
-
-
 }

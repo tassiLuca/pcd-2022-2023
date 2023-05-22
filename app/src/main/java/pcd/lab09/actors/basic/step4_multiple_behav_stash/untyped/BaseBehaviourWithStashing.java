@@ -13,9 +13,7 @@ public class BaseBehaviourWithStashing extends AbstractBehavior<MsgProtocol.Base
 	private int initialState;
 	private StashBuffer<MsgProtocol.BaseMsg> stashBuffer;
 	
-	private BaseBehaviourWithStashing(ActorContext<MsgProtocol.BaseMsg> context, 
-													int initialState,
-													StashBuffer<MsgProtocol.BaseMsg> stash) {
+	private BaseBehaviourWithStashing(ActorContext<MsgProtocol.BaseMsg> context, int initialState, StashBuffer<MsgProtocol.BaseMsg> stash) {
 		super(context);
 		this.initialState = initialState;
 		this.stashBuffer = stash;

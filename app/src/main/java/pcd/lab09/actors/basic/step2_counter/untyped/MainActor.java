@@ -7,8 +7,8 @@ public class MainActor extends AbstractActor {
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
-				.match(BootMsg.class, this::onBootMsg)
-				.build();	
+			.match(BootMsg.class, this::onBootMsg)
+			.build();
 	}
 
 	private void onBootMsg(BootMsg msg) {

@@ -9,6 +9,4 @@ public class MsgProtocol {
 	public static class MsgOne implements BaseMsg {}
 	
 	public static class MsgTwo implements BaseMsg {}
-
-
 }

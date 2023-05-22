@@ -13,9 +13,11 @@ public class BaseBehaviourWithStashing extends AbstractBehavior<MsgProtocol.Base
 	private int initialState;
 	private StashBuffer<MsgProtocol.BaseMsg> stashBuffer;
 	
-	private BaseBehaviourWithStashing(ActorContext<MsgProtocol.BaseMsg> context, 
-													int initialState,
-													StashBuffer<MsgProtocol.BaseMsg> stash) {
+	private BaseBehaviourWithStashing(
+			ActorContext<MsgProtocol.BaseMsg> context,
+			int initialState,
+			StashBuffer<MsgProtocol.BaseMsg> stash
+	) {
 		super(context);
 		this.initialState = initialState;
 		this.stashBuffer = stash;
@@ -23,25 +25,25 @@ public class BaseBehaviourWithStashing extends AbstractBehavior<MsgProtocol.Base
 	
 
 	public static Behavior<MsgProtocol.BaseMsg> create(int initialState) {
-		return Behaviors.withStash(100,
-				stash ->  Behaviors.setup(
-						context -> new BaseBehaviourWithStashing(context, initialState, stash)));
+		return Behaviors.withStash(100, stash ->  Behaviors.setup(
+			context -> new BaseBehaviourWithStashing(context, initialState, stash)
+		));
 	}
 
 	@Override
 	public Receive<MsgProtocol.BaseMsg> createReceive() {
 		return newReceiveBuilder()
-				.onMessage(MsgProtocol.MsgZero.class,this::onMsgZero)
-				.onMessage(MsgProtocol.BaseMsg.class,this::onAnyMsg)
-				.build();
+			.onMessage(MsgProtocol.MsgZero.class,this::onMsgZero)
+			.onMessage(MsgProtocol.BaseMsg.class,this::onAnyMsg)
+			.build();
 	}
 
 	
 	private Behavior<MsgProtocol.BaseMsg> onMsgZero(MsgProtocol.MsgZero msg) {
 		this.getContext().getLog().info("msgZero - state: " + initialState);		
 		return stashBuffer.unstashAll(
-					Behaviors.setup(context -> new BehaviourA(context, initialState + 1))
-			   );
+			Behaviors.setup(context -> new BehaviourA(context, initialState + 1))
+		);
 	}
 
 	private Behavior<MsgProtocol.BaseMsg> onAnyMsg(MsgProtocol.BaseMsg msg) {
@@ -53,7 +55,6 @@ public class BaseBehaviourWithStashing extends AbstractBehavior<MsgProtocol.Base
 	/* behaviour A */
 	
 	class BehaviourA extends AbstractBehavior<MsgProtocol.BaseMsg> {
-
 		private int localState;
 		
 		private BehaviourA(ActorContext<MsgProtocol.BaseMsg> context, int localState) {
@@ -64,8 +65,8 @@ public class BaseBehaviourWithStashing extends AbstractBehavior<MsgProtocol.Base
 		@Override
 		public Receive<MsgProtocol.BaseMsg> createReceive() {
 			return newReceiveBuilder()
-					.onMessage(MsgProtocol.MsgOne.class, this::onMsgOne)
-					.build();
+				.onMessage(MsgProtocol.MsgOne.class, this::onMsgOne)
+				.build();
 		}	
 
 		private Behavior<MsgProtocol.BaseMsg> onMsgOne(MsgProtocol.MsgOne msg) {
@@ -88,8 +89,8 @@ public class BaseBehaviourWithStashing extends AbstractBehavior<MsgProtocol.Base
 		@Override
 		public Receive<MsgProtocol.BaseMsg> createReceive() {
 			return newReceiveBuilder()
-					.onMessage(MsgProtocol.MsgTwo.class, this::onMsgTwo)
-					.build();
+				.onMessage(MsgProtocol.MsgTwo.class, this::onMsgTwo)
+				.build();
 		}	
 
 		private Behavior<MsgProtocol.BaseMsg> onMsgTwo(MsgProtocol.MsgTwo msg) {
@@ -97,6 +98,4 @@ public class BaseBehaviourWithStashing extends AbstractBehavior<MsgProtocol.Base
 			return Behaviors.stopped();
 		}
 	}
-	
-	
 }

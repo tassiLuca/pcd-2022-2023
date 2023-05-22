@@ -18,7 +18,7 @@ public class Test03b_SchedObserveOn {
 		/* `observeOn`: move the downstream computation to the specified scheduler */
 		Observable.just(100)	
 			.map(v -> { log("map 1 " + v); return v * v; })	// by the current thread (main thread)
-			.observeOn(Schedulers.computation()) 					// => use RX comp thread(s) downstream
+			.observeOn(Schedulers.computation()) 							// => use RX comp thread(s) downstream
 			.map(v -> { log("map 2 " + v); return v + 1; })	// by the RX comp thread
 			.subscribe(v -> log("sub " + v));					// by the RX comp thread
 
