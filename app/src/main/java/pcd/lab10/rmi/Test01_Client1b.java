@@ -9,7 +9,6 @@ public class Test01_Client1b {
     private Test01_Client1b() {}
 
     public static void main(String[] args) {
-
         String host = (args.length < 1) ? null : args[0];
         try {
             Registry registry = LocateRegistry.getRegistry(host);
@@ -18,7 +17,6 @@ public class Test01_Client1b {
             System.out.println("> value "+value);
             c.inc();
             System.out.println("> value "+c.getValue());
-            
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();

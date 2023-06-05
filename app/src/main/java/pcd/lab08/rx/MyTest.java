@@ -15,7 +15,6 @@ public class MyTest {
         //         .subscribe(MyTest::log);
         Disposable subscription = Observable.just("Hello, World!")
                 .subscribe(s -> System.out.println(s));
-        s
     }
 
     private static void log(String msg) { System.out.println("[" + Thread.currentThread().getName() + "] " + msg); }

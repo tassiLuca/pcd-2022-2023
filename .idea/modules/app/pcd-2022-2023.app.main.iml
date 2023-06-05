@@ -1,8 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module version="4">
-  <component name="AdditionalModuleElements">
-    <content url="file://$MODULE_DIR$/../../../app/src/main" dumb="true">
+<module external.linked.project.id=":app:main" external.linked.project.path="$MODULE_DIR$/../../../app" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="pcd-2022-2023" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../../../app/build/classes/java/main" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../app/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../../app/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../app/src/main/resources" type="java-resource" />
     </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../lib/jpf-classes.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../lib/jpf-annotations.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:31.1-jre" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-web:4.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-web-client:4.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-core:4.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.reactivex.rxjava3:rxjava:3.1.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.typesafe.akka:akka-actor-typed_2.13:2.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.rabbitmq:amqp-client:5.17.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-simple:2.0.7" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:2.0.7" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.checkerframework:checker-qual:3.12.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.11.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.3" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-web-common:4.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-auth-common:4.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-bridge-common:4.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-uri-template:4.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-handler-proxy:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-codec-http2:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-codec-http:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-resolver-dns:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-handler:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-transport:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-buffer:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.14.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.reactivestreams:reactive-streams:1.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.typesafe.akka:akka-slf4j_2.13:2.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.typesafe.akka:akka-actor_2.13:2.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.scala-lang:scala-library:2.13.10" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-codec-socks:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-codec:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-codec-dns:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-transport-native-unix-common:4.1.90.Final" level="project" />
+    <orderEntry type="library" name="Gradle: org.scala-lang.modules:scala-java8-compat_2.13:1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.typesafe:config:1.4.2" level="project" />
   </component>
 </module>
