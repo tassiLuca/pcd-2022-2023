@@ -163,5 +163,48 @@ Another useful factory dealing with timer is `Behaviors.withTimers` that create 
 - actors belong to a hierarchy, a top-down relationship between parents and children.
 
 ```scala
+object GuessNumberMain extends App:
+  case object StartPlay
 
+  val system = ActorSystem(
+    // guardian actor
+    Behaviors.receive[StartPlay.type] { (context, _) =>
+      context.log.info("Starting a game.")
+      val game = context.spawn(
+        GuessGame.game(Random.nextInt(100), 
+        numberOfAttempts = 5), 
+        "guess-listener"
+      )
+      val player = context.spawn(
+        GuessGame.humanPlayer(game),
+        "user"
+      )
+      player ! GuessGame.NewInput
+      Behaviors.same
+    },
+    "hello-world-akka-system"
+  )
+  system ! StartPlay
 ```
+
+- here the behavior is written directly inside the `ActorSystem` instead of inside the `apply` method of a Guardian module, but it's semantically the same!
+- `Spawn`: used to create actors from another actor, you use the context by using `context.spawn([someActorsApplyMethod], [someName])`. The signature is the same as the one for the ActorSystem and also creates an ActorRef to which you can send messages.
+- `Behaviors.setup`: this factory creates a behavior that is executed only once - when the actor is instantiated. It creates a behavior from a function with only one input parameter, the context.
+
+How to send a message and expect a reply?
+In Akka, `ask` (`ref ? req`) API that returns a future that will be completed when the response is sent back.
+
+TODO: report correct signature
+
+```scala
+def ask[Res](replyTo: ActorRef[Res] => Req)(implicit timeout: Timeout, scheduler: Scheduler): Future[Res]
+```
+Usage:
+```scala
+context.ask(worker, Worker.Parse) {
+      case Success(Worker.Done) =>
+        Report(s"$text parsed by ${worker.path.name}")
+      case Failure(ex) => ...
+}
+```
+
