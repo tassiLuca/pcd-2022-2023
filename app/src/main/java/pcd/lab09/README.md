@@ -322,6 +322,74 @@ object SpawningProtocol extends App:
 
 ### Discovering
 
+3 ways to obtain Actor references:
+
+- by creating actors with `ActorContext.spawn`
+- by passing actor references as constructor arguments or part of messages
+- by discovery via a **receptionist**
+  - Idea: the receptionist registers and subscribes actors to a specific key. Thus, all subscribers to that key are notified when registration occurs.
+
+<ins>Example</ins>: have an application that allows to register customers in an hotel, informing the hotel concierges about the high-end registrations, so they can prepare for VIP clients.
+
+<ins>Solution</ins>
+
+- when the VIP guests enter the hotel, the person at the front desk enters the guest's data into the hotel app which creates the `VIPGuest` actor and sends it the `EnterHotel` msg which triggers its registration to the concierge `goldenKey` by sending a `Register` message to the `context.system.receptionist`:
+  ```scala
+  object VIPGuest {
+
+    sealed trait Command
+    final case object EnterHotel extends Command
+    final case object LeaveHotel extends Command
+
+    def apply() = Behaviors.receive[Command] { (context, message) =>
+      message match {
+        case EnterHotel =>
+          context.system.receptionist ! Receptionist
+            .Register(HotelConcierge.goldenKey, context.self)
+          Behaviors.same
+
+        case LeaveHotel =>
+          context.system.receptionist ! Receptionist
+            .Deregister(HotelConcierge.goldenKey, context.self)
+          Behaviors.same
+      }
+    }
+  }
+  ```
+  - For the key, you need to define the `ServiceKey`. In this case it is defined inside the `HotelConcierge` actor.
+
+- `HotelConcierge` actor subscribes to a key, called `goldenKey`
+  ```scala
+  object HotelConcierge {
+    val goldenKey = ServiceKey[VIPGuest.Command]("concierge-key")
+
+    sealed trait Command
+    private final case class ListingResponse(listing: Receptionist.Listing) extends Command
+
+    def apply() = Behaviors.setup[Command] { context =>
+      val listingNotificationAdapter =
+        context.messageAdapter[Receptionist.Listing](ListingResponse)
+
+      context.system.receptionist ! Receptionist
+        .Subscribe(goldenKey, listingNotificationAdapter)
+
+      Behaviors.receiveMessage {
+        case ListingResponse(goldenKey.Listing(listings)) =>
+          listings.foreach { actor =>
+            context.log.info(s"${actor.path.name} is in")
+          }
+          Behaviors.same
+      }
+    }
+  }
+  ```
+  - it needs an adapter since the notification it receives does not belong to its protocol. It belongs to the receptionist API. It is an `akka.actor.typed.receptionist.Receptionist.Listing`. So the adapter needs to wrap this message into `ListingResponse` message which belongs to the concierge.
+    - In Akka, an adapter actor is a special type of actor that acts as a bridge between different actor systems or components within an application.
+    - The `VIPGuest` actor (when receiving `EnterHotel` msg) sends a `Register` one to the `context.system.receptionist` which notifies the adapter. The adapter wraps the message into a `ListingResponse` and sends it to the `HotelConcierge` actor.
+  - With the adapter the concierge can subscribe by sending a `Subscribe`
+message with the `goldenKey`
+  - when the concierge receives the list of registration it logs the name of each guest. This happens every time a guest registers.
+
 ### Fault Tolerance
 
 - having a system faults free is an illusion: having a system highly available and distributed is not possible. Simply because some parts of the system aren't under your control, and these can break (e.g. the network).
