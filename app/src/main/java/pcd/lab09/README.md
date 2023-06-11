@@ -188,6 +188,42 @@ private def activeBehavior(state: String): Behavior[Command] = ???
 
 It is important to note that this buffer only lives in memory and is lost when the actor restarts or stops. This can happen with any exception, but with a persistent failure it can be handled so that the buffer is not lost. You can handle this scenario by using `EventSourcedBehavior.onPersistFailure` with a `SupervisorStrategy.restartWithBackoff` available in the Akka persistence API (see Fault Tolerance below section).
 
+:warning: **We already know that the actor's behavior can not block: when all of the available threads are blocked, then all the actors on the same dispatcher will starve for threads and will not be able to process incoming messages.**
+
+```scala
+// THIS IS BAD!!!
+Behaviors.receiveMessages { _ => { Thread.sleep(5000); Behaviors.same } }
+```
+
+However, in some cases, it is unavoidable to do blocking operations.
+A **non-solution**: wrapping in future.
+```scala
+def badSolution(): Behavior[Int] = 
+  Behaviors.receive((ctx,i) => {
+    given ExecutionContext = ctx.executionContext // issue!
+    Future { Thread.sleep(5000); println("Finished " + i) }
+    Behaviors.same 
+  })
+```
+
+**Solution: dedicated dispatcher for blocking ops**
+
+`Application.conf`:
+```conf
+my-blocking-dispatcher {
+  type = Dispatcher
+  executor = "thread-pool-executor"
+  thread-pool-executor { fixed-pool-size = 16 }
+  throughput = 1
+}
+```
+
+```scala
+given ExecutionContext = context.system.dispatchers.lookup(
+  DispatcherSelector.fromConfig("my-blocking-dispatcher")
+)
+```
+
 ### "One actor is no actor"
 
 > _“A colony of ants is more than just an aggregate of insects that are living together. One ant is no ant. Two ants, and you begin to get something entirely new. Put a million together with the workers divided into different castes, each doing a different function—cutting the leaves, looking after the queen, taking care of the young, digging the nest out, and so on—and you’ve got an organism weighing about 11 kilograms [24 pounds], about the size of a dog, and dominating an area the size of a house”._
@@ -407,7 +443,7 @@ message with the `goldenKey`
   - _stop_: the actor must be terminated. It will no longer participate in the processing of messages.
 - **Principle**: the most dangerous actors (actors most likely to crash) should be as far down the hierarchy as possible. Faults that occur far down the hierarchy can be handled or monitored by more actors than a fault that occurs higher up the hierarchy. If a fault occurs at the top level of the actor system, it could restart all top-level actors or even shut down the actor system.
 
-Customising supervision: wrap the actor behavior using `Behaviors.supervise(s)`. Typically you would wrap the actor with supervision in the parent when spawning it as
+Customizing supervision: wrap the actor's behavior using `Behaviors.supervise(s)`. Typically you would wrap the actor with supervision in the parent when spawning it as
 a child.
 ```scala
 Behaviors.supervise(someBehavior())
@@ -457,3 +493,5 @@ Behavior.supervise(
 ```
 
 ### Akka test kit
+
+TODO
