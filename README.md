@@ -15,3 +15,5 @@ Labs:
 - [Lab06: Java Executors Framework + Java Virtual Threads](./app/src/main/java/pcd/lab06/)
 - [Lab07: Event loop with `Vert.X`](./app/src/main/java/pcd/lab07/)
 - [Lab08: Reactive programming with `RxJava`](./app/src/main/java/pcd/lab08/)
+- [Lab09: Akka actors](./app/src/main/java/pcd/lab09/)
+- [Lab10: Akka distributed + JavaRMI + MOM](./app/src/main/java/pcd/lab10/)
