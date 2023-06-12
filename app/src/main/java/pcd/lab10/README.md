@@ -69,7 +69,7 @@ Second option: a few "founders" are required to start the process. Akka provides
 - _Cluster bootstrap_: programmed to find the nodes in cloud environments such as Kubernetes, AWS, Azure, ... . This is the recommended approach.
 - _Programmatically_: using an implementation written ad-hoc.
 
-See `basics.Joining` source:
+See `basics.Joining` + `basics.ShowEvents` sources:
 ```scala
 @main def withSeedAndLeave(): Unit =
   val system1 = startup(port = 2551)(Behaviors.empty)
@@ -183,10 +183,15 @@ A leader is elected after convergence: the first node (in sort order) that is `U
 If a node is unreachable then gossip convergence is not possible and therefore most leader actions are impossible. 
 By enabling `akka.cluster.allow-weakly-up-members` (which is enabled by default), joining nodes can be promoted to `WeaklyUp` even while convergence is not yet reached. Once gossip convergence can be established again, the leader will move `WeaklyUp` members to `Up`.
 
-
-
 --- 
 
+In order to receive cluster state changes (e.g. to be notified of a node leaving the cluster) it is possible to use **subscriptions**.
+You can subscribe an actor to cluster events by using the subscriptions method on the `akka.cluster.typed.Cluster`.
+
+```scala
+val subscriber: ActorRef[MemberEvent]
+cluster.subscriptions ! Subscribe(subscriber, classOf[MemberEvent])
+```
 
 ## Java RMI
 
