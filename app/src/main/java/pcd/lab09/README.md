@@ -495,3 +495,7 @@ Behavior.supervise(
 ### Akka test kit
 
 TODO
+
+## References
+
+- [Akka in Action](https://livebook.manning.com/book/akka-in-action-second-edition/welcome/v-13)
