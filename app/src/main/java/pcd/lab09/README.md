@@ -123,11 +123,10 @@ object WalletOnOff {
         case Increase(_) =>
           context.log.info(s"wallet is deactivated. Can't increase")
           Behaviors.same
-        case Deactivate =>
-          Behaviors.same
         case Activate =>
           context.log.info(s"activating")
           activated(total)
+        case Deactivate => Behaviors.same
       }
     }
   }
@@ -149,8 +148,7 @@ Another useful factory dealing with timer is `Behaviors.withTimers` that create 
             // self actor after the given delay
             timers.startSingleTimer(Activate, t.second)
             deactivated(total)
-          case Activate =>
-            Behaviors.same
+          case Activate => Behaviors.same
         }
       }
     }
@@ -241,8 +239,7 @@ object GuessNumberMain extends App:
     Behaviors.receive[StartPlay.type] { (context, _) =>
       context.log.info("Starting a game.")
       val game = context.spawn(
-        GuessGame.game(Random.nextInt(100), 
-        numberOfAttempts = 5), 
+        GuessGame.game(Random.nextInt(100), numberOfAttempts = 5), 
         "guess-listener"
       )
       val player = context.spawn(
@@ -303,15 +300,18 @@ trait ActorContext ... {
 Usage:
 ```scala
 object Worker {
-  ...
+  sealed trait Command
   final case class Parse(replyTo: ActorRef[Worker.Response]) extends Command
-  ... 
+  
+  sealed trait Response
+  final case object Done extends Response
+  ...
 }
 
 context.ask(worker, Worker.Parse) {
-      case Success(Worker.Done) =>
-        Report(s"$text parsed by ${worker.path.name}")
-      case Failure(ex) => ...
+  // please note mapResponse: Try[Res] => T
+  case Success(Worker.Done) => Report(s"$text parsed by ${worker.path.name}")
+  case Failure(ex) => ...
 }
 ```
 
@@ -320,7 +320,7 @@ context.ask(worker, Worker.Parse) {
   def apply(replyTo: ActorRef[Worker.Response]): Worker.Parse
   ```
   The compiler concludes that you are referring to the apply function of this case class.
-- The `mapResponse` is the definition of the callback as Success or Failure, depending on whether the response arrives on time.
+- The `mapResponse` is the definition of the callback as **Success** or **Failure**, depending on whether the response arrives on time.
 - the implicit `responseTimeout: Timeout` is the amount of time the request waits for a response.
 - You should not pay much attention to the implicit `classTag`. It is there for historical reasons and for binary compatibility.
 
