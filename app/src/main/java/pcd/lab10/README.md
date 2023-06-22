@@ -18,6 +18,22 @@ Note: see the example project for build configuration.
 
 Goal of the cluster module: provide fully automated features for actor distribution and failover.
 
+**:warning: Important warning** - we recall:
+- **at-most-once delivery, i.e. no guaranteed delivery**
+  - means that for each message handed to the mechanism, that message **is delivered once or not at all**; in more casual terms <ins>**it means that messages may be lost.**</ins>
+    - if we want to be sure the message is received we must implement an _ad hoc_ protocol using acknowledgement messages
+- **message ordering per sender–receiver pair**
+  - for a given pair of actors, messages sent directly from the first to the second will not be received out-of-order:
+  - Example:
+    - Actor A1 sends messages M1, M2, M3 to A2.
+    - Actor A3 sends messages M4, M5, M6 to A2.
+    1. If M1 is delivered it must be delivered before M2 and M3
+    2. If M2 is delivered it must be delivered before M3
+    3. If M4 is delivered it must be delivered before M5 and M6
+    4. If M5 is delivered it must be delivered before M6
+    5. A2 can see messages from A1 interleaved with messages from A3
+    6. Since there is no guaranteed delivery, any of the messages may be dropped, i.e. not arrive at A2
+
 Basic concepts:
 
 - **node**:  logical member of cluster, identified by `hostname:port:uid` (there could be multiple nodes on the same physical machine)
@@ -192,6 +208,48 @@ You can subscribe an actor to cluster events by using the subscriptions method o
 val subscriber: ActorRef[MemberEvent]
 cluster.subscriptions ! Subscribe(subscriber, classOf[MemberEvent])
 ```
+
+#### Cluster singleton
+
+- singleton actor which has only one instance in the entire cluster. This instance is assigned to the oldest node, that is, the one with the lower IP, and is automatically moved when its node is removed from the cluster.
+  - It makes sure that at most one singleton instance is running at any point in time.
+- used to provide a single point of access (logger, coordinator, job manager, ...)
+- :warning: **it can be considered an anti-pattern because it can become a single point of failure or a bottleneck in the application**
+  - :poop: This is because **if it has a critical responsibility for the system, the application breaks when it fails**. Whether you use it or not, every decision is a tradeoff.
+  - :rotating_light: The cluster failure detector will notice when oldest node becomes unreachable due to things like JVM crash, hard shut down, or network failure. After Downing and removing that node the a new oldest node will take over and a new singleton actor is created.
+  - messages can always be lost because of the distributed nature of these actors. As always, additional logic should be implemented in the singleton (acknowledgement) and in the client (retry) actors to ensure at-least-once message delivery.
+
+Actor behavior:
+```scala
+object MyBehavior {
+  def apply(): Behavior[String] = Behaviors.Ignore
+}
+```
+
+If you have an actor system you can create the singleton factory as follows.
+```scala
+val singletonFactory = ClusterSingleton(system)
+```
+
+Then you need to wrap your behavior in a SingletonActor and make sure you set up the supervision strategy to restart.
+The proxy will route all messages to the current instance of the singleton, keep track of the oldest node in the cluster and discover the singleton’s ActorRef. There might be periods during which the singleton is unavailable, e.g., when a node leaves the cluster. In these cases, the proxy will buffer the messages sent to the singleton and then deliver them when the singleton is finally available. If the buffer is full the proxy will drop old messages when new messages are sent via the proxy. The size of the buffer is configurable and it can be disabled by using a buffer size of 0.
+```scala
+val wrappedBehavior = SingletonActor(
+  Behaviors
+    .supervise(MyBehavior())
+    .onFailure(SupervisorStrategy.restart),
+  "myShardingCoordinator"
+)
+```
+
+With these two now you can create the singleton as follows:
+```scala
+val mySingletonActor = singletonFactory.init(wrappedBehavior)
+```
+
+It doesn't matter how many times you run this line of code in your application, there will only ever be one instance available in the cluster. 
+
+**:warning:** You have to keep in mind that this actor is not persistent; that is, it loses its state every time it is moved from one node to another. You need to add a persistence mechanism yourself to make its state durable.
 
 ## Java RMI
 

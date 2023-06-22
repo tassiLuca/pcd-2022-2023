@@ -410,8 +410,8 @@ object SpawningProtocol extends App:
         .Subscribe(goldenKey, listingNotificationAdapter)
 
       Behaviors.receiveMessage {
-        case ListingResponse(goldenKey.Listing(listings)) =>
-          listings.foreach { actor =>
+        case ListingResponse(listings) =>
+          listings.serviceInstances(goldenKey).foreach { actor =>
             context.log.info(s"${actor.path.name} is in")
           }
           Behaviors.same
