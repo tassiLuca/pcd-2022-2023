@@ -32,4 +32,3 @@ public class Test4_SubscriberWithRoutingTopic {
         channel.basicConsume(queueName, true, deliverCallback, t -> {});
     }
 }
-

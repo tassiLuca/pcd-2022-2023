@@ -4,6 +4,7 @@ import com.rabbitmq.client.*;
 import java.nio.charset.StandardCharsets;
 
 public class Test2_Subscriber {
+
     private static final String EXCHANGE_NAME = "logs";
 
     public static void main(String[] argv) throws Exception {

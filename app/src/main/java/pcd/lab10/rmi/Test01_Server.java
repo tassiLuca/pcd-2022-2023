@@ -6,7 +6,7 @@ import java.rmi.server.UnicastRemoteObject;
         
 public class Test01_Server  {
                 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         try {
             HelloService helloObj = new HelloServiceImpl();
             HelloService helloObjStub = (HelloService) UnicastRemoteObject.exportObject(helloObj, 0);
@@ -18,7 +18,7 @@ public class Test01_Server  {
             registry.rebind("countObj", countStub);
             System.out.println("Objects registered.");
         } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
+            System.err.println("Server exception: " + e);
             e.printStackTrace();
         }
     }

@@ -62,4 +62,3 @@ public class Test4_PublisherWithRoutingTopic {
         return words.toString();
     }
 }
-

@@ -2,9 +2,9 @@ package pcd.lab10.rmi;
 
 import java.io.Serializable;
 
-public class Message implements Serializable   {
+public class Message implements Serializable {
 
-    private String content;
+    private final String content;
 
     public Message(String s){
         content = s;

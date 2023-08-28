@@ -7,11 +7,11 @@ public class HelloServiceImpl implements HelloService {
     public HelloServiceImpl() {}
 
     public String sayHello() {
-    		return "Hello, world!";
+        return "Hello, world!";
     }
     
     public String sayHello(int n) {
-    	    return "Hello, world! ==> " + n;
+        return "Hello, world! ==> " + n;
     }
 
     public /* synchronized */ void sayHello(Message m) {

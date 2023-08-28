@@ -8,7 +8,6 @@ public class Test3_PublisherWithRoutingDirect {
     private static final String EXCHANGE_NAME = "direct_logs";
 
     public static void main(String[] argv) throws Exception {
-
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         Connection connection = factory.newConnection();
@@ -49,4 +48,3 @@ public class Test3_PublisherWithRoutingDirect {
         return words.toString();
     }
 }
-

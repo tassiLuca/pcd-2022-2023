@@ -14,21 +14,16 @@ public class Test02_Client2 {
         try {
             Registry registry = LocateRegistry.getRegistry(host);
             HelloService obj = (HelloService) registry.lookup("helloObj2");
-            
             MyClass1 arg1 = new MyClass1Impl(200);
             System.out.println("before: >> "+arg1.get());
             obj.sayHello(arg1);
             System.out.println("after: >> "+arg1.get());
-            
             MyClass2 arg = new MyClass2Impl(300); 
             UnicastRemoteObject.exportObject(arg, 0);
-
             System.out.println("before: >> "+arg.get());
             String response = obj.sayHello(arg);
-            
             System.out.println("response: " + response);
             System.out.println("after: >> "+arg.get());
-            
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();

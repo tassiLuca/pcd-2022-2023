@@ -71,8 +71,8 @@ akka {
 
 <ins>**Cluster membership**</ins>
 
-First option: joining a cluster programmatically knowing the address of a member, sending a `Join` message
-
+First option: joining a cluster programmatically knowing the address of a member, sending a `Join` message.
+The following line sends a message to the cluster manager actor to join the cluster with the address of the current cluster member. The `Join` message is used to request a node to join the cluster. By sending this message to the cluster manager, the current cluster member (represented by `cluster.selfMember.address`) requests to join the cluster.
 ```scala
 cluster.manager ! Join(cluster.selfMember.address)
 ```

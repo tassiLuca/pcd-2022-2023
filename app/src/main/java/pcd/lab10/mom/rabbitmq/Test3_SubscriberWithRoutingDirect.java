@@ -26,4 +26,3 @@ public class Test3_SubscriberWithRoutingDirect {
         channel.basicConsume(queueName, true, deliverCallback, t -> {});
     }
 }
-
