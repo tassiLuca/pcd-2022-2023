@@ -9,14 +9,14 @@ public class BallViewer extends Thread {
     private final ViewerFrame frame;
     private static final int FRAMES_PER_SEC = 25;
     
-    public BallViewer(final Context ctx){
+    public BallViewer(final Context ctx) {
         stop = false;
         context = ctx;
         frame = new ViewerFrame(620, 620);
         SwingUtilities.invokeLater(() -> frame.setVisible(true));
    }
     
-    public void run(){
+    public void run() {
         while (!stop) {
             long t0 = System.currentTimeMillis();
         	frame.updatePosition(context.getPositions());
@@ -25,8 +25,7 @@ public class BallViewer extends Thread {
             if (dt > 0) {
 	            try {
 	                Thread.sleep(dt);     
-	            } catch (Exception ex){
-	            }
+	            } catch (Exception ignored) {}
             }
         }
     }

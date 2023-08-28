@@ -28,9 +28,9 @@ public class BallAgent extends Thread {
             lastUpdate = System.currentTimeMillis();
 	        while (!stop) {
 	            updatePosition();
-	            // Thread.sleep(5);
+                Thread.sleep(5);
 	        }
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

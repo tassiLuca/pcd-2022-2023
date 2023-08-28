@@ -25,7 +25,7 @@ public class ViewerFrame extends JFrame {
         setResizable(false);
         panel = new VisualiserPanel(width,height);
         getContentPane().add(panel);
-        addWindowListener(new WindowAdapter(){
+        addWindowListener(new WindowAdapter() {
 			public void windowClosing(final WindowEvent ev){
 				System.exit(-1);
 			}

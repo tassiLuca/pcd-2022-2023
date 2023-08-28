@@ -119,6 +119,105 @@ synchronized (<object reference expression>) {
 
 ## Performances and profiling
 
+Improving performance = doing more with fewer resources.
+
+:smiley: Multithreading benefits & costs:
+
+- improve resource utilization, by letting applications more easily exploit available resources and processing capabilities
+- improve responsiveness, by letting applications begin processing new tasks immediately while existing tasks are still running
+
+:frowning: But also some new costs compared to single-threaded solutions:
+
+- overhead associated with coordinating between threads: locking, signaling, memory synch
+- increased context switching
+- thread creation and teardown
+- scheduling overhead
+
+Three main aspects:
+
+- **throughput**: the rate at which a set of concurrent tasks is completed
+- **responsiveness**: the delay between a request for and completion of some action (also called latency)
+- **scalability**: the improvement in throughput (or lack thereof) as more resources (usually CPUs) are made available
+
+Two different kinds of objectives:
+
+- utilize the existing processing resources more effectively
+  - keeping the CPUs as busy as possible (with useful work)
+- enable our program to exploit additional processing resources if they become available
+  - for CPU-bound programs, increasing capacity by adding processors
+
+### Performance testing
+
+Main goals of performance testing:
+
+- seeking to measure end-to-end performance metrics for representative use cases (use-case selection is important)
+- selecting sizings empirically for various bounds: number of threads, buffer capacities, etc.
+- testing throughput
+  - how fast
+  - focus on average
+  - answering questions like: “How long does it take for an
+operation or task to be completed on average?”
+- testing responsiveness
+  - how mouch
+  - focus on variance 
+  - answering questions like: “What percentage of operations
+will succeed in under XX milliseconds?”
+
+:high_brightness: <ins>**Nearly all engineering decisions involve some form of tradeoff. In any case, avoid premature optimization rule:**</ins>
+
+- <ins>**First, make it right, then make it fast (if it is not already fast enough)**</ins>
+- <ins>**Don't trade safety for performance**</ins>
+  - **The quest for performance is one of the more common sources of concurrency bugs**
+
+Before deciding that one approach is faster than another, we must clarify some aspects:
+
+- what do you mean by faster?
+- under what conditions will this approach be faster? Under light or heavy load? With smaller or larger data sets? Can you support your answer with measurements?
+- how often are these conditions likely to arise in your situations? Can you support your answer with measurements?
+- is this code likely to be used in other situations where the conditions may be different?
+
+:high_brightness: <ins>**Measure, don't guess.**</ins>
+
+Measuring in java: `System` class, `nanoTime()`, `currentTimeMillis()`
+
+#### Basic guidelines for optimizing performance: how many threads?
+
+- The ideal size for a thread pool is related to the types of tasks that will be submitted and the characteristics of the deployment system
+  - 2 basic kinds of tasks: 
+    - **CPU intensive**: a system with $N$ processors usually achieves optimum utilization with a thread pool of $N + 1$ threads. The $(N+1)$-th thread is useful since even in the compute-intense case threads can get page faults or pause for some reason, so the extra runnable thread prevents CPU cycles from going unused
+    - **I/O or blocking operations**: in this case we must set larger thread pool since not all of the threads will be schedulable at all times. How to size the pool?
+      - running the application using several different pool sizes under a benchmark load and observing the level of CPU utilization
+      - computing the optimal pool size for keeping the processors at the desired utilization by using the following formula: 
+      $$
+      N_{THREADS} = N_{CPU} * U_{CPU} * \biggl(1 + \frac{W}{C}\biggl) 
+      $$
+      where: $N_{CPU}$ is the number of CPU, $U_{CPU}$ is the target CPU utilization ($0 \le U_{CPU} \le 1$) and $W/C$ the ratio of wait time to compute time (estimated through profiling).
+
+- **The size should be dynamically bounded to the number of available CPUs (not hard-coded)**
+  - in Java `Runtime.availableProcessors()`
+
+- All concurrent applications have some sources of serialization or synchronization, heavily conditioning the speedup. Often serialization is hidden in frameworks and libraries.
+  - The principal threat to scalability in concurrent application is the exclusive resource lock:
+    - **reduce the duration for which locks are held** (narrow lock scope and finer lock granularity)
+    - **reduce the frequency with which locks are requested**
+    - **replace exclusive locks with coordination mechanisms that allow for greater concurrency**
+
+---
+#### 👨🏻‍💻 Matrix multiplication example
+
+Concurrent programming evergreen: see `step04`.
+
+Goal: compute the multiplication between two matrices.
+
+Rationale: 
+- `MatMulConcurLib` class spawn a number of workers equal to the number of available CPUs on the machine
+- at each worker is assigned the computation of a number of rows equal to `number of rows of A / #workers` 
+
+---
+#### 👨🏻‍💻 Bouncing ball example
+
+---
+
 ### Monitoring
 
 - JConsole is the Java Monitoring and Management Console, a graphical tool shipped in J2SE JDK 5.0 (and later versions)
@@ -131,5 +230,8 @@ synchronized (<object reference expression>) {
     - monitoring % CPU used by methods, threads
     - monitoring how long a thread is blocked or running
     - ...
-- https://stackoverflow.com/questions/27406200/visualvm-thread-states
-- TO FINISH!
+- Threads state in Java:
+  ![java thread states](../../../../../../res/lab01/java-thread-states.png)
+  - **non-runnable (blocked)**: this is the state when the thread is still alive, but is currently not eligible to run
+  - **parking**: threads are being parked because it does not have a permission to execute. Once permission is granted the thread will be unparked and execute.
+  - ref: [stackoverflow discussion](https://stackoverflow.com/questions/27406200/visualvm-thread-states)

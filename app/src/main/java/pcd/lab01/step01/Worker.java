@@ -4,28 +4,28 @@ package pcd.lab01.step01;
  * Base class for very simple agent structure.
  */
 public abstract class Worker extends Thread {
-	
-	public Worker(String name) {
-		super(name);
-	}
 
-	protected void sleepFor(long ms) {
-		try {
-			sleep(ms);
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
-		}
-	}
+    public Worker(final String name) {
+        super(name);
+    }
 
-	protected void print(String msg) {
-		synchronized (System.out) {
-			System.out.print(msg);
-		}
-	}
+    protected void sleepFor(final long ms) {
+        try {
+            sleep(ms);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-	protected void println(String msg) {
-		synchronized (System.out) {
-			System.out.println(msg);
-		}
-	}
+    protected void print(final String msg) {
+        synchronized (System.out) {
+            System.out.print(msg);
+        }
+    }
+
+    protected void println(final String msg) {
+        synchronized (System.out) {
+            System.out.println(msg);
+        }
+    }
 }

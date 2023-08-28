@@ -5,10 +5,9 @@ package pcd.lab01.step03;
  */
 public class Step03 {
 
-	public static void main(String[] args) throws Exception {
-		MyWorkerA t = new MyWorkerA("worker-A");
-		t.start();
-		new MyWorkerB("worker-B", t).start();		
-	}
-
+    public static void main(String[] args) throws Exception {
+        MyWorkerA t = new MyWorkerA("worker-A");
+        t.start();
+        new MyWorkerB("worker-B", t).start();
+    }
 }

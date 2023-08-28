@@ -3,15 +3,10 @@ package pcd.ass02.task_based;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
-import java.util.Arrays;
 import javax.swing.*;
-
-import pcd.demo.common.*;
-
 
 public class ViewDistributionFrame extends JFrame {
     
