@@ -1,0 +1,16 @@
+title: Concurrent Programming @ ISI UniBo (Cesena)
+description: Concurrent Programming Course
+baseurl: "/pcd-2022-2023"
+
+# Rendering
+markdown: kramdown
+kramdown:
+  input: GFM                  # Uses GitHub Flavored Markdown
+  hard_wrap: false            # Do not enter <br> automatically
+  syntax_highlighter: rouge   # Uses Rouge for syntax highlighting
+
+# Theme and plugins
+remote_theme: pages-themes/primer@v0.6.0
+plugins:
+  - jekyll-remote-theme
+  - jemoji
