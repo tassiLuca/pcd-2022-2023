@@ -83,9 +83,15 @@ Two main examples
     ```
   - see `check_act` and `check_act_fixed`
 
-
 ## Model Checking with JPF
-- TO FINISH!
+
+- Java Pathfinder (JPF) is an open-source system to verify executable Java bytecode programs.
+  - It was developed at the Robust Software Engineering Group at NASA Ames Research Center
+  - open-sourced since 04/2005: [jpf-core GitHub repo](https://github.com/javapathfinder/jpf-core), [jpf wiki](https://github.com/javapathfinder/jpf-core/wiki)
+- The core of JPF is a Java Virtual Machine. JPF executes normal Java bytecode programs and can store, match and restore program states. **It executes programs** not just once (like a normal VM), but theoretically **in all possible ways, <ins>checking for property violations</ins> like deadlocks or unhandled exceptions <ins>along with all potential execution paths</ins>**.
+  - Its primary application has been Model checking of concurrent programs, to find defects such as data races and deadlocks.
+- <ins>Difference between testing and model checking</ins>:
+  ![testing vs model-checking](../../../../../../res/lab02/testing-vs-model-checking.png)
 
 <!--
 
