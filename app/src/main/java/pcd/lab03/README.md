@@ -109,23 +109,45 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
        waiting to lock monitor 0x0000600000320d00 (object 0x000000070e8181a0, a pcd.lab03.liveness.deadlock_account.Account),
        which is held by "Thread-1"
        ```
-     - this is the situation in which: inside `Thread-0` $A$ wants to send money to $B$ so it acquires the lock on $A$ and attempts to acquire the lock on $B$; in the meanwhile, because inside `Thread-1` $B$ wants to send money to $C$, it acquires the lock on $B$ before the `Thread-0` can do so, blocking it waiting for the `Thread-1` releases the lock on $B$. At this point, `Thread-1` should acquire the lock on $C$, but before doing so, `Thread-18`, which wants to send money from $C$ to $A$, acquires the lock on $C$, preventing `Thread-1` from entering the critical section. Now on, `Thread-18` attempts to acquire the lock on $A$, which is already hold by `Thread-0`: deadlock :skull:!
-       ```
-            Thread-0                 Thread-1                Thread-18
-            A --> B                  B --> C                 C --> A
-       |--> 1) lock A           |--> 2) lock B           |-> 4) lock C
-       |    3) attempt lock B x-|    5) attempt lock C --|   6) attempt lock A ->|
-       |--------------------------------------<----------------------------------|
+     - this is the situation in which: inside `Thread-0` $A$ wants to send money to $B$ so it acquires the lock on $A$ and attempts to acquire the lock on $B$; in the meanwhile, because inside `Thread-1` $B$ wants to send money to $C$, it acquires the lock on $B$ before the `Thread-0` can do so, blocking it waiting for the `Thread-1` releases the lock on $B$. At this point, `Thread-1` should acquire the lock on $C$, but before doing so, `Thread-18`, which wants to send money from $C$ to $B$, acquires the lock on $C$, preventing `Thread-1` from entering the critical section. Now on, `Thread-18` attempts to acquire the lock on $B$, which is already hold by `Thread-1`: deadlock :skull:!
+        ```
+        Thread-0                   Thread-1                Thread-18
+        A --> B                    B --> C                 C --> A
+        1) lock A            |---> 2) lock B           |-> 4) lock C
+        3) attempt lock B x->|     5) attempt lock C ->|   6) attempt lock B ->|
+                             |------------------------<------------------------|
        ```
 
    - How to fix? If they asked for the locks in the same order, there would be no cyclic locking dependency and therefore no deadlock: <ins>**a program will be free of lock-ordering deadlocks if all threads acquire the locks they need in a fixed global order**</ins>
      - introduce `AccountManager` entity which acquires the lock on the sender and receiver based on their id
-     - running `TestAccountsNoDeadlock` and running VisualVM
-       ![test account with no deadlock](../../../../../../res/lab03/account-management.png)
-       No more deadlock :smile:.
-       :warning: Note that if the number of accounts is greater than 3 could happen that more threads are simultaneously in their critical section (due to the fact they are sending money from and to different receivers, e.g. $A \rightarrow B \land C \rightarrow D$).
+        ```java
+        int first = Math.min(from, to);
+        int last = Math.max(from, to);
+        synchronized (accounts[first]) {
+            synchronized (accounts[last]) {
+                // transfer
+            }
+        }
+        ```
+     - running `TestAccountsNoDeadlock` and running VisualVM. No more deadlock :smile:.
 
    - :speech_balloon: Alternative technique: timed locks: detecting and recovering from deadlocks using `tryLock` feature of [`Lock`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/Lock.html) classes instead of the intrinsic lock (see `TestAccountsNoDeadlockWithLock.java` + `AccountWithLock.java`)
+     - `tryLock` semantic: acquires the lock only if it is free at the time of invocation. Acquires the lock if it is available and returns immediately with the value true. If the lock is not available then this method will return immediately with the value false.
+        ```java
+        if (fromAcct.lock.tryLock()) {
+            try {
+                if (toAcct.lock.tryLock()) {
+                    try {
+                        // logic
+                    } finally {
+                        toAcct.lock.unlock();
+                    }
+                }
+            } finally {
+                fromAcct.lock.unlock();
+            }
+        }
+        ```
 
    - Verifying consistent lock ordering requires a global analysis of your program's locking behavior.
 
@@ -145,7 +167,7 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
     > 
     > This is also an Item of Effective Java (Item 79: Avoid excessive synchronization)
     > 
-    > "To avoid liveness and safety failures, **never cede control to the client within a synchronized method or block**. In other words, inside a synchronized region, do not invoke a method that is design to be overridden, or one provided by a client in the fort of a function object. **From the perspective of the class with the synchronized region, such methods are _alien_.** The class has no knowledge of what the method does and has no control over it. Depending on what an alien method does, calling it from a synchronized region can cause exceptions, deadlock, or data corruption"
+    > "To avoid liveness and safety failures, **never cede control to the client within a synchronized method or block**. In other words, inside a synchronized region, do not invoke a method that is design to be overridden, or one provided by a client in the form of a function object. **From the perspective of the class with the synchronized region, such methods are _alien_.** The class has no knowledge of what the method does and has no control over it. Depending on what an alien method does, calling it from a synchronized region can cause exceptions, deadlock, or data corruption"
     >
 
 ### Other liveness hazard

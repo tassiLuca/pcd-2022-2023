@@ -7,7 +7,7 @@ public class TestSafeObservableSet {
     public static void main(String... args) {
         final SafeObservableSet<Integer> set = new SafeObservableSet<>();
         // set.addObserver((s, e) -> System.out.println("Added element " + e));
-        set.addObserver(new SetObserver<Integer>() {
+        set.addObserver(new SetObserver<>() {
             @Override
             public void added(ObservableSet<Integer> set, Integer element) {
                 System.out.println("Added element " + element);

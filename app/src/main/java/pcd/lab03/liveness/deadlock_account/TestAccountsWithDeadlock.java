@@ -10,11 +10,10 @@ public class TestAccountsWithDeadlock {
 	private static final Random gen = new Random();
 	private static final Account[] accounts = new Account[NUM_ACCOUNTS];
 	
-	public static void transferMoney(Account from,	Account to, int amount) throws InsufficientBalanceException {
+	public static void transferMoney(Account from, Account to, int amount) throws InsufficientBalanceException {
 		synchronized (from) {
 			synchronized (to) {
-				if (from.getBalance() < amount)
-					throw new InsufficientBalanceException();
+				if (from.getBalance() < amount) throw new InsufficientBalanceException();
 				from.debit(amount);
 				to.credit(amount);
 				try {
@@ -28,7 +27,7 @@ public class TestAccountsWithDeadlock {
 		public void run() {
 			for (int i = 0; i < NUM_ITERATIONS; i++) {
 				int fromAcc = gen.nextInt(NUM_ACCOUNTS);
-				int toAcc = 0;
+				int toAcc;
 				do {
 					toAcc = gen.nextInt(NUM_ACCOUNTS);
 				} while (toAcc == fromAcc);
