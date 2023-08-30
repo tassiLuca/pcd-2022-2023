@@ -26,5 +26,5 @@ jobs:
         run: |
           for jpfFile in $(ls app/src/main/jpf/*.jpf); do
             echo "JPF: $jpfFile"
-            java -jar tmp/jpf-core/build/RunJPF.jar $jpfFile
+            java -jar /tmp/jpf-core/build/RunJPF.jar $jpfFile
           done
