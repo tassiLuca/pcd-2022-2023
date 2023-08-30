@@ -18,9 +18,9 @@ jobs:
       - name: Executes JPF
         run: |
           echo "javac version: `javac --version`"
-          ls
           mkdir app/bin
-          javac -d app/bin -cp lib app/src/main/java/pcd/lab02/*.java
+          find app/src/main/java/pcd/lab02 -name "*.java" | xargs javac -d app/bin -cp lib
+          ls app/bin
           for jpfFile in $(ls app/src/main/jpf/*.jpf); do
             echo "JPF: $jpfFile"
             java -jar lib/RunJPF.jar $jpfFile
