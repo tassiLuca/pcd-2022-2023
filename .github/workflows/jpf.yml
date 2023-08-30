@@ -15,8 +15,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
+      - name: Checkout jpf-core
+        uses: action/checkout@v3
+        with:
+          repository: 'javapathfinder/jpf-core'
       - name: Executes JPF
         run: |
+          ls
           echo "javac version: `javac --version`"
           mkdir app/bin
           find app/src/main/java/pcd/lab02 -name "*.java" | xargs javac -d app/bin -cp lib/jpf-classes.jar
