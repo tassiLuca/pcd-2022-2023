@@ -15,7 +15,10 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
       - name: Clone jpf-core
-        run: git clone https://github.com/javapathfinder/jpf-core.git /tmp/jpf-core
+        run: |
+          git clone https://github.com/javapathfinder/jpf-core.git /tmp/jpf-core
+          cd /tmp/jpf-core
+          ./gradlew buildJars
       - name: Build
         run: ./gradlew build
       - name: Executes JPF
