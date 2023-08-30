@@ -4,6 +4,12 @@ plugins {
   	id "org.openjfx.javafxplugin" version "0.0.13"
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(20)
+    }
+}
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
