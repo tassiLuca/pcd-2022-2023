@@ -16,7 +16,7 @@ class MyView extends JFrame implements ActionListener, ModelObserver {
 
 	private final MyController controller;
 	private final JTextField state;
-	
+
 	public MyView(MyController controller) {
 		super("My View");
 		this.controller = controller;
@@ -28,8 +28,8 @@ class MyView extends JFrame implements ActionListener, ModelObserver {
 		button2.addActionListener(this);
 		state = new JTextField(10);
 		JPanel panel = new JPanel();
-		panel.add(button1);		
-		panel.add(button2);	
+		panel.add(button1);
+		panel.add(button2);
 		panel.add(state);
 		setLayout(new BorderLayout());
 	    add(panel,BorderLayout.NORTH);
@@ -39,7 +39,7 @@ class MyView extends JFrame implements ActionListener, ModelObserver {
 			}
 		});
 	}
-	
+
 	public void actionPerformed(ActionEvent ev) {
 		try {
 			controller.processEvent(ev.getActionCommand());

@@ -7,7 +7,7 @@ public class TestGUI {
         MyController controller = new MyController(model);
         MyView view = new MyView(controller);
         model.addObserver(view);
-        view.show();
+        view.display();
         new MyAgent(model).start();
     }
 }

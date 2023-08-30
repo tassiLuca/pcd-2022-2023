@@ -110,4 +110,49 @@ Item 81, Effective Java: ***Prefer concurrency utilities to `wait` and `notify`*
 > **Given the difficulty of usign `wait` and `notify` correctly, you should use the higher-level concurrency utilities instead**."
 
 ## GUI
-- TO FINISH!
+
+Once upon a time GUI applications were single-threaded and GUI events were processed by a “main event loop”.
+Modern GUI frameworks are not so different: there is **a dedicated event dispatch thread (EDT) for handling GUI events which fetches events off a queue and dispatches them to application-defined event handlers**.
+
+![EDT](../../../../../../res/lab04/edt.png)
+
+Multithreaded GUI are a “failed dream”: many attempts failed due to the generation of problems with race conditions and deadlocks. Most of the modern GUI Frameworks are single-threaded:
+
+- <ins>all GUI objects are accessed exclusively by the event thread</ins>
+- <ins>the application developer must make sure that these objects are properly confined</ins>
+
+Problems and challenges:
+
+- **if one task takes long time to execute, other tasks must wait blocking the overall GUI...**
+  - `gui1_unresponsive` + `gui2_mvc_unresponsive` examples: in both examples the EDT calls the controller which executes a (sleep-simulated) long-term task and the entire GUI freeze 🥶
+- **... so tasks that execute in the event-thread must return quickly**
+- **to start long-term computations a separate control flow (thread) must be used. However, tipically, a long-term task must provide a visual feedback for indicating progress or when it completes and this code need to be executed by the EDT!**
+  - see `gui3_mvc_deadlock` package: inside the controller, a new thread (on-the-fly) is created. Now the application becomes smooth!
+  - more robust solution: consider offloading the task to a thread pool (as a master-worker solution) to avoid the cost of thread creation and to limit the number of threads to be used, besides the fact it is more elegant
+- Since all Swing/JavaFX components and data models (table model, tree model) are confined to the EDT **any code that access these objects must run in the event thread**
+  - `SwingUtilities.isEventDispatchThread`: to check if the current thread is the event thread
+  - `SwingUtilities.invokeLater`: to schedule a Runnable for execution on the event thread
+  - `SwingUtilities.invokeAndWait`: to schedule a Runnable task for execution on the event thread, blocking the current thread until it completes (it cannot be called by the event thread)
+    - :collision: be aware of deadlocks! See package `gui3_mvc_deadlock`: when the model is updated the thread calls the `modelUpdated()` method and then blocks until the EDT has completed the GUI update but, since the model is designed as a monitor, the calling thread still holds the lock on it and the EDT should access it to retrieve the current state but cannot (because the lock is held still by the calling thread)! As we saw in the previous lab, never call "alien" method from a synchronized region!
+    - the solution is simple: replace `invokeAndWait` with `invokeLater`
+  - methods to enqueue and repaint or revalidation requests on the event queue
+  - methods for adding or removing listeners can be called from any thread, but listeners will always be invoked in the event thread
+
+### Toward a cleaner design
+
+> Key points:
+>
+> - **encapsulating control in agents**
+>   - active components of the program
+>   - encapsulating the control logic
+> - **application Model as shared passive components**
+>   - can be used by agents
+>   - encapsulating mutex properties + includes coordination media $\rightarrow$ **monitors** 
+> - **View as shared passive components + one active component**
+>   - passive components
+>     - enabling and mediating the interaction with users
+>     - observed and used by agents
+>   - active component (EDT)
+>     - responsible for executing any tasks about the GUI
+
+See `gui.chrono2_strict` package.

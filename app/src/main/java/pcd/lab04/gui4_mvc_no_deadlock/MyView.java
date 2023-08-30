@@ -50,6 +50,7 @@ class MyView extends JFrame implements ActionListener, ModelObserver {
 	public void modelUpdated(MyModel model) {
 		try {
 			System.out.println("[View] model updated => updating the view");
+			// Don't block. Schedule the given runnable for execution on the EDT
 			SwingUtilities.invokeLater(() -> state.setText("state: " + model.getState()));
 		} catch (Exception ex){
 			ex.printStackTrace();
