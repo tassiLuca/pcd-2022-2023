@@ -1,6 +1,6 @@
-target = pcd.lab02.jpf.TestScenarios
+target=pcd.lab02.jpf.TestScenarios
 
-classpath=app/bin
+classpath=build/classes/java/main
 
 listener=gov.nasa.jpf.listener.PreciseRaceDetector
 

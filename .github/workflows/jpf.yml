@@ -14,17 +14,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
+      - name: Clone jpf-core
+        run: git clone https://github.com/javapathfinder/jpf-core.git /tmp/jpf-core
+      - name: Build
+        run: ./gradlew build
       - name: Executes JPF
         run: |
-          echo "javac version: `javac --version`"
-          git clone https://github.com/javapathfinder/jpf-core.git
-          pushd jpf-core
-          ./gradlew buildJars
-          popd
-          mkdir app/bin
-          find app/src/main/java/pcd/lab02 -name "*.java" | xargs javac -d app/bin -cp jpf-core/build/jpf-classes.jar
-          ls app/bin
           for jpfFile in $(ls app/src/main/jpf/*.jpf); do
             echo "JPF: $jpfFile"
-            java -jar jpf-core/build/RunJPF.jar $jpfFile
+            java -jar tmp/jpf-core/build/RunJPF.jar $jpfFile
           done
