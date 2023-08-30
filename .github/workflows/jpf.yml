@@ -18,6 +18,7 @@ jobs:
       - name: Executes JPF
         run: |
           echo "javac version: `javac --version`"
+          ls
           mkdir app/bin
           javac -d app/bin -cp lib app/src/main/java/pcd/lab02/*.java
           for jpfFile in $(ls app/src/main/jpf/*.jpf); do
