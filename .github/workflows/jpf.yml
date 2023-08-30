@@ -13,14 +13,15 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '20'
+          java-version: '11'
       - name: Clone jpf-core
         run: |
           git clone https://github.com/javapathfinder/jpf-core.git /tmp/jpf-core
           cd /tmp/jpf-core
           ./gradlew buildJars
-      - name: Build
-        run: ./gradlew build
+      - name: Compile JPF sources related
+        run: |
+          find app/src/main/java/pcd/lab02/ -name "*.java" | xargs javac -d app/bin -cp /tmp/jpf-core/build/jpf-classes.jar
       - name: Executes JPF
         run: |
           for jpfFile in $(ls app/src/main/jpf/*.jpf); do
