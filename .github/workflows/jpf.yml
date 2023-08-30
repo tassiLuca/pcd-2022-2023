@@ -4,7 +4,6 @@ on:
   push:
   workflow_dispatch:
 
-
 jobs:
   jpf-verify:
     runs-on: ubuntu-latest
@@ -15,18 +14,17 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-      - name: Checkout jpf-core
-        uses: action/checkout@v3
-        with:
-          repository: 'javapathfinder/jpf-core'
       - name: Executes JPF
         run: |
-          ls
           echo "javac version: `javac --version`"
+          git clone https://github.com/javapathfinder/jpf-core.git
+          pushd jpf-core
+          ./gradlew buildJars
+          popd
           mkdir app/bin
-          find app/src/main/java/pcd/lab02 -name "*.java" | xargs javac -d app/bin -cp lib/jpf-classes.jar
+          find app/src/main/java/pcd/lab02 -name "*.java" | xargs javac -d app/bin -cp jpf-core/build/jpf-classes.jar
           ls app/bin
           for jpfFile in $(ls app/src/main/jpf/*.jpf); do
             echo "JPF: $jpfFile"
-            java -jar lib/RunJPF.jar $jpfFile
+            java -jar jpf-core/build/RunJPF.jar $jpfFile
           done
