@@ -47,6 +47,7 @@ public class CyclicBarrierTest {
             } catch (BrokenBarrierException | InterruptedException exception) {
                 System.out.println("An exception occurred while waiting... " + exception);
             }
+            System.out.println("-> Player " + getName() + " ended");
         }
 
         private void doInitStuff() {

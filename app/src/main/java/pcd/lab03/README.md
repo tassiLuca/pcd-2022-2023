@@ -319,7 +319,7 @@ Main types provided with Java library:
     - until the latch reached the terminal state, the gate is closed and no thread can pass
     - in the terminal state, the gate opens allowing all threads to pass
     - once the latch reaches the terminal state, it cannot change the state again and so it remains open forever!
-  - `CountDownLatch` class:
+  - [`CountDownLatch`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CountDownLatch.html) class:
     - ```java
       CountDownLatch(int count)
       ```

@@ -5,53 +5,53 @@ import java.util.concurrent.locks.*;
 
 public class BoundedBuffer2<Item> implements BoundedBuffer<Item> {
 
-	private final LinkedList<Item> buffer;
-	private final int maxSize;
-	private final Lock mutex;
-	private final Condition notEmpty;
-	private final Condition notFull;
+    private final LinkedList<Item> buffer;
+    private final int maxSize;
+    private final Lock mutex;
+    private final Condition notEmpty;
+    private final Condition notFull;
 
-	public BoundedBuffer2(int size) {
-		buffer = new LinkedList<>();
-		maxSize = size;
-		mutex = new ReentrantLock(); // new ReentrantLock(true) for fair mutex
-		// conditions are taken from the same lock!
-		notEmpty = mutex.newCondition();
-		notFull = mutex.newCondition();
-	}
+    public BoundedBuffer2(int size) {
+        buffer = new LinkedList<>();
+        maxSize = size;
+        mutex = new ReentrantLock(); // new ReentrantLock(true) for fair mutex
+        // conditions are taken from the same lock!
+        notEmpty = mutex.newCondition();
+        notFull = mutex.newCondition();
+    }
 
-	public void put(Item item) throws InterruptedException {
-		try {
-			mutex.lock();
-			if (isFull()) {
-				notFull.await();
-			}
-			buffer.addLast(item);
-			notEmpty.signal();
-		} finally {
-			mutex.unlock();
-		}
-	}
+    public void put(Item item) throws InterruptedException {
+        try {
+            mutex.lock();
+            if (isFull()) {
+                notFull.await();
+            }
+            buffer.addLast(item);
+            notEmpty.signal();
+        } finally {
+            mutex.unlock();
+        }
+    }
 
-	public Item get() throws InterruptedException {
-		try {
-			mutex.lock();
-			if (isEmpty()) {
-				notEmpty.await();
-			}
-			Item item = buffer.removeFirst();
-			notFull.signal();
-			return item;
-		} finally {
-			mutex.unlock();
-		}
-	}
+    public Item get() throws InterruptedException {
+        try {
+            mutex.lock();
+            if (isEmpty()) {
+                notEmpty.await();
+            }
+            Item item = buffer.removeFirst();
+            notFull.signal();
+            return item;
+        } finally {
+            mutex.unlock();
+        }
+    }
 
-	private boolean isFull() {
-		return buffer.size() == maxSize;
-	}
+    private boolean isFull() {
+        return buffer.size() == maxSize;
+    }
 
-	private boolean isEmpty() {
-		return buffer.size() == 0;
-	}
+    private boolean isEmpty() {
+        return buffer.size() == 0;
+    }
 }

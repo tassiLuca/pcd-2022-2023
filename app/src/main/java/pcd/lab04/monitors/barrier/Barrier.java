@@ -7,10 +7,10 @@ package pcd.lab04.monitors.barrier;
  */
 interface Barrier {
 
-	/**
-	 * Blocks until all other participant threads reach this barrier.
-	 * @throws InterruptedException if any thread interrupted the current
-	 * thread before or while the current thread was waiting.
-	 */
-	void hitAndWaitAll() throws InterruptedException;
+    /**
+     * Blocks until all other participant threads reach this barrier.
+     * @throws InterruptedException if any thread interrupted the current
+     * thread before or while the current thread was waiting.
+     */
+    void hitAndWaitAll() throws InterruptedException;
 }
