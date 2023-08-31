@@ -130,13 +130,16 @@ Problems and challenges:
   - see `gui3_mvc_deadlock` package: inside the controller, a new thread (on-the-fly) is created. Now the application becomes smooth!
   - more robust solution: consider offloading the task to a thread pool (as a master-worker solution) to avoid the cost of thread creation and to limit the number of threads to be used, besides the fact it is more elegant
 - Since all Swing/JavaFX components and data models (table model, tree model) are confined to the EDT **any code that access these objects must run in the event thread**
+  - [`SwingUtilities`](https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/javax/swing/SwingUtilities.html) class
   - `SwingUtilities.isEventDispatchThread`: to check if the current thread is the event thread
   - `SwingUtilities.invokeLater`: to schedule a Runnable for execution on the event thread
+    - JavFX: [`Application.runLater`](https://javadoc.io/static/org.openjfx/javafx-graphics/15-ea+1/javafx.graphics/javafx/application/Platform.html#runLater(java.lang.Runnable))
   - `SwingUtilities.invokeAndWait`: to schedule a Runnable task for execution on the event thread, blocking the current thread until it completes (it cannot be called by the event thread)
     - :collision: be aware of deadlocks! See package `gui3_mvc_deadlock`: when the model is updated the thread calls the `modelUpdated()` method and then blocks until the EDT has completed the GUI update but, since the model is designed as a monitor, the calling thread still holds the lock on it and the EDT should access it to retrieve the current state but cannot (because the lock is held still by the calling thread)! As we saw in the previous lab, never call "alien" method from a synchronized region!
     - the solution is simple: replace `invokeAndWait` with `invokeLater`
   - methods to enqueue and repaint or revalidation requests on the event queue
   - methods for adding or removing listeners can be called from any thread, but listeners will always be invoked in the event thread
+  - :warning: Note: Apps should avoid flooding the EDT with too many pending Runnables. Otherwise, the app may become unresponsive. Apps are encouraged to batch up multiple operations into fewer calls.
 
 ### Toward a cleaner design
 
