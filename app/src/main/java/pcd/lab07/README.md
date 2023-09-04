@@ -35,7 +35,7 @@
       - Normally you would override the `start` method. When Vert.x deploys the verticle it will call it, and when the method has completed the verticle will be considered started.
       You can also optionally override the `stop` method.
 
-      - If you have to do something in your verticle start-up which takes some time and you don’t want the verticle to be considered deployed until that happens (e.g. start HTTP server) you have to implement the asynchronous `start` method (see `Step7_SimpleServer` e `Step8_WebService`). This version of the method takes a `Future` as a parameter. When the method returns the verticle will not be considered deployed. Some time later, after you’ve done everything you need to do you can call complete on the Future (or fail) to signal that you’re done.
+      - If you have to do something in your verticle start-up which takes some time and you don’t want the verticle to be considered deployed until that happens (e.g. start HTTP server) you have to implement the asynchronous `start` method (see `Step7_SimpleServer` e `Step8_WebService`). This version of the method takes a `Promise` (see below) as a parameter. When the method returns the verticle will not be considered deployed. Some time later, after you’ve done everything you need to do you can call complete on the Future (or fail) to signal that you’re done.
 
       - <ins>They are assigned an event loop thread when they are created and the start method is called with that event loop. When you call any other methods that takes a handler on a core API from an event loop then Vert.x will guarantee that those handlers, when called, will be executed on the same event loop.</ins>
 

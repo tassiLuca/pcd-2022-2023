@@ -4,22 +4,22 @@ import io.reactivex.rxjava3.core.*;
 
 public class Test02a_Creation_Synch {
 
-	public static void main(String[] args) {
-	    log("Creating a **cold** observable.");
-	    Observable<Integer> source = Observable.create(emitter -> {
-	        for (int i = 0; i <= 100; i++) {
-	            log("source: " + i);
-	            emitter.onNext(i);
-	        }
-	        emitter.onComplete();
-	    });
-	    log("Subscribing A");
-	    source.subscribe(v -> log("A: " + v));
-	    log("Subscribing B");
-	    source.subscribe(v -> log("B: " + v));
-	}
+    public static void main(String[] args) {
+        log("Creating a **cold** observable.");
+        Observable<Integer> source = Observable.create(emitter -> {
+            for (int i = 0; i <= 100; i++) {
+                log("source: " + i);
+                emitter.onNext(i);
+            }
+            emitter.onComplete();
+        });
+        log("Subscribing A");
+        source.subscribe(v -> log("A: " + v));
+        log("Subscribing B");
+        source.subscribe(v -> log("B: " + v));
+    }
 
-	static private void log(String msg) {
-		System.out.println("[" + Thread.currentThread().getName() + "] " + msg);
-	}
+    static private void log(String msg) {
+        System.out.println("[" + Thread.currentThread().getName() + "] " + msg);
+    }
 }

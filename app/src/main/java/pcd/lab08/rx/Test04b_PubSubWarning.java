@@ -11,21 +11,21 @@ import io.reactivex.rxjava3.subjects.Subject;
  */
 public class Test04b_PubSubWarning {
 
-	public static void main(String[] args){
-		Subject<String> subject = PublishSubject.create();
-		subject.onNext("Alpha");
-		subject.onNext("Beta");
-		subject.onNext("Alpha");
-		subject.onComplete();
-		subject.map(String::length)
-			.subscribe(System.out::println);  // no output, too late
-		System.out.println("second...");
-		Subject<String> subject2 = PublishSubject.create();
-		subject2.map(String::length)
-			.subscribe(System.out::println);  // assembly must occur before producing
-		subject2.onNext("One");
-		subject2.onNext("Two");
-		subject2.onNext("Three");
-		subject2.onComplete();
-	}
+    public static void main(String[] args){
+        Subject<String> subject = PublishSubject.create();
+        subject.onNext("Alpha");
+        subject.onNext("Beta");
+        subject.onNext("Alpha");
+        subject.onComplete();
+        subject.map(String::length)
+            .subscribe(System.out::println);  // no output, too late
+        System.out.println("second...");
+        Subject<String> subject2 = PublishSubject.create();
+        subject2.map(String::length)
+            .subscribe(System.out::println);  // assembly must occur before producing
+        subject2.onNext("One");
+        subject2.onNext("Two");
+        subject2.onNext("Three");
+        subject2.onComplete();
+    }
 }
