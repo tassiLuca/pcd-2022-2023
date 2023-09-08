@@ -36,3 +36,6 @@ bin
 
 # MacOS temp file
 .DS_Store
+
+# TLA+
+*.toolbox/
