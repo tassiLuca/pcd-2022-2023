@@ -90,8 +90,166 @@ Two main examples
   - open-sourced since 04/2005: [jpf-core GitHub repo](https://github.com/javapathfinder/jpf-core), [jpf wiki](https://github.com/javapathfinder/jpf-core/wiki)
 - The core of JPF is a Java Virtual Machine. JPF executes normal Java bytecode programs and can store, match and restore program states. **It executes programs** not just once (like a normal VM), but theoretically **in all possible ways, <ins>checking for property violations</ins> like deadlocks or unhandled exceptions <ins>along with all potential execution paths</ins>**.
   - Its primary application has been Model checking of concurrent programs, to find defects such as data races and deadlocks.
-- <ins>Difference between testing and model checking</ins>:
-  ![testing vs model-checking](../../../../../../res/lab02/testing-vs-model-checking.png)
+  - <ins>Difference between testing and model checking</ins>:
+    ![testing vs model-checking](../../../../../../res/lab02/testing-vs-model-checking.png)
+
+- :poop: it works only with Java 11 - so you must compile sources with java11
+  - to generate jars: `git clone https://github.com/javapathfinder/jpf-core` and then `./gradlew buildJars`: you can find the jars in `build/*.jar`
+    - on MacOS may not work, use Github CI :)
+  - then write the simplified version of the program to test (with listeners, Verify Api and `assert`) and the related `*.jpf` file (see `app/src/main/jpf/` folder)
+  - to run: `java -jar JPF/build/RunJPF.jar TestScenarios.jpf` (modify paths)
+    - or: `java -jar JPF/build/RunJPF.jar +classpath=bin ...`
+    - Important options: memory extension & listeners - `java -Xmx1024m -jar ./JPF/build/RunJPF.jar +classpath=bin/main +listener=gov.nasa.jpf.listener.PreciseRaceDetector pcd.lab02.jpf.TestCheckAct`
+
+- [Listeners](https://github.com/javapathfinder/jpf-core/wiki/Listeners)
+- [Verify API](https://github.com/javapathfinder/jpf-core/wiki/Verify-API-of-JPF)
+- [Testing with JUnit](https://github.com/javapathfinder/jpf-core/wiki/Writing-JPF-tests)
+
+- **Check and Act**
+  ```
+  JPF: app/src/main/jpf/TestCheckAct.jpf
+  JavaPathfinder core system v8.0 (rev 2858a4f9d5f7697797fa0d5582961a1b080c2396) - (C) 2005-2014 United States Government. All rights reserved.
+
+
+  ====================================================== system under test
+  pcd.lab02.jpf.TestCheckAct.main()
+
+  ====================================================== search started: 9/9/23, 10:27 AM
+  Warning:  orphan NativePeer method: jdk.internal.misc.Unsafe.getUnsafe()Lsun/misc/Unsafe;
+
+  ====================================================== error 1
+  gov.nasa.jpf.listener.PreciseRaceDetector
+  race for field pcd.lab02.jpf.Counter@1f0.count
+  Thread-1 at pcd.lab02.jpf.Counter.inc(Counter.java:11)
+  "  WRITE: putfield pcd.lab02.jpf.Counter.count
+  Thread-2 at pcd.lab02.jpf.Counter.getCount(Counter.java:15)
+  "  READ:  getfield pcd.lab02.jpf.Counter.count
+
+
+  ====================================================== trace #1
+  ------------------------------------------------------ transition #0 thread: 0
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"ROOT" ,1/1,isCascaded:false}
+  [6712 insn w/o sources]
+  ------------------------------------------------------ transition #1 thread: 0
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"END_ATOMIC" ,1/3,isCascaded:false}
+  [5 insn w/o sources]
+  ------------------------------------------------------ transition #2 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"JOIN" ,1/2,isCascaded:false}
+  [4 insn w/o sources]
+  ------------------------------------------------------ transition #3 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,1/2,isCascaded:false}
+  [4 insn w/o sources]
+  ------------------------------------------------------ transition #4 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,1/2,isCascaded:false}
+  [5 insn w/o sources]
+  ------------------------------------------------------ transition #5 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,1/2,isCascaded:false}
+  [5 insn w/o sources]
+  ------------------------------------------------------ transition #6 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,1/2,isCascaded:false}
+  [4 insn w/o sources]
+  ------------------------------------------------------ transition #7 thread: 2
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,2/2,isCascaded:false}
+  [4 insn w/o sources]
+  ------------------------------------------------------ transition #8 thread: 2
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,2/2,isCascaded:false}
+  [4 insn w/o sources]
+  ------------------------------------------------------ transition #9 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,1/2,isCascaded:false}
+  [1 insn w/o sources]
+
+  ====================================================== results
+  error #1: gov.nasa.jpf.listener.PreciseRaceDetector "race for field pcd.lab02.jpf.Counter@1f0.count   T..."
+
+  ====================================================== statistics
+  elapsed time:       00:00:00
+  states:             new=19,visited=4,backtracked=13,end=2
+  search:             maxDepth=11,constraints=0
+  choice generators:  thread=18 (signal=0,lock=1,sharedRef=9,threadApi=4,reschedule=3), data=0
+  heap:               new=542,released=63,maxLive=515,gcCycles=19
+  instructions:       6842
+  max memory:         110MB
+  loaded code:        classes=88,methods=2401
+
+  ====================================================== search finished: 9/9/23, 10:27 AM
+  ```
+
+- **Lost Update**:
+  ```
+  JPF: app/src/main/jpf/TestLostUpdate.jpf
+  JavaPathfinder core system v8.0 (rev 2858a4f9d5f7697797fa0d5582961a1b080c2396) - (C) 2005-2014 United States Government. All rights reserved.
+
+
+  ====================================================== system under test
+  pcd.lab02.jpf.TestLostUpdate.main()
+
+  ====================================================== search started: 9/9/23, 10:27 AM
+  Warning:  orphan NativePeer method: jdk.internal.misc.Unsafe.getUnsafe()Lsun/misc/Unsafe;
+  before inc Thread-1
+  after inc Thread-1
+  before inc Thread-2
+  after inc Thread-2
+  before inc Thread-2
+  after inc Thread-2
+  after inc Thread-2
+  after inc Thread-2
+  after inc Thread-2
+  before inc Thread-2
+  after inc Thread-1
+
+  ====================================================== error 1
+  gov.nasa.jpf.listener.PreciseRaceDetector
+  race for field pcd.lab02.jpf.TestLostUpdate$Counter@1ed.count
+    Thread-1 at pcd.lab02.jpf.TestLostUpdate$Counter.inc(TestLostUpdate.java:16)
+  "  WRITE: putfield pcd.lab02.jpf.TestLostUpdate$Counter.count
+    Thread-2 at pcd.lab02.jpf.TestLostUpdate$Counter.inc(TestLostUpdate.java:16)
+  "  READ:  getfield pcd.lab02.jpf.TestLostUpdate$Counter.count
+
+
+  ====================================================== trace #1
+  ------------------------------------------------------ transition #0 thread: 0
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"ROOT" ,1/1,isCascaded:false}
+        [6702 insn w/o sources]
+  ------------------------------------------------------ transition #1 thread: 0
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"START" ,1/2,isCascaded:false}
+        [5 insn w/o sources]
+  ------------------------------------------------------ transition #2 thread: 0
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"START" ,1/3,isCascaded:false}
+        [5 insn w/o sources]
+  ------------------------------------------------------ transition #3 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"JOIN" ,1/2,isCascaded:false}
+        [434 insn w/o sources]
+  ------------------------------------------------------ transition #4 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,1/2,isCascaded:false}
+        [5 insn w/o sources]
+  ------------------------------------------------------ transition #5 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,1/2,isCascaded:false}
+        [4 insn w/o sources]
+  ------------------------------------------------------ transition #6 thread: 2
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,2/2,isCascaded:false}
+        [434 insn w/o sources]
+  ------------------------------------------------------ transition #7 thread: 2
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,2/2,isCascaded:false}
+        [5 insn w/o sources]
+  ------------------------------------------------------ transition #8 thread: 1
+  gov.nasa.jpf.vm.choice.ThreadChoiceFromSet {id:"SHARED_OBJECT" ,1/2,isCascaded:false}
+        [1 insn w/o sources]
+
+  ====================================================== results
+  error #1: gov.nasa.jpf.listener.PreciseRaceDetector "race for field pcd.lab02.jpf.TestLostUpdate$Counte..."
+
+  ====================================================== statistics
+  elapsed time:       00:00:00
+  states:             new=20,visited=5,backtracked=16,end=2
+  search:             maxDepth=11,constraints=0
+  choice generators:  thread=19 (signal=0,lock=1,sharedRef=8,threadApi=7,reschedule=3), data=0
+  heap:               new=636,released=151,maxLive=518,gcCycles=25
+  instructions:       11580
+  max memory:         110MB
+  loaded code:        classes=87,methods=2303
+
+  ====================================================== search finished: 9/9/23, 10:27 AM
+  ```
 
 <!--
 
