@@ -1,6 +1,5 @@
 package pcd.lab01.bouncingballdemo.bouncingballnet;
 
-
 import java.util.*;
 
 import pcd.lab01.bouncingballdemo.common.*;
@@ -8,11 +7,11 @@ import pcd.lab01.bouncingballdemo.common.*;
 public class BallAgent extends Thread {
     
     private P2d pos;
-    private V2d vel;
+    private final V2d vel;
     private boolean stop;
-    private double speed;
-    private Context ctx;
-    private Boundary bounds;
+    private final double speed;
+    private final Context ctx;
+    private final Boundary bounds;
     private long lastUpdate;
     
     public BallAgent(Context ctx){
@@ -62,25 +61,25 @@ public class BallAgent extends Thread {
     }
 
     private void applyConstraints(){
-        if (pos.x > bounds.getX1()){
-        		if (ctx.goneOutsideRight(this,pos,vel,speed)){
-        			stop = true;
-        		} else {
-        			pos.x = bounds.getX1();
-        			vel.x = -vel.x;
-        		}
-        } else if (pos.x < bounds.getX0()){
-	    		if (ctx.goneOutsideLeft(this,pos,vel,speed)){
-	    			stop = true;
-	    		} else {
-	    			pos.x = bounds.getX0();
-	    			vel.x = -vel.x;
-	    		}
-        } else if (pos.y > bounds.getY1()){
-            pos.y = bounds.getY1();
+        if (pos.x > bounds.x1()){
+            if (ctx.goneOutsideRight(this,pos,vel,speed)){
+                stop = true;
+            } else {
+                pos.x = bounds.x1();
+                vel.x = -vel.x;
+            }
+        } else if (pos.x < bounds.x0()){
+            if (ctx.goneOutsideLeft(this,pos,vel,speed)){
+                stop = true;
+            } else {
+                pos.x = bounds.x0();
+                vel.x = -vel.x;
+            }
+        } else if (pos.y > bounds.y1()){
+            pos.y = bounds.y1();
             vel.y = -vel.y;
-        } else if (pos.y < bounds.getY0()){
-            pos.y = bounds.getY0();
+        } else if (pos.y < bounds.y0()){
+            pos.y = bounds.y0();
             vel.y = -vel.y;
         }
     }

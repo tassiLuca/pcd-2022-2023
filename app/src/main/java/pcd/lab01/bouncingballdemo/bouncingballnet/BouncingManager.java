@@ -10,18 +10,15 @@ import pcd.lab01.bouncingballdemo.common.V2d;
 /**
  * Agents processing incoming requests
  * for attaching peers and migrating balls.
- * 
- * @author aricci
- *
  */
 public class BouncingManager extends Thread{
 
-	private boolean stop;
-	private DatagramSocket socket;
-	private DatagramPacket currentMsg;
-	private int port;
-	private Context ctx;
-	
+	private final boolean stop;
+	private final DatagramSocket socket;
+	private final DatagramPacket currentMsg;
+	private final int port;
+	private final Context ctx;
+
 	public BouncingManager(int port, Context ctx) throws Exception {
 		this.port = port;
 		stop = false;
@@ -30,7 +27,7 @@ public class BouncingManager extends Thread{
 		byte[] msgBuffer = new byte[1024];
 		currentMsg = new DatagramPacket(msgBuffer,msgBuffer.length);
 	}
-	
+
 	public void run(){
 		log("Start working (port "+port+").");
 		while (!stop) {
@@ -38,7 +35,7 @@ public class BouncingManager extends Thread{
 				socket.receive(currentMsg);
 				DataInputStream st = new DataInputStream(new ByteArrayInputStream(currentMsg.getData()));
 				int code = st.readInt();
-                 if (code == 0xCAFE01){
+				if (code == 0xCAFE01){
 					// attach left
 					String addr = st.readUTF();
 					int port = st.readInt();
@@ -69,7 +66,7 @@ public class BouncingManager extends Thread{
 					V2d vel = new V2d(vx,vy);
 					log("new ball: "+pos+" "+vel+" "+speed);
 					ctx.createNewBall(pos,vel,speed);
-				} 
+				}
 			} catch (Exception ex){
 				log("Errore nella comunicazione.");
 			}

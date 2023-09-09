@@ -216,6 +216,15 @@ Rationale:
 ---
 #### 👨🏻‍💻 Bouncing ball example
 
+- For each new ball a `BallAgent` thread is spawned.
+- Despite the fact the `BallViewer` updates the GUI with the new positions of the balls 25 times per seconds (`FRAMES_PER_SEC`) the `BallAgent` in loop continuously updates the position of the ball, using (wasting!) a lot of resources
+  - we can think every `BallAgent` is assigned to one core of the machine
+  - after spawning $NUM_CORES$ balls the CPU is working at full speed just for updating unnecessarily the position of the ball that is not displayed
+  - if we continue to spawn other balls the CPU begin suffering and the balls start _lagging_!
+  ![bouncing-ball-demo](../../../../../../res/lab01/bouncing-ball-demo.png)
+- How to solve? Simply, make the `BallAgent` don't waste resources recomputing in loop the position of the ball since it is not anyway displayed! The GUI update happens every `FRAMES_PER_SEC`. Make the `BallAgent` recompute the position every `FRAMES_PER_SEC`! 
+  - simply adding a `Thread.sleep(5)` solve the situation!
+
 ---
 
 ### Monitoring

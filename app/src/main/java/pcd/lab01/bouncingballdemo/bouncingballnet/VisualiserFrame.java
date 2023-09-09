@@ -12,7 +12,7 @@ import pcd.lab01.bouncingballdemo.common.*;
 
 public class VisualiserFrame extends JFrame {
     
-    private VisualiserPanel panel;
+    private final VisualiserPanel panel;
     
     public VisualiserFrame(Context ctx){
         setTitle("Bouncing Balls");

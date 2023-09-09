@@ -1,14 +1,11 @@
 package pcd.lab01.bouncingballdemo.bouncingballnet;
 
-
 import java.util.*;
 
 import pcd.lab01.bouncingballdemo.common.*;
 
 /**
  * Context acts as container of the balls.
- *  
- * @author aricci
  */
 public class Context {
 

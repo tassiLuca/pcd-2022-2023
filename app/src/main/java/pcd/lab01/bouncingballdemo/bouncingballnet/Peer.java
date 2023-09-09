@@ -5,17 +5,13 @@ import java.net.*;
 
 import pcd.lab01.bouncingballdemo.common.*;
 
-
 /**
- * Class representing a target peer 
- * 
- * @author aricci
- *
+ * Class representing a target peer
  */
 public class Peer {
-	private InetSocketAddress address;
-	private DatagramSocket socket;
-	
+	private final InetSocketAddress address;
+	private final DatagramSocket socket;
+
 	public Peer(InetSocketAddress targetAddr) throws Exception {
 		address = targetAddr;
 		socket = new DatagramSocket();
@@ -39,7 +35,7 @@ public class Peer {
 			System.err.println("Error in attaching peer.");
 		}
 	}
-	
+
 	/**
 	 * Informs the target peer to attach current node on the right
 	 */
@@ -71,7 +67,7 @@ public class Peer {
 			out.writeDouble(pos.y);
 			out.writeDouble(v.x);
 			out.writeDouble(v.y);
-			out.writeDouble(speed);			
+			out.writeDouble(speed);
 			byte[] barray = bout.toByteArray();
 			DatagramPacket msg = new DatagramPacket(barray,barray.length,address);
 			socket.send(msg);

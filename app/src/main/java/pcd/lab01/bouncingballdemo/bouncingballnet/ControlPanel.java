@@ -4,9 +4,8 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class ControlPanel extends JFrame implements ActionListener{
-    private JButton buttonPlus;
-    private JButton buttonMinus;
-    private Context context;
+    private final JButton buttonPlus;
+    private final Context context;
     
     public ControlPanel(Context ctx){
         context = ctx;
@@ -23,7 +22,7 @@ public class ControlPanel extends JFrame implements ActionListener{
 		});
 
         buttonPlus = new JButton("+ ball");
-        buttonMinus = new JButton("- ball");
+        JButton buttonMinus = new JButton("- ball");
         JPanel p = new JPanel();
         p.add(buttonPlus);
         p.add(buttonMinus);
