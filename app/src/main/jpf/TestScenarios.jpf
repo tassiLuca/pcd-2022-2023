@@ -1,7 +1,5 @@
 target=pcd.lab02.jpf.TestScenarios
 
-classpath=app/bin
-
 listener=gov.nasa.jpf.listener.PreciseRaceDetector
 
 report.console.property_violation=error,trace
