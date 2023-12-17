@@ -29,6 +29,7 @@ Overview:
   - tasks are modeled by a `Callable<V>` functional interface
     - `call()` method encapsulates the behavior of the task doing some kind of computation and returning some kind `V` of value
   - A `Future` represents the result of an asynchronous computation. Methods are provided to check if the computation is complete, to wait for its completion, and to retrieve the result of the computation. The result can only be retrieved using the method `get` when the computation has been completed, **blocking if necessary until it is ready.**
+  ![submit](../../../../../../res/lab06/submit.svg)
 - `Executors` provides factory and utility static methods for `Executor`, `ExecutorService`, `ScheduledExecutorService`, `ThreadFactory`, and `Callable` classes. Most commons ones:
   - `FixedThreadPool`:
     - one thread for each task up to the maximum pool size
@@ -110,12 +111,12 @@ From Java SE 7 **Fork-Join Framework**:
   - `join()` method allows a `ForkJoinTask` to wait for the completion of another one.
 
 - 2 types of `ForkJoinTask` specializations:
-  - `RecursiveAction` represent executions that do not yield a return value.
-  - `RecursiveTask` yield return values. This is preferred because most divide-and-conquer algorithms return a value from a computation over a data set.
+  - `RecursiveAction` represents executions that do not yield a return value.
+  - `RecursiveTask` yields return values. This is preferred because most divide-and-conquer algorithms return a value from a computation over a data set.
 
 Example in `lab06.executors.forkjoin` package.
 
-**Goal**:  counting the occurrences of a word in a set of documents [^1].
+**Goal**: count the occurrences of a word in a set of documents.
 
 [^1]: [Fork and Join: Java Can Excel at Painless Parallel Programming Too!](https://www.oracle.com/technical-resources/articles/java/fork-join.html)
 
@@ -141,9 +142,38 @@ The fork/join framework maximizes parallelism by ensuring that a pending documen
 - facilitates error recovery by providing natural transaction boundaries
 - promotes concurrency
 
-### `CompletableFuture`
+### `CompletableFuture`s
 
-
+- :warning: **`CompletableFuture`s $\neq$ Promises**
+  - **_who invokes the continuation/callback?_**
+    - In the case of `CompletableFuture`s a thread **different** from the thread that triggered the request (e.g. the thread generating the events)
+      - **:collision: This may lead to races!**
+    - In the case of Promises, like JS ones, since it is an event-driven architecture based on the event loop model, the continuation is executed by the event loop, i.e. the logical thread of control that triggered the async task / function (which is different from the thread that served / executed the async task / function)
 
 ## Java Virtual Threads
+
+**Virtual Threads $\approx$ A lightweight implementation of Java threads**:
+
+- threads as _**logical unit of concurrency**_
+- but **preserving the benefits of classic 'physical' (platform) threads**
+
+Cons of platform threads:
+
+- thread creation is expensive and resource-heavy
+  - in OS the thread stack is allocated as a monolithic block of memory at thread creation time that cannot be resized later
+    - if stack memory is overprovisioned, we will use even more memory
+    - if it is underprovisioned, we risk `StackOverflowException`
+    - We generally lean towards overprovisioning thread stacks as being the lesser of evil, but the result is a relatively low limit on how many concurrent threads we can have for a given amount of memory
+  - **Limit on how many threads can be created** $\Rightarrow$ complicates the design and development
+    - e.g in server-side applications, it would be natural to adopt a thread-per-task approach, i.e. assigning each incoming request to a single thread for the lifetime of the task
+    - as programs scale, this approach is on a collision
+    course with the memory characteristics of platform threads
+
+![java virtual threads](../../../../../../res/lab06/java-virtual-threads.png)
+
 TO FINISH!
+
+## References 
+
+- [Virtual threads -- rockthejvm.com](https://blog.rockthejvm.com/ultimate-guide-to-java-virtual-threads/)
+- [Fork and join example](https://www.oracle.com/technical-resources/articles/java/fork-join.html)

@@ -78,7 +78,7 @@ See `monitors.signaling_semantic` package.
 
 ---
 
-## 2. Exploiting high-level support
+### 2. Exploiting high-level support
 
 Exploiting explicit locks with `ReentrantLock` and `Condition` classes implementing condition variables provided by `java.util.concurrent` library.
 
@@ -109,7 +109,7 @@ Item 81, Effective Java: ***Prefer concurrency utilities to `wait` and `notify`*
 > "Since Java 5, the platform has provided higher-level concurrency utilities that do the sorts of things you formerly had to hand-code atop `wait` and `notify`.
 > **Given the difficulty of usign `wait` and `notify` correctly, you should use the higher-level concurrency utilities instead**."
 
-## GUI
+## GUI design and implementation
 
 Once upon a time GUI applications were single-threaded and GUI events were processed by a “main event loop”.
 Modern GUI frameworks are not so different: there is **a dedicated event dispatch thread (EDT) for handling GUI events which fetches events off a queue and dispatches them to application-defined event handlers**.

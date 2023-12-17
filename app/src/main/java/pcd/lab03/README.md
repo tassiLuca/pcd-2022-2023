@@ -4,7 +4,7 @@
 
 Thread-off between _safety_ and _liveness_:
 
-- Locks are essentials to ensure thread safety 
+- Locks are essential to ensure thread safety 
   - :boom: but indiscriminate use of locking can cause **"lock-ordering" deadlocks**;
 - Thread pools and semaphores are essential to bind resource consumption 
   - :boom: but failure to understand activities being bounded can cause **resource deadlocks**.
@@ -107,7 +107,7 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
        waiting to lock monitor 0x0000600000320d00 (object 0x000000070e8181a0, a pcd.lab03.liveness.deadlock_account.Account),
        which is held by "Thread-1"
        ```
-     - this is the situation in which: inside `Thread-0` $A$ wants to send money to $B$ so it acquires the lock on $A$ and attempts to acquire the lock on $B$; in the meanwhile, because inside `Thread-1` $B$ wants to send money to $C$, it acquires the lock on $B$ before the `Thread-0` can do so, blocking it waiting for the `Thread-1` releases the lock on $B$. At this point, `Thread-1` should acquire the lock on $C$, but before doing so, `Thread-18`, which wants to send money from $C$ to $B$, acquires the lock on $C$, preventing `Thread-1` from entering the critical section. Now on, `Thread-18` attempts to acquire the lock on $B$, which is already hold by `Thread-1`: deadlock :skull:!
+     - this is the situation in which: inside `Thread-0` $A$ wants to send money to $B$ so it acquires the lock on $A$ and attempts to acquire the lock on $B$; in the meanwhile, because inside `Thread-1` $B$ wants to send money to $C$, it acquires the lock on $B$ before the `Thread-0` can do so, blocking it waiting for the `Thread-1` releases the lock on $B$. At this point, `Thread-1` should acquire the lock on $C$, but before doing so, `Thread-18`, which wants to send money from $C$ to $B$, acquires the lock on $C$, preventing `Thread-1` from entering the critical section. Now on, `Thread-18` attempts to acquire the lock on $B$, which is already held by `Thread-1`: deadlock :skull:!
         ```
         Thread-0                   Thread-1                Thread-18
         A --> B                    B --> C                 C --> A
@@ -116,7 +116,7 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
                              |------------------------<------------------------|
        ```
 
-   - How to fix? If they asked for the locks in the same order, there would be no cyclic locking dependency and therefore no deadlock: <ins>**a program will be free of lock-ordering deadlocks if all threads acquire the locks they need in a fixed global order**</ins>
+   - How to fix it? If they asked for the locks in the same order, there would be no cyclic locking dependency and therefore no deadlock: <ins>**a program will be free of lock-ordering deadlocks if all threads acquire the locks they need in a fixed global order**</ins>
      - introduce `AccountManager` entity which acquires the lock on the sender and receiver based on their id
         ```java
         int first = Math.min(from, to);
@@ -168,7 +168,7 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
     > "To avoid liveness and safety failures, **never cede control to the client within a synchronized method or block**. In other words, inside a synchronized region, do not invoke a method that is design to be overridden, or one provided by a client in the form of a function object. **From the perspective of the class with the synchronized region, such methods are _alien_.** The class has no knowledge of what the method does and has no control over it. Depending on what an alien method does, calling it from a synchronized region can cause exceptions, deadlock, or data corruption"
     >
 
-### Other liveness hazard
+### Other liveness hazards
 
 - **Starvation**
   - typically manifested when using priorities
@@ -178,7 +178,7 @@ Deadlock with locks happens when multiple threads wait forever due to cyclic loc
 - **Poor responsiveness**
   - e.g. executing long-term tasks in GUI thread
   - can also be caused by poor lock management
-    - if a thread holds a lock for long time - for instance while iterating on a large collection and performing substantial work on each element - other threads that need to access that collection may have to wait long time
+    - if a thread holds a lock for a long time - for instance, while iterating on a large collection and performing substantial work on each element - other threads that need to access that collection may have to wait a long time
 - **Livelock**
   - when threads cannot make progress because they keep retrying
 an operation that will always fail
@@ -200,7 +200,7 @@ The Java platform libraries (Java 5.0 & Java 6.0) include a rich set of concurre
   - created by [`Collections.synchronizedXXX`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collections.html) factory methods
   - achieving thread-safety by _encapsulating_ the state + _synchronizing_ every public method serializing all access to the collection's state
   - Problems:
-    - need to use additional client-side locking to guard compound actions, including iteration, navigation, conditional operations such as put-if-absent. 
+    - need to use additional client-side locking to guard compound actions, including iteration, navigation and conditional operations such as put-if-absent.
 
       ---
       From Java doc:
@@ -230,7 +230,6 @@ The Java platform libraries (Java 5.0 & Java 6.0) include a rich set of concurre
     - the object to be used for client-side locking in the synchronized collection object itself
     - performances: locking the collection for long-term operations, such as iteration, strongly limits concurrency. This is due to the fact synchronized collections lock the whole collection.
 
-
 ### Concurrent Collections
 
 - Since Java 1.5
@@ -247,18 +246,18 @@ Some notes:
 - Bounded queue as a basic building block for producer-consumer design pattern
   - powerful resource management tool for building reliable applications, making programs more robust to overload by throttling activities that threaten to produce more work than can be handled
 
-- [`Deque`](https://docs.oracle.com/javase/8/docs/api/java/util/Deque.html) and [`BlockingDeque`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/BlockingDeque.html) are used for _work stealing_ design pattern
+- [`Deque`](https://docs.oracle.com/javase/8/docs/api/java/util/Deque.html) and [`BlockingDeque`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/BlockingDeque.html) are used for _work-stealing_ design pattern
   
   ---
 
-  **Deque** = "double ended queue": A linear collection that supports element insertion and removal at both ends. It is usually pronounced "deck".
+  **Deque** = "double-ended queue": A linear collection that supports element insertion and removal at both ends. It is usually pronounced "deck".
 
   A **BlockingDeque** is a deque that additionally supports blocking operations that wait for the deque to become non-empty when retrieving an element, and wait for space to become available in the deque when storing an element.
 
   ---
 
   - similar to producers-consumers
-  - each consumer has its deque
+  - each consumer has its own deque
   - if a consumer exhausts the work in its deque, it can steal work from the tail of someone else’s deque
   - More scalable than _producers-consumers_:
     - workers don’t contend for a shared work queue: most of the time they access only their own deque, reducing contention
@@ -298,7 +297,7 @@ Main types provided with Java library:
     }
     ```
   - `tryLock()` for polled and timed lock acquisition to have a more sophisticated error recovery
-    - see `TestAccountsNoDeadlockWithTryLock.java` for an use example
+    - see `TestAccountsNoDeadlockWithTryLock.java` for a use example
   - `lockInterruptibly()`: acquires the lock unless the current thread is interrupted.
   - [`ReadWriteLock`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/locks/ReadWriteLock.html): A ReadWriteLock maintains a pair of associated locks, one for read-only operations and one for writing. The read lock may be held simultaneously by multiple reader threads, so long as there are no writers. The write lock is exclusive.
   - Aside: `ReentrantLock` throughput is about 4 times than intrinsic lock
@@ -316,7 +315,7 @@ Main types provided with Java library:
 
 - **_Latches_**
   - A latch is a synchronizer that can delay the progress of a thread until it reaches its terminal state, functioning as a gate:
-    - until the latch reached the terminal state, the gate is closed and no thread can pass
+    - until the latch reaches the terminal state, the gate is closed and no thread can pass
     - in the terminal state, the gate opens allowing all threads to pass
     - once the latch reaches the terminal state, it cannot change the state again and so it remains open forever!
   - [`CountDownLatch`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CountDownLatch.html) class:
@@ -326,7 +325,7 @@ Main types provided with Java library:
     - `countDown()` method to decrement the counter
     - `await()` method that causes the current thread to wait until the latch has counted down to zero unless the thread is interrupted.
     ![latch use](../../../../../../res/lab03/latch-seq.png)
-  - Used to ensure that certain activities do not proceed until other one-time activity complete. Main examples:
+  - Used to ensure that certain activity does not proceed until another one-time activity has been completed. Main examples:
     - ensuring a computation does not proceed until the resources it needs have been initialized
     - ensuring that a service does not start until other services on which it depends have started
     - waiting for all parties involved in an activity (e.g: players in a multiplayer game) to be ready to proceed
@@ -341,7 +340,7 @@ some event has occurred
       ```
       Creates a new CyclicBarrier that will trip when the given number of parties (threads) are waiting upon it, and which will execute the given barrier action when the barrier is tripped, performed by the last thread entering the barrier.
       ![barrier](../../../../../../res/lab03/cyclic-barrier-uml.png)
-    - Actually, it is a **Cyclic** barrier: with `reset()` method is possible reset the barrier to its initial state
+    - Actually, it is a **Cyclic** barrier: with `reset()` method is possible to reset the barrier to its initial state
       ![barrier](../../../../../../res/lab03/cyclic-barrier-sq.png)
     - see `barrier` package
 

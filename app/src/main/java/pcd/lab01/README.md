@@ -1,6 +1,6 @@
 # Lab01
 
-## Multithreaded programming in Java
+## Basics of Java Multithreaded programming
 
 - Java has been the first mainstream programming language to provide native support for concurrent programming
   - “conservative approach”: everything is still an object
@@ -58,7 +58,7 @@ th.start();
   - the method to execute the thread object is `start()`, **not** `run()`
     - If `run()` method is called directly instead of `start()`, `run()` method will be treated as a normal overridden method of the thread class (or runnable interface), just like a passive object. This run method will be executed within the context of the current thread, not in a new thread.
     - It’s the `start()` method that spawns a new thread and schedules the thread with the JVM. The JVM will let the newly spawned thread execute `run()` method when the resources and CPU are ready.
-  - All the public methods to asynchronously act on the control flow of the thread have been deprecated (see [Java Thread Primitive Deprecation](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/doc-files/threadPrimitiveDeprecation.html) -- the reasons described here will be completely clear in a couple of labs...). The same functionality is achieved through proper patterns, we will see in the following.
+  - All the public methods to asynchronously act on the control flow of the thread have been deprecated (see [Java Thread Primitive Deprecation](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/doc-files/threadPrimitiveDeprecation.html) -- the reasons described here will be completely clear in a couple of labs...). The same functionality is achieved through proper patterns, as we will see in the following.
 - When the Java virtual machine starts up, there is usually one non-daemon thread (the thread that typically calls the application's main method). The Java virtual machine terminates when all started non-daemon threads have terminated.
   - and a lot of other daemon threads: Java RMI, garbage collector, ...
 
@@ -107,17 +107,17 @@ synchronized (<object reference expression>) {
 
     Ordine delle stampe: `b3` è garantito sia stampato dopo `a2`.
 
-## Programming Discipline
+### :grey_exclamation: Programming Discipline
 
 - Strong conceptual separation between **active** and **passive** entities:
   - active entities as agents that are responsible for accomplishing some tasks $\Rightarrow$ no interfaces
   - passive entities as the objects shared and manipulated by such agents to accomplish such tasks, described by a contract, i.e. their interface
 - Viewing threads as <ins>**active objects encapsulating state, behavior and the control of the behavior**</ins>
-  - the object's methods should be called only by the thread represented by the object
+  - **the object's methods should be called only by the thread represented by the object**
   - **the use of public methods should be minimized**, ideally no public methods; protected ones are allowed for extendibility's sake
 - **Promoting interaction using shared (passive) objects, not by calling public methods of their interface**: this would violate encapsulation of the control flow
 
-## Performances and profiling
+### Performances and profiling
 
 Improving performance = doing more with fewer resources.
 
@@ -158,8 +158,8 @@ Main goals of performance testing:
   - answering questions like: “How long does it take for an
 operation or task to be completed on average?”
 - testing responsiveness
-  - how mouch
-  - focus on variance 
+  - how much
+  - focus on variance
   - answering questions like: “What percentage of operations
 will succeed in under XX milliseconds?”
 
@@ -185,24 +185,27 @@ Measuring in java: `System` class, `nanoTime()`, `currentTimeMillis()`
 - The ideal size for a thread pool is related to the types of tasks that will be submitted and the characteristics of the deployment system
   - 2 basic kinds of tasks: 
     - **CPU intensive**: a system with $N$ processors usually achieves optimum utilization with a thread pool of $N + 1$ threads. The $(N+1)$-th thread is useful since even in the compute-intense case threads can get page faults or pause for some reason, so the extra runnable thread prevents CPU cycles from going unused
-    - **I/O or blocking operations**: in this case we must set larger thread pool since not all of the threads will be schedulable at all times. How to size the pool?
+    - **I/O or blocking operations**: in this case, we must set a larger thread pool since not all of the threads will be schedulable at all times. How to size the pool?
       - running the application using several different pool sizes under a benchmark load and observing the level of CPU utilization
-      - computing the optimal pool size for keeping the processors at the desired utilization by using the following formula: 
+      - computing the optimal pool size for keeping the processors at the desired utilization by using the following formula:
+   
       $$
-      N_{THREADS} = N_{CPU} * U_{CPU} * \biggl(1 + \frac{W}{C}\biggl) 
+      N_{THREADS} = N_{CPU} * U_{CPU} * \biggl(1 + \frac{W}{C}\biggl)
       $$
+
       where: $N_{CPU}$ is the number of CPU, $U_{CPU}$ is the target CPU utilization ($0 \le U_{CPU} \le 1$) and $W/C$ the ratio of wait time to compute time (estimated through profiling).
 
 - **The size should be dynamically bounded to the number of available CPUs (not hard-coded)**
   - in Java `Runtime.availableProcessors()`
 
 - All concurrent applications have some sources of serialization or synchronization, heavily conditioning the speedup. Often serialization is hidden in frameworks and libraries.
-  - The principal threat to scalability in concurrent application is the exclusive resource lock:
+  - The principal threat to scalability in concurrent applications is the exclusive resource lock:
     - **reduce the duration for which locks are held** (narrow lock scope and finer lock granularity)
     - **reduce the frequency with which locks are requested**
     - **replace exclusive locks with coordination mechanisms that allow for greater concurrency**
 
 ---
+
 #### 👨🏻‍💻 Matrix multiplication example
 
 Concurrent programming evergreen: see `step04`.
@@ -214,15 +217,16 @@ Rationale:
 - at each worker is assigned the computation of a number of rows equal to `number of rows of A / #workers` 
 
 ---
+
 #### 👨🏻‍💻 Bouncing ball example
 
-- For each new ball a `BallAgent` thread is spawned.
-- Despite the fact the `BallViewer` updates the GUI with the new positions of the balls 25 times per seconds (`FRAMES_PER_SEC`) the `BallAgent` in loop continuously updates the position of the ball, using (wasting!) a lot of resources
+- For each new ball, a `BallAgent` thread is spawned.
+- Despite the fact the `BallViewer` updates the GUI with the new positions of the balls 25 times per second (`FRAMES_PER_SEC`) the `BallAgent` in the loop continuously updates the position of the ball, using (wasting!) a lot of resources
   - we can think every `BallAgent` is assigned to one core of the machine
-  - after spawning $NUM\_CORES$ balls the CPU is working at full speed just for updating unnecessarily the position of the ball that is not displayed
-  - if we continue to spawn other balls the CPU begin suffering and the balls start _lagging_!
+  - after spawning `NUM_CORES` balls the CPU is working at full speed just to update unnecessarily the position of the ball that is not displayed
+  - if we continue to spawn other balls the CPU begins suffering and the balls start _lagging_!
   ![bouncing-ball-demo](../../../../../../res/lab01/bouncing-ball-demo.png)
-- How to solve? Simply, make the `BallAgent` don't waste resources recomputing in loop the position of the ball since it is not anyway displayed! The GUI update happens every `FRAMES_PER_SEC`. Make the `BallAgent` recompute the position every `FRAMES_PER_SEC`! 
+- How to solve it? Simply, make the `BallAgent` don't waste resources recomputing in the loop the position of the ball since it is not anyway displayed! The GUI update happens every `FRAMES_PER_SEC`. Make the `BallAgent` recompute the position every `FRAMES_PER_SEC`! 
   - simply adding a `Thread.sleep(5)` solve the situation!
 
 ---
@@ -242,5 +246,5 @@ Rationale:
 - Threads state in Java:
   ![java thread states](../../../../../../res/lab01/java-thread-states.png)
   - **non-runnable (blocked)**: this is the state when the thread is still alive, but is currently not eligible to run
-  - **parking**: threads are being parked because it does not have a permission to execute. Once permission is granted the thread will be unparked and execute.
+  - **parking**: threads are being parked because it does not have permission to execute. Once permission is granted the thread will be unparked and executed.
   - ref: [stackoverflow discussion](https://stackoverflow.com/questions/27406200/visualvm-thread-states)

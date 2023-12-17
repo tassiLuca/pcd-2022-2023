@@ -1,5 +1,6 @@
 package pcd.lab04.monitors.sync_cell;
 
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.*;
 
 public class SyncCell2 {

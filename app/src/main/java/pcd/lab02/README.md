@@ -30,7 +30,7 @@ state and in particular to shared, mutable state:
     - make the state variable immutable
     - use synchronization whenever accessing the state variable
   - :point_right: Stateless/Immutable objects are always thread-safe: actions of a thread accessing a stateless object cannot affect the correctness of operations in other threads. Thread safety is undermined as soon as we share and access in R/W stateful objects, mutable state-full objects, in particular
-    - In functional programming the absence of shared mutable state makes multithreading safe
+In functional programming, the absence of a shared mutable state makes multithreading safe
 
 ### Atomic compound actions in Java
 
@@ -52,8 +52,7 @@ A synchronized block has 2 parts:
 Mostly used at a method level: we will see in the following labs when we'll discuss monitors.
 
 :arrow_right: Atomic blocks work by exploiting the **lock** embedded **in each** Java object called **intrinsic lock** (or monitor lock) functioning as a guard for the block.
-The lock is automatically acquired and then released by a thread
-respectively when entering and exiting the block:
+The lock is automatically acquired and then released by a thread respectively when entering and exiting the block:
 
 - if the lock is already acquired, the thread is blocked (suspended) and added to the entry set
 - when a thread exited the block, one thread of the entry set is selected and re-activated
@@ -62,7 +61,7 @@ respectively when entering and exiting the block:
 
 For static methods and fields, the lock is associated with the related class object.
 
-The misuse of atomic blocks can lead to performance problems or misbehavior, like sequentializations, which leads to a strong impact on speed-up and worsening performances.
+The misuse of atomic blocks can lead to performance problems or misbehavior, like serializations, which leads to a strong impact on speed-up and worsening performances.
 Attention should be paid to which parts must be designed and implemented as critical sections, **minimizing the time in which a lock is retained**.
 
 ### Race conditions
