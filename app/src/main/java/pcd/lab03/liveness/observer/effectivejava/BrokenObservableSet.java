@@ -43,7 +43,7 @@ public class BrokenObservableSet<E> implements ObservableSet<E> {
     public boolean addAll(Collection<? extends E> collection) {
         boolean result = false;
         for (var element : collection) {
-            result |= add(element);
+            result |= add(element); // | is the bit-wise OR operator
         }
         return result;
     }

@@ -1,8 +1,7 @@
 package pcd.lab03.liveness.observer;
 
 /**
- * A simple agents which continually performs
- * the update of the {@link Observed} entity.
+ * Simple agent that continually performs the update of the {@link Observed} entity.
  */
 class UpdateAgent extends Thread {
     private final Observed obj;

@@ -1,8 +1,7 @@
 package pcd.lab03.liveness.observer;
 
 /**
- * An agent simply listening for state change and logging
- * them on standard output.
+ * An agent simply listening for state change and logging them on standard output.
  */
 class ListeningAgent extends Thread {
     private final ObserverImpl obj;

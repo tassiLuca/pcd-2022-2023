@@ -1,8 +1,7 @@
 package pcd.lab03.liveness.observer;
 
 /**
- * An interface modeling an entity which observes
- * a possible multitude of {@link Observed} one.
+ * An interface modeling an entity which observes a possible multitude of {@link Observed} one.
  */
 public interface Observer {
 

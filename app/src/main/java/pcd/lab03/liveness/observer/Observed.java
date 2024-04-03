@@ -1,7 +1,7 @@
 package pcd.lab03.liveness.observer;
 
 /**
- * An interface modelling an entity which is observed.
+ * An interface modeling an entity which is observed.
  */
 public interface Observed {
 
@@ -16,8 +16,7 @@ public interface Observed {
     int getState();
 
     /**
-     * Registers a new observer (listener) in order to be notified
-     * when a state change occurs.
+     * Registers a new observer (listener) to be notified when a state change occurs.
      * @param obj the observer to register.
      */
     void register(Observer obj);
