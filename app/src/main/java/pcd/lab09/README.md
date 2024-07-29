@@ -1,10 +1,26 @@
-# Actors
+# Akka Actors
 
-## Intro
+## Recap
 
 Actors are entities that **encapsulate state and behavior** and communicate exclusively by exchanging **messages** which are placed into the recipient's **mailbox**.
 
-TODO...
+<div style="max-width: 550px; margin: 0 auto;">
+
+<img src="../../../../../../res/lab09/actors-model.png" alt="Actor model" />
+
+</div>
+
+- **Behavior**. Upon message reception, an actor can:
+
+  - send a finite number of messages
+  - create a finite number of child actors
+  - (must) specify its next behavior
+
+- **Encapsulation**. An actor is exposed to the outside through an actor reference. Everything else is hidden from the outside world $\Rightarrow$ communication happens only through messages.
+
+- Actors are logical entities, decoupled by physical concurrency (threads). They are **lightweight** and can be created in large numbers.
+
+**Important Remark**: actors should react to messages promptly and should not block themselves. If an actor is blocked, it cannot process messages and the system will not be able to make progress (like in Event Loop architecture).
 
 ## Akka actors
 
@@ -16,7 +32,20 @@ TODO...
   - _Akka typed_: new, type-safe API
   - _Akka Classic_: original API (still fully supported)
 
-**Akka actor systems**: TODO
+**Akka actor systems**:
+
+- A hierarchical structure of actors;
+  - **Actor reference**: designates a single actor and maps its lifecycle;
+  - **Actor path**: represents a name (inhabited or not by an actor) and has no life cycle.
+- Each actor has a parent and can have children;
+- The top-level actor is called the **guardian actor**;
+- The guardian actor is the parent of all actors in the system;
+- More **actor systems** exist as a collaborating ensemble of actors is the natural unit for managing shared facilities like scheduling services, configuration, logging, etc.
+  - The most common scenario will only involve a single actor system per JVM.
+
+[[More here]](https://doc.akka.io/docs/akka/current/general/addressing.html)
+
+![actor system](https://doc.akka.io/docs/akka/current/images/actor-paths-overview.png)
 
 ```scala
 // "Actor" module definition
@@ -29,13 +58,12 @@ object Counter:
   
   // Behavior of the actor
   def apply(from: Int, to: Int): Behavior[Command] =
-    Behaviors.receive { (context, msg) =>
+    Behaviors.receive: (context, msg) =>
       msg match
         case Tick if from != to =>
           context.log.info(s"Count: $from")
           Counter(from - from.compareTo(to), to) // same of apply(from - from.compareTo(to), to)
         case _ => Behaviors.stopped
-    }
 ```
 
 - `object Counter` is the actor module definition, including message types and behavior
@@ -44,7 +72,7 @@ object Counter:
   - `Behavior[T]` represents a behavior for processing messages of type `T`
 - Build behavior by passing a function to a factory such as `Behaviors.receive(f)`
   - creates the behavior instance immediately before the actor is running
-  - state is updated by returning a new behavior that holds the new immutable state, in a pure functional way
+  - ✨ **state is updated by returning a new behavior that holds the new immutable state, in a pure functional way**
   - termination
 - An actor is given by a `Behavior[T]` and an `ActorContext[T]` in which the behavior is executed, which provides access to, notably:
   - `context.system(actor system)`
@@ -53,8 +81,8 @@ object Counter:
   - `context.log` (access to logging system)
 - Finally, you need to set the behavior for the next message
   - choosing the same behavior, with `Behavior.same`
-  - returning a new behavior <ins>**on different immutable state**</ins>
-    - :point_right: no mutable state! Everything is immutable
+  - returning a new behavior <ins>**on a different immutable state**</ins>
+    - :point_right: **no mutable state! Everything is immutable**
     - after processing a `Tick` message, the next behavior will be `Counter(1, 2)`. This way the **behavior has new input values and the state is transferred from one message to the next**.
   - shutdown through termination of the top-level actor: `Behavior.stopped`
     - once the actor stops, it cannot process any more messages. All messages remaining in its queue or new messages sent to its address are forwarded by the system to another actor named **deadLetters**.
@@ -112,8 +140,7 @@ object WalletOnOff {
           activated(current)
         case Deactivate =>
           deactivated(total)
-        case Activate =>
-          Behaviors.same
+        case Activate => Behaviors.same
       }
     }
   
@@ -154,9 +181,10 @@ Another useful factory dealing with timer is `Behaviors.withTimers` that create 
     }
 ```
 
-<ins>**Stashing**</ins>: stashing enables an actor to temporarily buffer all or some messages that cannot or should not be handled using the actor's current behavior.
-  - if the actor has to load some initial state or initialize some resources before it can accept the first real message 
-  - when the actor is waiting for something to complete before processing the next message.
+<ins>**Stashing**</ins>: stashing enables an actor to temporarily buffer all or some messages that cannot or should not be handled using the actor's current behavior. Useful when:
+
+- the actor has to load some initial state or initialize someresources before it can accept the first real message;
+- the actor is waiting for something to complete before processing the next message.
 
 ```scala
 def apply(): Behavior[Command] = 
@@ -168,6 +196,9 @@ private def start(
   ctx: ActorContext[Command],
   buffer: StashBuffer[Command]
 ): Behavior[Command] =
+  // Sends the result of the given Future to this Actor ("self"),
+  // after adapted it with the given function
+  // In this case we are loading the initial state from a DB that takes some time...
   ctx.pipeToSelf(db.load(id)) {
     case Success(value) => InitialState(value)
     case Failure(cause) => DBError(cause) 
@@ -184,9 +215,11 @@ private def start(
 private def activeBehavior(state: String): Behavior[Command] = ???
 ```
 
-It is important to note that this buffer only lives in memory and is lost when the actor restarts or stops. This can happen with any exception, but with a persistent failure it can be handled so that the buffer is not lost. You can handle this scenario by using `EventSourcedBehavior.onPersistFailure` with a `SupervisorStrategy.restartWithBackoff` available in the Akka persistence API (see Fault Tolerance below section).
+A side note: when using an API that returns a `Future` from an actor, commonly, you would like to use the value of the response in the actor when the `Future` is completed. For this purpose, the `ActorContext` provides a `pipeToSelf` method.
 
-:warning: **We already know that the actor's behavior can not block: when all of the available threads are blocked, then all the actors on the same dispatcher will starve for threads and will not be able to process incoming messages.**
+:warning: It is important to note that this buffer only lives in memory and is lost when the actor restarts or stops. This can happen with any exception, but with a persistent failure it can be handled so that the buffer is not lost. You can handle this scenario by using `EventSourcedBehavior.onPersistFailure` with a `SupervisorStrategy.restartWithBackoff` available in the Akka persistence API (see Fault Tolerance below section).
+
+:warning: <ins>**We already know that the actor's behavior can not block: when all of the available threads are blocked, then all the actors on the same dispatcher will starve for threads and will not be able to process incoming messages.**</ins>
 
 ```scala
 // THIS IS BAD!!!
@@ -194,7 +227,8 @@ Behaviors.receiveMessages { _ => { Thread.sleep(5000); Behaviors.same } }
 ```
 
 However, in some cases, it is unavoidable to do blocking operations.
-A **non-solution**: wrapping in future.
+A **BAD solution**: wrapping in a `Future`.
+
 ```scala
 def badSolution(): Behavior[Int] = 
   Behaviors.receive((ctx,i) => {
@@ -204,9 +238,10 @@ def badSolution(): Behavior[Int] =
   })
 ```
 
-**Solution: dedicated dispatcher for blocking ops**
+:bulb: **Solution: dedicated dispatcher for blocking ops**
 
 `Application.conf`:
+
 ```conf
 my-blocking-dispatcher {
   type = Dispatcher
@@ -259,7 +294,7 @@ object GuessNumberMain extends App:
   - :bulb: <ins>**Design principle: actors should always be as small as possible. Create a subtree of actors to handle some complex request.**</ins>
 - `Behaviors.setup`: this factory creates a behavior that is executed only once - when the actor is instantiated. It creates a behavior from a function with only one input parameter, the context. This is its first event in life.
 
-**How to send a message and expect a reply?**
+:point_right: **How to send a message and expect a reply?**
 
 Very common pattern: **Request-Response**, in which the actor I message replies.
 
@@ -309,7 +344,7 @@ object Worker {
 }
 
 context.ask(worker, Worker.Parse) {
-  // please note mapResponse: Try[Res] => T
+  // please note `mapResponse: Try[Res] => T`
   case Success(Worker.Done) => Report(s"$text parsed by ${worker.path.name}")
   case Failure(ex) => ...
 }
@@ -322,7 +357,7 @@ context.ask(worker, Worker.Parse) {
   The compiler concludes that you are referring to the apply function of this case class.
 - The `mapResponse` is the definition of the callback as **Success** or **Failure**, depending on whether the response arrives on time.
 - the implicit `responseTimeout: Timeout` is the amount of time the request waits for a response.
-- You should not pay much attention to the implicit `classTag`. It is there for historical reasons and for binary compatibility.
+- (You should not pay much attention to the implicit `classTag`. It is there for historical reasons and for binary compatibility.)
 
 As we have seen the guardian actor is responsible for initialization of tasks and create the initial actors of the application, but sometimes you might want to spawn new actors from the outside of the guardian actor (for example creating one actor per HTTP request).
 
@@ -425,6 +460,10 @@ object SpawningProtocol extends App:
   - With the adapter the concierge can subscribe by sending a `Subscribe`
 message with the `goldenKey`
   - when the concierge receives the list of registration it logs the name of each guest. This happens every time a guest registers.
+
+> _The receptionist does not scale up to any number of services or very high turnaround of services. It will likely handle up to thousands or tens of thousands of services. Use cases with higher demands the receptionist for initial contact between actors on the nodes while the actual logic of those is up to the applications own actors._
+>
+> [From documentation]
 
 ### Fault Tolerance
 

@@ -9,10 +9,10 @@
 Note: see the example project for build configuration.
 
 - Akka cluster: a group of Actor Systems (that live in independent JVM) communicating P2P to form a whole
-  - location transparency: no matter an actor is in the same node or not, its location is transparent 
-  - no single point of failure
-  - fault-tolerant
-  - can dynamically increase and decrease the number of nodes
+  - **location transparency**: no matter whether an actor is in the same node or not, its location is transparent;
+  - no single point of failure;
+  - fault-tolerant;
+  - can dynamically increase and decrease the number of nodes.
 
 ![akka cluster](../../../../../../res/lab10/akka-cluster.png)
 
