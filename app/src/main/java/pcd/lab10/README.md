@@ -64,7 +64,8 @@ akka {
   cluster {
     seed-nodes = [
       "akka://ClusterSystem@127.0.0.1:2551",
-      "akka://ClusterSystem@127.0.0.1:2552"]
+      "akka://ClusterSystem@127.0.0.1:2552"
+    ]
   }
 }
 ```
@@ -253,8 +254,20 @@ It doesn't matter how many times you run this line of code in your application, 
 
 ## Java RMI
 
-## MOM
+RMI (Remote Method Invocation) is a Java API that performs the object-oriented equivalent of RPC (Remote Procedure Call), allowing a Java object to invoke methods on an object running in another JVM.
 
+![Java RMI architecture](https://www.researchgate.net/profile/Dennis-Gannon-2/publication/233943469/figure/fig1/AS:339844241870853@1458036589586/Java-RMI-architecture.png)
+
+Java RMI is presented to showcase the weaknesses of the illusion of location transparency in distributed systems and the need for a more robust solution.
+Nowadays, RMI is considered obsolete and is not used in modern distributed systems.
+
+Some notes can be found [here](http://www.lia.deis.unibo.it/Courses/RetiLA/RetiLA_06-07/materiale/lezioni/rmix2.pdf).
+
+A tutorial can be found [here](https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/hello/hello-world.html).
+
+## MOM (Message-Oriented Middleware): RabbitMQ
+
+See notes from [Distributed Systems](https://tassiluca.github.io/distributed-systems-notes/notes/lab10-queues.html).
 
 ## References
 
